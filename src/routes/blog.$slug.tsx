@@ -70,7 +70,7 @@ function BlogPostPage() {
           <span aria-hidden>{post.cover}</span>
         </div>
         <div className="space-y-5 text-white/85 md:text-lg">
-          {post.content.split("\n\n").map((para, i) => (
+          {post.content.split("\n\n").map((para: string, i: number) => (
             <p key={i}>{para}</p>
           ))}
         </div>
