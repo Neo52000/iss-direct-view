@@ -1,29 +1,57 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { HeroLive } from "@/components/HeroLive";
+import { FeatureCards } from "@/components/FeatureCards";
+import { EmailCapture } from "@/components/EmailCapture";
+import { FAQ, faqJsonLd } from "@/components/FAQ";
+import { homeFaq } from "@/data/faq";
+import { BlogPreview } from "@/components/BlogPreview";
+import { KitSection, CommerceBenefits } from "@/components/KitSection";
+import { ProductGrid } from "@/components/ProductGrid";
+import { AdSlot } from "@/components/AdSlot";
 
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Your App" },
-      { name: "description", content: "Replace this with a one-sentence description of your app." },
-      { property: "og:title", content: "Your App" },
-      { property: "og:description", content: "Replace this with a one-sentence description of your app." },
+      { title: "ISS Direct France — Voir l'ISS en direct depuis l'espace" },
+      {
+        name: "description",
+        content:
+          "Live vidéo de la Station Spatiale Internationale, position en temps réel et passages visibles au-dessus de chez vous.",
+      },
+      { property: "og:title", content: "ISS Direct France — Voir l'ISS en direct" },
+      {
+        property: "og:description",
+        content:
+          "Live vidéo de l'ISS, position en temps réel et alertes de passages visibles depuis votre ville.",
+      },
+      { property: "og:url", content: "/" },
+      { property: "og:type", content: "website" },
+    ],
+    links: [{ rel: "canonical", href: "/" }],
+    scripts: [
+      {
+        type: "application/ld+json",
+        children: JSON.stringify(faqJsonLd(homeFaq)),
+      },
     ],
   }),
-  component: Index,
+  component: Home,
 });
 
-// IMPORTANT: Replace this placeholder. See ./README.md for routing conventions.
-function Index() {
+function Home() {
   return (
-    <div
-      className="flex min-h-screen items-center justify-center"
-      style={{ backgroundColor: "#fcfbf8" }}
-    >
-      <img
-        data-lovable-blank-page-placeholder="REMOVE_THIS"
-        src="https://cdn.gpteng.co/blank-app-v1.svg"
-        alt="Your app will live here!"
-      />
-    </div>
+    <>
+      <HeroLive />
+      <FeatureCards />
+      <div className="mx-auto max-w-7xl px-4 md:px-6">
+        <AdSlot label="Espace publicitaire" />
+      </div>
+      <EmailCapture />
+      <FAQ items={homeFaq} />
+      <BlogPreview />
+      <KitSection />
+      <ProductGrid />
+      <CommerceBenefits />
+    </>
   );
 }
