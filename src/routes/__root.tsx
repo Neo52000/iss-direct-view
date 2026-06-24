@@ -77,19 +77,35 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Lovable App" },
-      { name: "description", content: "Lovable Generated Project" },
-      { name: "author", content: "Lovable" },
-      { property: "og:title", content: "Lovable App" },
-      { property: "og:description", content: "Lovable Generated Project" },
+      { title: "ISS Direct France — Voir l'ISS en direct depuis l'espace" },
+      { name: "description", content: "Regardez la Station Spatiale Internationale en direct, suivez sa position en temps réel et découvrez quand l'observer depuis chez vous." },
+      { property: "og:site_name", content: "ISS Direct France" },
       { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary" },
-      { name: "twitter:site", content: "@Lovable" },
+      { property: "og:locale", content: "fr_FR" },
+      { name: "twitter:card", content: "summary_large_image" },
+      { name: "theme-color", content: "#050B1F" },
     ],
     links: [
+      { rel: "preconnect", href: "https://fonts.googleapis.com" },
+      { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
+      {
+        rel: "stylesheet",
+        href: "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;700;800&display=swap",
+      },
       {
         rel: "stylesheet",
         href: appCss,
+      },
+    ],
+    scripts: [
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "Organization",
+          name: "ISS Direct France",
+          description: "Suivi de la Station Spatiale Internationale en direct, position en temps réel et passages visibles.",
+        }),
       },
     ],
   }),
