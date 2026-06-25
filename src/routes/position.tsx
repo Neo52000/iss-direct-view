@@ -7,7 +7,7 @@ import {
   formatSpeed,
   getReadableDate,
 } from "@/lib/iss-utils";
-import { Crosshair, Satellite } from "lucide-react";
+import { Crosshair, Satellite, AlertTriangle, Loader2 } from "lucide-react";
 
 export const Route = createFileRoute("/position")({
   head: () => ({
@@ -38,21 +38,25 @@ function PositionPage() {
     L: typeof import("leaflet") | null;
   }>({ map: null, marker: null, polyline: null, follow: true, L: null });
   const [history, setHistory] = useState<[number, number][]>([]);
+  const [mapStatus, setMapStatus] = useState<"loading" | "ready" | "error">("loading");
+  const [tilesLoaded, setTilesLoaded] = useState(false);
 
   // init Leaflet client-side
   useEffect(() => {
     let cancelled = false;
+    let timeoutId: ReturnType<typeof setTimeout> | undefined;
     (async () => {
-      const L = (await import("leaflet")).default;
-      await import("leaflet/dist/leaflet.css");
-      if (cancelled || !mapRef.current || leafletRef.current.map) return;
-      const map = L.map(mapRef.current, {
+      try {
+        const L = (await import("leaflet")).default;
+        await import("leaflet/dist/leaflet.css");
+        if (cancelled || !mapRef.current || leafletRef.current.map) return;
+        const map = L.map(mapRef.current, {
         center: [0, 0],
         zoom: 3,
         worldCopyJump: true,
         zoomControl: true,
       });
-      L.tileLayer(
+      const tileLayer = L.tileLayer(
         "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png",
         {
           attribution: "© OpenStreetMap, © CartoDB",
@@ -60,6 +64,25 @@ function PositionPage() {
           maxZoom: 19,
         },
       ).addTo(map);
+
+      // Fallback: if tiles don't load within 10s, mark as error
+      timeoutId = setTimeout(() => {
+        if (!cancelled) {
+          setMapStatus((s) => (s === "loading" ? "error" : s));
+        }
+      }, 10000);
+
+      tileLayer.on("load", () => {
+        if (cancelled) return;
+        if (timeoutId) clearTimeout(timeoutId);
+        setTilesLoaded(true);
+        setMapStatus("ready");
+      });
+      tileLayer.on("tileerror", () => {
+        if (cancelled) return;
+        // Only flip to error if no tile ever loaded
+        setMapStatus((s) => (s === "ready" ? s : "error"));
+      });
 
       const icon = L.divIcon({
         className: "iss-marker",
@@ -71,11 +94,33 @@ function PositionPage() {
       const polyline = L.polyline([], { color: "#71D7FF", weight: 2, opacity: 0.7 }).addTo(map);
 
       leafletRef.current = { map, marker, polyline, follow: true, L };
+      } catch (e) {
+        console.error("Leaflet init failed", e);
+        if (!cancelled) setMapStatus("error");
+      }
     })();
     return () => {
       cancelled = true;
+      if (timeoutId) clearTimeout(timeoutId);
+      const { map } = leafletRef.current as { map: import("leaflet").Map | null };
+      if (map) {
+        map.remove();
+        leafletRef.current = { map: null, marker: null, polyline: null, follow: true, L: null };
+      }
     };
   }, []);
+
+  const retryMap = () => {
+    setMapStatus("loading");
+    setTilesLoaded(false);
+    const { map } = leafletRef.current as { map: import("leaflet").Map | null };
+    if (map) {
+      map.remove();
+      leafletRef.current = { map: null, marker: null, polyline: null, follow: true, L: null };
+    }
+    // Force re-run of init effect via reload trigger
+    window.location.reload();
+  };
 
   // sync position
   useEffect(() => {
@@ -128,11 +173,47 @@ function PositionPage() {
       </div>
 
       <div className="mt-6 grid gap-5 lg:grid-cols-[1fr_320px]">
-        <div
-          ref={mapRef}
-          className="h-[60vh] min-h-[420px] overflow-hidden rounded-2xl border border-white/10 bg-black"
-          aria-label="Carte de la position actuelle de l'ISS"
-        />
+        <div className="relative h-[60vh] min-h-[420px] overflow-hidden rounded-2xl border border-white/10 bg-black">
+          <div
+            ref={mapRef}
+            className="absolute inset-0"
+            aria-label="Carte de la position actuelle de l'ISS"
+          />
+          {mapStatus === "loading" || !tilesLoaded ? (
+            <div
+              className="pointer-events-none absolute inset-0 grid place-items-center bg-[color:var(--iss-bg)]/80 backdrop-blur-sm"
+              aria-live="polite"
+            >
+              <div className="flex flex-col items-center gap-3 text-white/70">
+                <div className="relative h-16 w-16">
+                  <div className="absolute inset-0 animate-ping rounded-full bg-[color:var(--iss-cyan)]/30" />
+                  <div className="absolute inset-2 grid place-items-center rounded-full bg-[color:var(--iss-surface)] border border-white/10">
+                    <Loader2 className="h-6 w-6 animate-spin text-[color:var(--iss-cyan)]" />
+                  </div>
+                </div>
+                <p className="text-sm">Chargement de la carte…</p>
+              </div>
+            </div>
+          ) : null}
+          {mapStatus === "error" ? (
+            <div className="pointer-events-auto absolute inset-0 grid place-items-center bg-[color:var(--iss-bg)]/90 backdrop-blur-sm p-6">
+              <div className="iss-card flex max-w-sm flex-col items-center gap-3 p-6 text-center">
+                <AlertTriangle className="h-8 w-8 text-[color:var(--iss-red,#FF3B4A)]" />
+                <h3 className="font-display text-lg font-bold">Carte indisponible</h3>
+                <p className="text-sm text-white/70">
+                  Les tuiles cartographiques n'ont pas pu se charger. Vérifiez votre connexion ou
+                  réessayez.
+                </p>
+                <button
+                  onClick={retryMap}
+                  className="mt-1 rounded-full bg-[color:var(--iss-blue)] px-4 py-2 text-sm font-semibold"
+                >
+                  Réessayer
+                </button>
+              </div>
+            </div>
+          ) : null}
+        </div>
 
         <aside className="iss-card flex flex-col gap-4 p-5">
           <div className="flex items-center gap-2">
