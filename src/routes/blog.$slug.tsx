@@ -1,6 +1,6 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { blogPosts, getPost } from "@/data/blogPosts";
-import { getReadableDate } from "@/lib/iss-utils";
+import { getReadableDay } from "@/lib/iss-utils";
 import { EmailCapture } from "@/components/EmailCapture";
 
 export const Route = createFileRoute("/blog/$slug")({
@@ -65,7 +65,7 @@ function BlogPostPage() {
         <h1 className="mt-2 font-display text-3xl font-extrabold leading-tight md:text-5xl">
           {post.title}
         </h1>
-        <p className="mt-3 text-sm text-white/50">Publié le {getReadableDate(post.date)}</p>
+        <p className="mt-3 text-sm text-white/50">Publié le {getReadableDay(post.date)}</p>
         <div className="my-8 grid aspect-[16/9] place-items-center rounded-2xl bg-gradient-to-br from-[color:var(--iss-surface)] to-[#0a1f4a] text-8xl">
           <span aria-hidden>{post.cover}</span>
         </div>
