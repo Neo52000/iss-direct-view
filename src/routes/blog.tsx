@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { blogPosts } from "@/data/blogPosts";
-import { getReadableDate } from "@/lib/iss-utils";
+import { getReadableDay } from "@/lib/iss-utils";
 
 export const Route = createFileRoute("/blog")({
   head: () => ({
