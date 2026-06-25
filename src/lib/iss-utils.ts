@@ -12,6 +12,15 @@ export const getReadableDate = (d: Date | string | number) => {
   return new Intl.DateTimeFormat("fr-FR", {
     dateStyle: "long",
     timeStyle: "short",
+    timeZone: "Europe/Paris",
+  }).format(date);
+};
+
+export const getReadableDay = (d: Date | string | number) => {
+  const date = typeof d === "string" || typeof d === "number" ? new Date(d) : d;
+  return new Intl.DateTimeFormat("fr-FR", {
+    dateStyle: "long",
+    timeZone: "Europe/Paris",
   }).format(date);
 };
 

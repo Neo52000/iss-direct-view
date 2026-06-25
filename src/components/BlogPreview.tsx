@@ -1,6 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { blogPosts } from "@/data/blogPosts";
-import { getReadableDate } from "@/lib/iss-utils";
+import { getReadableDay } from "@/lib/iss-utils";
 
 export function BlogPreview({ count = 3 }: { count?: number }) {
   const posts = blogPosts.slice(0, count);
@@ -33,7 +33,7 @@ export function BlogPreview({ count = 3 }: { count?: number }) {
               <h3 className="mt-2 font-display text-lg font-bold leading-snug">{p.title}</h3>
               <p className="mt-2 line-clamp-3 text-sm text-white/70">{p.excerpt}</p>
               <div className="mt-4 flex items-center justify-between">
-                <span className="text-xs text-white/40">{getReadableDate(p.date)}</span>
+                <span className="text-xs text-white/40">{getReadableDay(p.date)}</span>
                 <Link
                   to="/blog/$slug"
                   params={{ slug: p.slug }}
