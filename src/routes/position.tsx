@@ -40,6 +40,9 @@ function PositionPage() {
   const [history, setHistory] = useState<[number, number][]>([]);
   const [mapStatus, setMapStatus] = useState<"loading" | "ready" | "error">("loading");
   const [tilesLoaded, setTilesLoaded] = useState(false);
+  const tileLayerRef = useRef<import("leaflet").TileLayer | null>(null);
+  const preloadCacheRef = useRef<Set<string>>(new Set());
+  const lastPreloadRef = useRef<{ lat: number; lon: number; t: number } | null>(null);
 
   // init Leaflet client-side
   useEffect(() => {
@@ -62,8 +65,12 @@ function PositionPage() {
           attribution: "© OpenStreetMap, © CartoDB",
           subdomains: "abcd",
           maxZoom: 19,
+          keepBuffer: 4,
+          updateWhenIdle: false,
+          updateWhenZooming: false,
         },
       ).addTo(map);
+      tileLayerRef.current = tileLayer;
 
       // Fallback: if tiles don't load within 10s, mark as error
       timeoutId = setTimeout(() => {
@@ -110,6 +117,52 @@ function PositionPage() {
     };
   }, []);
 
+  /**
+   * Warm the browser HTTP cache for tiles around (lat, lon) at the current zoom
+   * and the next zoom level — gives instant tiles on pan/zoom/recenter.
+   */
+  const preloadTilesAround = (lat: number, lon: number) => {
+    const layer = tileLayerRef.current;
+    const map = leafletRef.current.map as import("leaflet").Map | null;
+    if (!layer || !map) return;
+    const subdomains = ["a", "b", "c", "d"];
+    const r = (map.options as { detectRetina?: boolean }).detectRetina ? "@2x" : "";
+    const cache = preloadCacheRef.current;
+    const zoom = map.getZoom();
+    const targets = [
+      { z: zoom, radius: 2 },
+      { z: Math.min(zoom + 1, 19), radius: 1 },
+    ];
+    for (const { z, radius } of targets) {
+      const n = 2 ** z;
+      const xC = Math.floor(((lon + 180) / 360) * n);
+      const latRad = (lat * Math.PI) / 180;
+      const yC = Math.floor(
+        ((1 - Math.log(Math.tan(latRad) + 1 / Math.cos(latRad)) / Math.PI) / 2) * n,
+      );
+      for (let dx = -radius; dx <= radius; dx++) {
+        for (let dy = -radius; dy <= radius; dy++) {
+          const x = ((xC + dx) % n + n) % n;
+          const y = yC + dy;
+          if (y < 0 || y >= n) continue;
+          const s = subdomains[Math.abs(x + y) % subdomains.length];
+          const url = `https://${s}.basemaps.cartocdn.com/dark_all/${z}/${x}/${y}${r}.png`;
+          if (cache.has(url)) continue;
+          cache.add(url);
+          const img = new Image();
+          img.decoding = "async";
+          img.loading = "eager";
+          img.src = url;
+        }
+      }
+    }
+    // Cap cache size to avoid unbounded growth
+    if (cache.size > 600) {
+      const arr = Array.from(cache).slice(-400);
+      preloadCacheRef.current = new Set(arr);
+    }
+  };
+
   const retryMap = () => {
     setMapStatus("loading");
     setTilesLoaded(false);
@@ -141,6 +194,16 @@ function PositionPage() {
       return next;
     });
     if (follow) map.panTo(latlng, { animate: true });
+
+    // Throttle preloads: only run if >15s or >2° drift
+    const last = lastPreloadRef.current;
+    const drift = last
+      ? Math.hypot(position.latitude - last.lat, position.longitude - last.lon)
+      : Infinity;
+    if (!last || Date.now() - last.t > 15000 || drift > 2) {
+      lastPreloadRef.current = { lat: position.latitude, lon: position.longitude, t: Date.now() };
+      preloadTilesAround(position.latitude, position.longitude);
+    }
   }, [position]);
 
   const recenter = () => {
