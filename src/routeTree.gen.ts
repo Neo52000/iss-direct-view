@@ -18,9 +18,12 @@ import { Route as LiveRouteImport } from './routes/live'
 import { Route as ContactRouteImport } from './routes/contact'
 import { Route as ConfidentialiteRouteImport } from './routes/confidentialite'
 import { Route as BlogRouteImport } from './routes/blog'
+import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AProposRouteImport } from './routes/a-propos'
+import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as BlogSlugRouteImport } from './routes/blog.$slug'
+import { Route as AuthenticatedAdminProductsRouteImport } from './routes/_authenticated/admin.products'
 
 const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
   id: '/sitemap.xml',
@@ -67,9 +70,18 @@ const BlogRoute = BlogRouteImport.update({
   path: '/blog',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthRoute = AuthRouteImport.update({
+  id: '/auth',
+  path: '/auth',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AProposRoute = AProposRouteImport.update({
   id: '/a-propos',
   path: '/a-propos',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
+  id: '/_authenticated',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -82,10 +94,17 @@ const BlogSlugRoute = BlogSlugRouteImport.update({
   path: '/$slug',
   getParentRoute: () => BlogRoute,
 } as any)
+const AuthenticatedAdminProductsRoute =
+  AuthenticatedAdminProductsRouteImport.update({
+    id: '/admin/products',
+    path: '/admin/products',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/a-propos': typeof AProposRoute
+  '/auth': typeof AuthRoute
   '/blog': typeof BlogRouteWithChildren
   '/confidentialite': typeof ConfidentialiteRoute
   '/contact': typeof ContactRoute
@@ -96,10 +115,12 @@ export interface FileRoutesByFullPath {
   '/ressources': typeof RessourcesRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/blog/$slug': typeof BlogSlugRoute
+  '/admin/products': typeof AuthenticatedAdminProductsRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/a-propos': typeof AProposRoute
+  '/auth': typeof AuthRoute
   '/blog': typeof BlogRouteWithChildren
   '/confidentialite': typeof ConfidentialiteRoute
   '/contact': typeof ContactRoute
@@ -110,11 +131,14 @@ export interface FileRoutesByTo {
   '/ressources': typeof RessourcesRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/blog/$slug': typeof BlogSlugRoute
+  '/admin/products': typeof AuthenticatedAdminProductsRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/a-propos': typeof AProposRoute
+  '/auth': typeof AuthRoute
   '/blog': typeof BlogRouteWithChildren
   '/confidentialite': typeof ConfidentialiteRoute
   '/contact': typeof ContactRoute
@@ -125,12 +149,14 @@ export interface FileRoutesById {
   '/ressources': typeof RessourcesRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/blog/$slug': typeof BlogSlugRoute
+  '/_authenticated/admin/products': typeof AuthenticatedAdminProductsRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
     | '/a-propos'
+    | '/auth'
     | '/blog'
     | '/confidentialite'
     | '/contact'
@@ -141,10 +167,12 @@ export interface FileRouteTypes {
     | '/ressources'
     | '/sitemap.xml'
     | '/blog/$slug'
+    | '/admin/products'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/a-propos'
+    | '/auth'
     | '/blog'
     | '/confidentialite'
     | '/contact'
@@ -155,10 +183,13 @@ export interface FileRouteTypes {
     | '/ressources'
     | '/sitemap.xml'
     | '/blog/$slug'
+    | '/admin/products'
   id:
     | '__root__'
     | '/'
+    | '/_authenticated'
     | '/a-propos'
+    | '/auth'
     | '/blog'
     | '/confidentialite'
     | '/contact'
@@ -169,11 +200,14 @@ export interface FileRouteTypes {
     | '/ressources'
     | '/sitemap.xml'
     | '/blog/$slug'
+    | '/_authenticated/admin/products'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   AProposRoute: typeof AProposRoute
+  AuthRoute: typeof AuthRoute
   BlogRoute: typeof BlogRouteWithChildren
   ConfidentialiteRoute: typeof ConfidentialiteRoute
   ContactRoute: typeof ContactRoute
@@ -250,11 +284,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BlogRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/auth': {
+      id: '/auth'
+      path: '/auth'
+      fullPath: '/auth'
+      preLoaderRoute: typeof AuthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/a-propos': {
       id: '/a-propos'
       path: '/a-propos'
       fullPath: '/a-propos'
       preLoaderRoute: typeof AProposRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated': {
+      id: '/_authenticated'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof AuthenticatedRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -271,8 +319,26 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BlogSlugRouteImport
       parentRoute: typeof BlogRoute
     }
+    '/_authenticated/admin/products': {
+      id: '/_authenticated/admin/products'
+      path: '/admin/products'
+      fullPath: '/admin/products'
+      preLoaderRoute: typeof AuthenticatedAdminProductsRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
   }
 }
+
+interface AuthenticatedRouteRouteChildren {
+  AuthenticatedAdminProductsRoute: typeof AuthenticatedAdminProductsRoute
+}
+
+const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedAdminProductsRoute: AuthenticatedAdminProductsRoute,
+}
+
+const AuthenticatedRouteRouteWithChildren =
+  AuthenticatedRouteRoute._addFileChildren(AuthenticatedRouteRouteChildren)
 
 interface BlogRouteChildren {
   BlogSlugRoute: typeof BlogSlugRoute
@@ -286,7 +352,9 @@ const BlogRouteWithChildren = BlogRoute._addFileChildren(BlogRouteChildren)
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   AProposRoute: AProposRoute,
+  AuthRoute: AuthRoute,
   BlogRoute: BlogRouteWithChildren,
   ConfidentialiteRoute: ConfidentialiteRoute,
   ContactRoute: ContactRoute,
