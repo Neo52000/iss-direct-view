@@ -1,14 +1,6 @@
 [build]
   command = "bun run build"
-  publish = "dist/client"
+  publish = "dist"
 
 [build.environment]
   NITRO_PRESET = "netlify"
-
-# TanStack Start / Nitro génère une fonction Netlify qui gère le SSR
-# et les server functions. Tous les chemins non-statiques y sont routés.
-[[redirects]]
-  from = "/*"
-  to = "/.netlify/functions/server"
-  status = 200
-  force = false
