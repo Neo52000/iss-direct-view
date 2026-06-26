@@ -1,6 +1,8 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "@tanstack/react-router";
-import { Menu, X, Satellite } from "lucide-react";
+import { Menu, X, Satellite, Lock } from "lucide-react";
+import { currentUserIsAdmin } from "@/lib/products";
+import { supabase } from "@/integrations/supabase/client";
 
 const NAV = [
   { to: "/", label: "Accueil" },
@@ -14,6 +16,20 @@ const NAV = [
 
 export function Header() {
   const [open, setOpen] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
+
+  useEffect(() => {
+    let mounted = true;
+    currentUserIsAdmin().then((v) => mounted && setIsAdmin(v));
+    const { data: sub } = supabase.auth.onAuthStateChange(() => {
+      currentUserIsAdmin().then((v) => mounted && setIsAdmin(v));
+    });
+    return () => {
+      mounted = false;
+      sub.subscription.unsubscribe();
+    };
+  }, []);
+
   return (
     <header className="sticky top-0 z-40 border-b border-white/10 bg-[color:var(--iss-bg)]/80 backdrop-blur">
       <div className="mx-auto grid max-w-7xl grid-cols-[minmax(0,1fr)_auto] items-center gap-4 px-4 py-3 md:px-6">
@@ -39,6 +55,14 @@ export function Header() {
               </Link>
             ))}
           </nav>
+          {isAdmin ? (
+            <Link
+              to="/admin/products"
+              className="hidden items-center gap-1.5 rounded-full border border-[color:var(--iss-cyan)]/40 px-3 py-2 text-xs font-semibold text-[color:var(--iss-cyan)] hover:bg-[color:var(--iss-cyan)]/10 lg:inline-flex"
+            >
+              <Lock className="h-3.5 w-3.5" /> Admin
+            </Link>
+          ) : null}
           <Link
             to="/"
             hash="alertes"
