@@ -2,9 +2,28 @@ import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { blogPosts, getPost } from "@/data/blogPosts";
 import { getReadableDay } from "@/lib/iss-utils";
 import { EmailCapture } from "@/components/EmailCapture";
+import { fetchPostBySlug } from "@/lib/blog";
 
 export const Route = createFileRoute("/blog/$slug")({
-  loader: ({ params }) => {
+  loader: async ({ params }) => {
+    try {
+      const row = await fetchPostBySlug(params.slug);
+      if (row) {
+        return {
+          slug: row.slug,
+          title: row.title,
+          metaDescription: row.meta_description ?? row.excerpt ?? row.title,
+          excerpt: row.excerpt ?? "",
+          content: row.content,
+          category: row.category,
+          date: row.published_at,
+          readingTime: row.reading_time,
+          cover: row.cover,
+        };
+      }
+    } catch {
+      /* fallback below */
+    }
     const post = getPost(params.slug);
     if (!post) throw notFound();
     return post;
