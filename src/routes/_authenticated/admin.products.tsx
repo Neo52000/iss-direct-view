@@ -10,7 +10,9 @@ import {
   type Product,
   type ProductInput,
 } from "@/lib/products";
-import { Pencil, Plus, Trash2, ExternalLink, BarChart3, LogOut } from "lucide-react";
+import { Pencil, Plus, Trash2, ExternalLink, BarChart3, LogOut, Sparkles } from "lucide-react";
+import { useServerFn } from "@tanstack/react-start";
+import { generateProductCopy } from "@/lib/ai-product.functions";
 
 export const Route = createFileRoute("/_authenticated/admin/products")({
   head: () => ({
@@ -256,6 +258,38 @@ function EditDrawer({
   const [form, setForm] = useState(initial);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [aiLoading, setAiLoading] = useState(false);
+  const [aiError, setAiError] = useState<string | null>(null);
+  const generate = useServerFn(generateProductCopy);
+
+  async function handleGenerate() {
+    setAiError(null);
+    if (!form.title.trim()) {
+      setAiError("Renseignez d'abord le titre du produit.");
+      return;
+    }
+    setAiLoading(true);
+    try {
+      const out = await generate({
+        data: {
+          title: form.title,
+          category: form.category,
+          price: form.price,
+          affiliate_url: form.affiliate_url,
+          hint: form.badge ?? "",
+        },
+      });
+      setForm((f) => ({
+        ...f,
+        description: out.description || f.description,
+        meta_description: out.meta_description || f.meta_description,
+      }));
+    } catch (err) {
+      setAiError(err instanceof Error ? err.message : "Erreur IA");
+    } finally {
+      setAiLoading(false);
+    }
+  }
 
   function set<K extends keyof typeof form>(k: K, v: (typeof form)[K]) {
     setForm((f) => ({ ...f, [k]: v }));
@@ -382,6 +416,21 @@ function EditDrawer({
               className={inputCls}
             />
           </Field>
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-semibold text-white/60">
+              Contenu IA (description + meta)
+            </span>
+            <button
+              type="button"
+              onClick={handleGenerate}
+              disabled={aiLoading}
+              className="inline-flex items-center gap-2 rounded-full border border-[color:var(--iss-cyan)]/40 bg-[color:var(--iss-cyan)]/10 px-3 py-1.5 text-xs font-semibold text-[color:var(--iss-cyan)] hover:bg-[color:var(--iss-cyan)]/20 disabled:opacity-60"
+            >
+              <Sparkles className="h-3.5 w-3.5" />
+              {aiLoading ? "Génération…" : "Générer avec l'IA"}
+            </button>
+          </div>
+          {aiError ? <p className="-mt-2 text-xs text-rose-300">{aiError}</p> : null}
           <Field label="Description longue">
             <textarea
               rows={4}
