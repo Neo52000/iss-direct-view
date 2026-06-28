@@ -19,6 +19,7 @@ export const Route = createFileRoute("/blog/$slug")({
           date: row.published_at,
           readingTime: row.reading_time,
           cover: row.cover,
+          image: row.cover_image_url ?? null,
         };
       }
     } catch {
@@ -26,7 +27,7 @@ export const Route = createFileRoute("/blog/$slug")({
     }
     const post = getPost(params.slug);
     if (!post) throw notFound();
-    return post;
+    return { ...post, image: null as string | null };
   },
   head: ({ loaderData }) => {
     const post = loaderData;
@@ -40,6 +41,13 @@ export const Route = createFileRoute("/blog/$slug")({
         { property: "og:type", content: "article" },
         { property: "og:url", content: `/blog/${post.slug}` },
         { property: "article:published_time", content: post.date },
+        ...(post.image
+          ? [
+              { property: "og:image", content: post.image },
+              { name: "twitter:image", content: post.image },
+              { name: "twitter:card", content: "summary_large_image" },
+            ]
+          : []),
       ],
       links: [{ rel: "canonical", href: `/blog/${post.slug}` }],
       scripts: [
@@ -85,9 +93,19 @@ function BlogPostPage() {
           {post.title}
         </h1>
         <p className="mt-3 text-sm text-white/50">Publié le {getReadableDay(post.date)}</p>
-        <div className="my-8 grid aspect-[16/9] place-items-center rounded-2xl bg-gradient-to-br from-[color:var(--iss-surface)] to-[#0a1f4a] text-8xl">
-          <span aria-hidden>{post.cover}</span>
-        </div>
+        {post.image ? (
+          <img
+            src={post.image}
+            alt={post.title}
+            width={1280}
+            height={720}
+            className="my-8 aspect-[16/9] w-full rounded-2xl object-cover"
+          />
+        ) : (
+          <div className="my-8 grid aspect-[16/9] place-items-center rounded-2xl bg-gradient-to-br from-[color:var(--iss-surface)] to-[#0a1f4a] text-8xl">
+            <span aria-hidden>{post.cover}</span>
+          </div>
+        )}
         <div className="space-y-5 text-white/85 md:text-lg">
           {post.content.split("\n\n").map((para: string, i: number) => (
             <p key={i}>{para}</p>

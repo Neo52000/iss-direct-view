@@ -10,6 +10,7 @@ export interface BlogPostRow {
   category: string;
   cover: string;
   reading_time: number;
+  cover_image_url: string | null;
   published: boolean;
   published_at: string;
   created_at: string;
