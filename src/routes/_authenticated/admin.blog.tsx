@@ -35,6 +35,7 @@ const EMPTY: BlogPostInput = {
   reading_time: 4,
   published: true,
   published_at: new Date().toISOString(),
+  cover_image_url: null,
 };
 
 function AdminBlogPage() {
