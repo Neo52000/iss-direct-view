@@ -4,7 +4,7 @@ import { getReadableDay } from "@/lib/iss-utils";
 import { useQuery } from "@tanstack/react-query";
 import { fetchPublishedPosts, type BlogPostRow } from "@/lib/blog";
 
-export const Route = createFileRoute("/blog")({
+export const Route = createFileRoute("/blog/")({
   head: () => ({
     meta: [
       { title: "Blog ISS — Articles sur la Station Spatiale Internationale" },

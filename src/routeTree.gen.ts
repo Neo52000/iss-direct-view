@@ -17,11 +17,11 @@ import { Route as MentionsLegalesRouteImport } from './routes/mentions-legales'
 import { Route as LiveRouteImport } from './routes/live'
 import { Route as ContactRouteImport } from './routes/contact'
 import { Route as ConfidentialiteRouteImport } from './routes/confidentialite'
-import { Route as BlogRouteImport } from './routes/blog'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AProposRouteImport } from './routes/a-propos'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as BlogIndexRouteImport } from './routes/blog.index'
 import { Route as BlogSlugRouteImport } from './routes/blog.$slug'
 import { Route as AuthenticatedAdminProductsRouteImport } from './routes/_authenticated/admin.products'
 import { Route as AuthenticatedAdminBlogRouteImport } from './routes/_authenticated/admin.blog'
@@ -66,11 +66,6 @@ const ConfidentialiteRoute = ConfidentialiteRouteImport.update({
   path: '/confidentialite',
   getParentRoute: () => rootRouteImport,
 } as any)
-const BlogRoute = BlogRouteImport.update({
-  id: '/blog',
-  path: '/blog',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const AuthRoute = AuthRouteImport.update({
   id: '/auth',
   path: '/auth',
@@ -90,10 +85,15 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const BlogIndexRoute = BlogIndexRouteImport.update({
+  id: '/blog/',
+  path: '/blog/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const BlogSlugRoute = BlogSlugRouteImport.update({
-  id: '/$slug',
-  path: '/$slug',
-  getParentRoute: () => BlogRoute,
+  id: '/blog/$slug',
+  path: '/blog/$slug',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const AuthenticatedAdminProductsRoute =
   AuthenticatedAdminProductsRouteImport.update({
@@ -111,7 +111,6 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/a-propos': typeof AProposRoute
   '/auth': typeof AuthRoute
-  '/blog': typeof BlogRouteWithChildren
   '/confidentialite': typeof ConfidentialiteRoute
   '/contact': typeof ContactRoute
   '/live': typeof LiveRoute
@@ -121,6 +120,7 @@ export interface FileRoutesByFullPath {
   '/ressources': typeof RessourcesRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/blog/$slug': typeof BlogSlugRoute
+  '/blog/': typeof BlogIndexRoute
   '/admin/blog': typeof AuthenticatedAdminBlogRoute
   '/admin/products': typeof AuthenticatedAdminProductsRoute
 }
@@ -128,7 +128,6 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/a-propos': typeof AProposRoute
   '/auth': typeof AuthRoute
-  '/blog': typeof BlogRouteWithChildren
   '/confidentialite': typeof ConfidentialiteRoute
   '/contact': typeof ContactRoute
   '/live': typeof LiveRoute
@@ -138,6 +137,7 @@ export interface FileRoutesByTo {
   '/ressources': typeof RessourcesRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/blog/$slug': typeof BlogSlugRoute
+  '/blog': typeof BlogIndexRoute
   '/admin/blog': typeof AuthenticatedAdminBlogRoute
   '/admin/products': typeof AuthenticatedAdminProductsRoute
 }
@@ -147,7 +147,6 @@ export interface FileRoutesById {
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/a-propos': typeof AProposRoute
   '/auth': typeof AuthRoute
-  '/blog': typeof BlogRouteWithChildren
   '/confidentialite': typeof ConfidentialiteRoute
   '/contact': typeof ContactRoute
   '/live': typeof LiveRoute
@@ -157,6 +156,7 @@ export interface FileRoutesById {
   '/ressources': typeof RessourcesRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/blog/$slug': typeof BlogSlugRoute
+  '/blog/': typeof BlogIndexRoute
   '/_authenticated/admin/blog': typeof AuthenticatedAdminBlogRoute
   '/_authenticated/admin/products': typeof AuthenticatedAdminProductsRoute
 }
@@ -166,7 +166,6 @@ export interface FileRouteTypes {
     | '/'
     | '/a-propos'
     | '/auth'
-    | '/blog'
     | '/confidentialite'
     | '/contact'
     | '/live'
@@ -176,6 +175,7 @@ export interface FileRouteTypes {
     | '/ressources'
     | '/sitemap.xml'
     | '/blog/$slug'
+    | '/blog/'
     | '/admin/blog'
     | '/admin/products'
   fileRoutesByTo: FileRoutesByTo
@@ -183,7 +183,6 @@ export interface FileRouteTypes {
     | '/'
     | '/a-propos'
     | '/auth'
-    | '/blog'
     | '/confidentialite'
     | '/contact'
     | '/live'
@@ -193,6 +192,7 @@ export interface FileRouteTypes {
     | '/ressources'
     | '/sitemap.xml'
     | '/blog/$slug'
+    | '/blog'
     | '/admin/blog'
     | '/admin/products'
   id:
@@ -201,7 +201,6 @@ export interface FileRouteTypes {
     | '/_authenticated'
     | '/a-propos'
     | '/auth'
-    | '/blog'
     | '/confidentialite'
     | '/contact'
     | '/live'
@@ -211,6 +210,7 @@ export interface FileRouteTypes {
     | '/ressources'
     | '/sitemap.xml'
     | '/blog/$slug'
+    | '/blog/'
     | '/_authenticated/admin/blog'
     | '/_authenticated/admin/products'
   fileRoutesById: FileRoutesById
@@ -220,7 +220,6 @@ export interface RootRouteChildren {
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   AProposRoute: typeof AProposRoute
   AuthRoute: typeof AuthRoute
-  BlogRoute: typeof BlogRouteWithChildren
   ConfidentialiteRoute: typeof ConfidentialiteRoute
   ContactRoute: typeof ContactRoute
   LiveRoute: typeof LiveRoute
@@ -229,6 +228,8 @@ export interface RootRouteChildren {
   PositionRoute: typeof PositionRoute
   RessourcesRoute: typeof RessourcesRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
+  BlogSlugRoute: typeof BlogSlugRoute
+  BlogIndexRoute: typeof BlogIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -289,13 +290,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ConfidentialiteRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/blog': {
-      id: '/blog'
-      path: '/blog'
-      fullPath: '/blog'
-      preLoaderRoute: typeof BlogRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/auth': {
       id: '/auth'
       path: '/auth'
@@ -324,12 +318,19 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/blog/': {
+      id: '/blog/'
+      path: '/blog'
+      fullPath: '/blog/'
+      preLoaderRoute: typeof BlogIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/blog/$slug': {
       id: '/blog/$slug'
-      path: '/$slug'
+      path: '/blog/$slug'
       fullPath: '/blog/$slug'
       preLoaderRoute: typeof BlogSlugRouteImport
-      parentRoute: typeof BlogRoute
+      parentRoute: typeof rootRouteImport
     }
     '/_authenticated/admin/products': {
       id: '/_authenticated/admin/products'
@@ -361,22 +362,11 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
 const AuthenticatedRouteRouteWithChildren =
   AuthenticatedRouteRoute._addFileChildren(AuthenticatedRouteRouteChildren)
 
-interface BlogRouteChildren {
-  BlogSlugRoute: typeof BlogSlugRoute
-}
-
-const BlogRouteChildren: BlogRouteChildren = {
-  BlogSlugRoute: BlogSlugRoute,
-}
-
-const BlogRouteWithChildren = BlogRoute._addFileChildren(BlogRouteChildren)
-
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   AProposRoute: AProposRoute,
   AuthRoute: AuthRoute,
-  BlogRoute: BlogRouteWithChildren,
   ConfidentialiteRoute: ConfidentialiteRoute,
   ContactRoute: ContactRoute,
   LiveRoute: LiveRoute,
@@ -385,17 +375,9 @@ const rootRouteChildren: RootRouteChildren = {
   PositionRoute: PositionRoute,
   RessourcesRoute: RessourcesRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
+  BlogSlugRoute: BlogSlugRoute,
+  BlogIndexRoute: BlogIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
