@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
+import { Route as RssDotxmlRouteImport } from './routes/rss[.]xml'
 import { Route as RessourcesRouteImport } from './routes/ressources'
 import { Route as PositionRouteImport } from './routes/position'
 import { Route as PassagesRouteImport } from './routes/passages'
@@ -29,6 +30,11 @@ import { Route as AuthenticatedAdminBlogRouteImport } from './routes/_authentica
 const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
   id: '/sitemap.xml',
   path: '/sitemap.xml',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RssDotxmlRoute = RssDotxmlRouteImport.update({
+  id: '/rss.xml',
+  path: '/rss.xml',
   getParentRoute: () => rootRouteImport,
 } as any)
 const RessourcesRoute = RessourcesRouteImport.update({
@@ -118,6 +124,7 @@ export interface FileRoutesByFullPath {
   '/passages': typeof PassagesRoute
   '/position': typeof PositionRoute
   '/ressources': typeof RessourcesRoute
+  '/rss.xml': typeof RssDotxmlRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/blog/': typeof BlogIndexRoute
@@ -135,6 +142,7 @@ export interface FileRoutesByTo {
   '/passages': typeof PassagesRoute
   '/position': typeof PositionRoute
   '/ressources': typeof RessourcesRoute
+  '/rss.xml': typeof RssDotxmlRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/blog': typeof BlogIndexRoute
@@ -154,6 +162,7 @@ export interface FileRoutesById {
   '/passages': typeof PassagesRoute
   '/position': typeof PositionRoute
   '/ressources': typeof RessourcesRoute
+  '/rss.xml': typeof RssDotxmlRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/blog/': typeof BlogIndexRoute
@@ -173,6 +182,7 @@ export interface FileRouteTypes {
     | '/passages'
     | '/position'
     | '/ressources'
+    | '/rss.xml'
     | '/sitemap.xml'
     | '/blog/$slug'
     | '/blog/'
@@ -190,6 +200,7 @@ export interface FileRouteTypes {
     | '/passages'
     | '/position'
     | '/ressources'
+    | '/rss.xml'
     | '/sitemap.xml'
     | '/blog/$slug'
     | '/blog'
@@ -208,6 +219,7 @@ export interface FileRouteTypes {
     | '/passages'
     | '/position'
     | '/ressources'
+    | '/rss.xml'
     | '/sitemap.xml'
     | '/blog/$slug'
     | '/blog/'
@@ -227,6 +239,7 @@ export interface RootRouteChildren {
   PassagesRoute: typeof PassagesRoute
   PositionRoute: typeof PositionRoute
   RessourcesRoute: typeof RessourcesRoute
+  RssDotxmlRoute: typeof RssDotxmlRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   BlogSlugRoute: typeof BlogSlugRoute
   BlogIndexRoute: typeof BlogIndexRoute
@@ -239,6 +252,13 @@ declare module '@tanstack/react-router' {
       path: '/sitemap.xml'
       fullPath: '/sitemap.xml'
       preLoaderRoute: typeof SitemapDotxmlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/rss.xml': {
+      id: '/rss.xml'
+      path: '/rss.xml'
+      fullPath: '/rss.xml'
+      preLoaderRoute: typeof RssDotxmlRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/ressources': {
@@ -374,6 +394,7 @@ const rootRouteChildren: RootRouteChildren = {
   PassagesRoute: PassagesRoute,
   PositionRoute: PositionRoute,
   RessourcesRoute: RessourcesRoute,
+  RssDotxmlRoute: RssDotxmlRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   BlogSlugRoute: BlogSlugRoute,
   BlogIndexRoute: BlogIndexRoute,
