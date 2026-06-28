@@ -34,6 +34,14 @@ function BlogIndex() {
       <p className="mt-3 max-w-2xl text-white/70">
         Tout pour comprendre l'ISS, l'observer et la faire découvrir aux enfants.
       </p>
+      <a
+        href="/rss.xml"
+        className="mt-4 inline-flex items-center gap-2 rounded-full border border-[color:var(--iss-cyan)]/40 bg-[color:var(--iss-cyan)]/10 px-4 py-2 text-sm font-semibold text-[color:var(--iss-cyan)] transition hover:bg-[color:var(--iss-cyan)]/20"
+          target="_blank"
+        rel="noopener"
+      >
+        <span aria-hidden>📡</span> S'abonner au flux RSS
+      </a>
       <div className="mt-10 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
         {merged.map((p) => (
           <article key={p.slug} className="iss-card flex flex-col overflow-hidden">
