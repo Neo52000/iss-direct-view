@@ -37,9 +37,20 @@ function BlogIndex() {
       <div className="mt-10 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
         {merged.map((p) => (
           <article key={p.slug} className="iss-card flex flex-col overflow-hidden">
-            <div className="grid aspect-[16/10] place-items-center bg-gradient-to-br from-[color:var(--iss-surface)] to-[#0a1f4a] text-6xl">
-              <span aria-hidden>{p.cover}</span>
-            </div>
+            {p.image ? (
+              <img
+                src={p.image}
+                alt={p.title}
+                loading="lazy"
+                width={1024}
+                height={640}
+                className="aspect-[16/10] w-full object-cover"
+              />
+            ) : (
+              <div className="grid aspect-[16/10] place-items-center bg-gradient-to-br from-[color:var(--iss-surface)] to-[#0a1f4a] text-6xl">
+                <span aria-hidden>{p.cover}</span>
+              </div>
+            )}
             <div className="flex flex-1 flex-col p-5">
               <span className="text-[11px] font-semibold uppercase tracking-wider text-[color:var(--iss-cyan)]">
                 {p.category} · {p.readingTime} min
@@ -72,6 +83,7 @@ type CardPost = {
   cover: string;
   date: string;
   readingTime: number;
+  image?: string | null;
 };
 
 function mergePosts(dbPosts: BlogPostRow[]): CardPost[] {
@@ -83,6 +95,7 @@ function mergePosts(dbPosts: BlogPostRow[]): CardPost[] {
     cover: p.cover,
     date: p.published_at,
     readingTime: p.reading_time,
+    image: p.cover_image_url,
   }));
   const seen = new Set(fromDb.map((p) => p.slug));
   const fromStatic: CardPost[] = blogPosts
