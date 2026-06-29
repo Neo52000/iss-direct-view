@@ -1,9 +1,51 @@
 import { Link } from "@tanstack/react-router";
 import { blogPosts } from "@/data/blogPosts";
 import { getReadableDay } from "@/lib/iss-utils";
+import { useQuery } from "@tanstack/react-query";
+import { fetchPublishedPosts } from "@/lib/blog";
+
+const STATIC_IMAGES: Record<string, string> = {
+  "voir-iss-oeil-nu-france": "/blog/iss-trail-france.jpg",
+  "pourquoi-live-iss-noir": "/blog/iss-live-night.jpg",
+  "altitude-iss": "/blog/iss-night-orbit.jpg",
+  "iss-tours-terre-par-jour": "/blog/earth-orbit-sunrise.jpg",
+  "vitesse-iss": "/blog/iss-night-orbit.jpg",
+  "photographier-iss-smartphone": "/blog/observation-telescope.jpg",
+  "activite-espace-a-imprimer": "/blog/kids-tracking-iss.jpg",
+  "expliquer-iss-primaire": "/blog/kids-tracking-iss.jpg",
+};
 
 export function BlogPreview({ count = 3 }: { count?: number }) {
-  const posts = blogPosts.slice(0, count);
+  const { data: dbPosts = [] } = useQuery({
+    queryKey: ["blog", "published"],
+    queryFn: fetchPublishedPosts,
+  });
+  const fromDb = dbPosts.map((p) => ({
+    slug: p.slug,
+    title: p.title,
+    excerpt: p.excerpt ?? "",
+    category: p.category,
+    cover: p.cover,
+    date: p.published_at,
+    readingTime: p.reading_time,
+    image: p.cover_image_url ?? STATIC_IMAGES[p.slug] ?? null,
+  }));
+  const seen = new Set(fromDb.map((p) => p.slug));
+  const fromStatic = blogPosts
+    .filter((p) => !seen.has(p.slug))
+    .map((p) => ({
+      slug: p.slug,
+      title: p.title,
+      excerpt: p.excerpt,
+      category: p.category,
+      cover: p.cover,
+      date: p.date,
+      readingTime: p.readingTime,
+      image: STATIC_IMAGES[p.slug] ?? null,
+    }));
+  const posts = [...fromDb, ...fromStatic]
+    .sort((a, b) => (a.date < b.date ? 1 : -1))
+    .slice(0, count);
   return (
     <section className="mx-auto max-w-7xl px-4 py-16 md:px-6">
       <div className="flex flex-wrap items-end justify-between gap-3">
@@ -23,9 +65,20 @@ export function BlogPreview({ count = 3 }: { count?: number }) {
       <div className="mt-8 grid gap-5 md:grid-cols-3">
         {posts.map((p) => (
           <article key={p.slug} className="iss-card flex flex-col overflow-hidden">
-            <div className="grid aspect-[16/10] place-items-center bg-gradient-to-br from-[color:var(--iss-surface)] to-[#0a1f4a] text-6xl">
-              <span aria-hidden>{p.cover}</span>
-            </div>
+            {p.image ? (
+              <img
+                src={p.image}
+                alt={p.title}
+                loading="lazy"
+                width={1024}
+                height={640}
+                className="aspect-[16/10] w-full object-cover"
+              />
+            ) : (
+              <div className="grid aspect-[16/10] place-items-center bg-gradient-to-br from-[color:var(--iss-surface)] to-[#0a1f4a] text-6xl">
+                <span aria-hidden>{p.cover}</span>
+              </div>
+            )}
             <div className="flex flex-1 flex-col p-5">
               <span className="text-[11px] font-semibold uppercase tracking-wider text-[color:var(--iss-cyan)]">
                 {p.category} · {p.readingTime} min
