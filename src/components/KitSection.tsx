@@ -1,6 +1,15 @@
 import { Download, GraduationCap } from "lucide-react";
+import { useEffect, useState } from "react";
+import { fetchSetting, SETTING_KEYS } from "@/lib/settings";
 
 export function KitSection() {
+  const [url, setUrl] = useState<string>("/ressources");
+  useEffect(() => {
+    fetchSetting(SETTING_KEYS.kitDownloadUrl)
+      .then((v) => v && setUrl(v))
+      .catch(() => {});
+  }, []);
+  const isExternal = /^https?:\/\//i.test(url);
   return (
     <section className="mx-auto max-w-7xl px-4 py-12 md:px-6">
       <div className="overflow-hidden rounded-3xl bg-gradient-to-br from-[#FFB020] to-[#FF8A00] p-8 text-[#2a1a00] md:p-12">
@@ -18,7 +27,9 @@ export function KitSection() {
             </p>
             <div className="mt-5 flex flex-wrap gap-3">
               <a
-                href="/ressources"
+                href={url}
+                target={isExternal ? "_blank" : undefined}
+                rel={isExternal ? "noopener noreferrer" : undefined}
                 className="inline-flex items-center gap-2 rounded-full bg-[#0b1530] px-5 py-3 text-sm font-semibold text-white hover:bg-black"
               >
                 <Download className="h-4 w-4" /> Télécharger gratuitement
