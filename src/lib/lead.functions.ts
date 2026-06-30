@@ -12,7 +12,9 @@ export const sendLeadConfirmation = createServerFn({ method: "POST" })
     const apiKey = process.env.BREVO_API_KEY;
     if (!apiKey) return { sent: false, reason: "BREVO_API_KEY non configurée" };
 
-    const cityLine = data.city ? ` depuis ${data.city}` : "";
+    const escapeHtml = (s: string) =>
+      s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#x27;");
+    const cityLine = data.city ? ` depuis ${escapeHtml(data.city)}` : "";
 
     const res = await fetch("https://api.brevo.com/v3/smtp/email", {
       method: "POST",

@@ -14,7 +14,7 @@ CREATE POLICY "Anyone can insert leads" ON public.leads
 
 -- Seuls les admins peuvent lire la liste des leads
 CREATE POLICY "Admins can read leads" ON public.leads
-  FOR SELECT USING (has_role(auth.uid(), 'admin'::app_role));
+  FOR SELECT USING (has_role('admin'::app_role, auth.uid()));
 
 GRANT INSERT ON public.leads TO anon, authenticated;
 GRANT SELECT ON public.leads TO authenticated;

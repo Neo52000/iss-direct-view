@@ -13,7 +13,8 @@ export async function submitLead(email: string, city?: string, consent = true): 
   const lead: Lead = { email, city, consent, createdAt: new Date().toISOString() };
 
   try {
-    await supabase.from("leads").insert({ email, city: city || null, consent });
+    const { error } = await supabase.from("leads").insert({ email, city: city || null, consent });
+    if (error) throw error;
   } catch {
     // Fallback localStorage si Supabase indisponible
     try {

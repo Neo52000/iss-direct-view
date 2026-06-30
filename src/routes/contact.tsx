@@ -59,6 +59,7 @@ function ContactPage() {
         >
           <input
             required
+            maxLength={100}
             value={name}
             onChange={(e) => setName(e.target.value)}
             placeholder="Votre nom"
@@ -74,6 +75,8 @@ function ContactPage() {
           />
           <textarea
             required
+            minLength={10}
+            maxLength={5000}
             rows={5}
             value={message}
             onChange={(e) => setMessage(e.target.value)}

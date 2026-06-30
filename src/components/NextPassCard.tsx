@@ -24,19 +24,22 @@ export function NextPassCard() {
     }
     navigator.geolocation.getCurrentPosition(
       async (pos) => {
-        const { latitude: lat, longitude: lon } = pos.coords;
-        const result = await getVisiblePasses(lat, lon);
-        if (!result.configured) {
-          setState({ status: "nokey" });
-          return;
+        try {
+          const { latitude: lat, longitude: lon } = pos.coords;
+          const result = await getVisiblePasses(lat, lon);
+          if (!result.configured) {
+            setState({ status: "nokey" });
+            return;
+          }
+          if ("error" in result || !result.passes.length) {
+            setState({ status: "error", message: "error" in result ? result.error : "Aucun passage trouvé" });
+            return;
+          }
+          const label = `${lat.toFixed(1)}°N, ${Math.abs(lon).toFixed(1)}°${lon >= 0 ? "E" : "O"}`;
+          setState({ status: "ok", pass: result.passes[0], label });
+        } catch (err) {
+          setState({ status: "error", message: err instanceof Error ? err.message : "Erreur réseau" });
         }
-        if ("error" in result || !result.passes.length) {
-          setState({ status: "error", message: "error" in result ? result.error : "Aucun passage trouvé" });
-          return;
-        }
-        // Reverse-geocode approximatif : utiliser les coordonnées comme label
-        const label = `${lat.toFixed(1)}°N, ${Math.abs(lon).toFixed(1)}°${lon >= 0 ? "E" : "O"}`;
-        setState({ status: "ok", pass: result.passes[0], label });
       },
       () => setState({ status: "nolocation" }),
       { timeout: 8000 },
