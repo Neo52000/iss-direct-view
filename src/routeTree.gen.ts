@@ -23,6 +23,12 @@ import { Route as AProposRouteImport } from './routes/a-propos'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as BlogIndexRouteImport } from './routes/blog.index'
+import { Route as PrintQuizRouteImport } from './routes/print/quiz'
+import { Route as PrintPosterRouteImport } from './routes/print/poster'
+import { Route as PrintGlossaireRouteImport } from './routes/print/glossaire'
+import { Route as PrintFichesRouteImport } from './routes/print/fiches'
+import { Route as PrintColoriagesRouteImport } from './routes/print/coloriages'
+import { Route as PrintCartesRouteImport } from './routes/print/cartes'
 import { Route as BlogSlugRouteImport } from './routes/blog.$slug'
 import { Route as AuthenticatedAdminSettingsRouteImport } from './routes/_authenticated/admin.settings'
 import { Route as AuthenticatedAdminProductsRouteImport } from './routes/_authenticated/admin.products'
@@ -97,6 +103,36 @@ const BlogIndexRoute = BlogIndexRouteImport.update({
   path: '/blog/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PrintQuizRoute = PrintQuizRouteImport.update({
+  id: '/print/quiz',
+  path: '/print/quiz',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PrintPosterRoute = PrintPosterRouteImport.update({
+  id: '/print/poster',
+  path: '/print/poster',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PrintGlossaireRoute = PrintGlossaireRouteImport.update({
+  id: '/print/glossaire',
+  path: '/print/glossaire',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PrintFichesRoute = PrintFichesRouteImport.update({
+  id: '/print/fiches',
+  path: '/print/fiches',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PrintColoriagesRoute = PrintColoriagesRouteImport.update({
+  id: '/print/coloriages',
+  path: '/print/coloriages',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PrintCartesRoute = PrintCartesRouteImport.update({
+  id: '/print/cartes',
+  path: '/print/cartes',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const BlogSlugRoute = BlogSlugRouteImport.update({
   id: '/blog/$slug',
   path: '/blog/$slug',
@@ -134,6 +170,12 @@ export interface FileRoutesByFullPath {
   '/rss.xml': typeof RssDotxmlRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/blog/$slug': typeof BlogSlugRoute
+  '/print/cartes': typeof PrintCartesRoute
+  '/print/coloriages': typeof PrintColoriagesRoute
+  '/print/fiches': typeof PrintFichesRoute
+  '/print/glossaire': typeof PrintGlossaireRoute
+  '/print/poster': typeof PrintPosterRoute
+  '/print/quiz': typeof PrintQuizRoute
   '/blog/': typeof BlogIndexRoute
   '/admin/blog': typeof AuthenticatedAdminBlogRoute
   '/admin/products': typeof AuthenticatedAdminProductsRoute
@@ -153,6 +195,12 @@ export interface FileRoutesByTo {
   '/rss.xml': typeof RssDotxmlRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/blog/$slug': typeof BlogSlugRoute
+  '/print/cartes': typeof PrintCartesRoute
+  '/print/coloriages': typeof PrintColoriagesRoute
+  '/print/fiches': typeof PrintFichesRoute
+  '/print/glossaire': typeof PrintGlossaireRoute
+  '/print/poster': typeof PrintPosterRoute
+  '/print/quiz': typeof PrintQuizRoute
   '/blog': typeof BlogIndexRoute
   '/admin/blog': typeof AuthenticatedAdminBlogRoute
   '/admin/products': typeof AuthenticatedAdminProductsRoute
@@ -174,6 +222,12 @@ export interface FileRoutesById {
   '/rss.xml': typeof RssDotxmlRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/blog/$slug': typeof BlogSlugRoute
+  '/print/cartes': typeof PrintCartesRoute
+  '/print/coloriages': typeof PrintColoriagesRoute
+  '/print/fiches': typeof PrintFichesRoute
+  '/print/glossaire': typeof PrintGlossaireRoute
+  '/print/poster': typeof PrintPosterRoute
+  '/print/quiz': typeof PrintQuizRoute
   '/blog/': typeof BlogIndexRoute
   '/_authenticated/admin/blog': typeof AuthenticatedAdminBlogRoute
   '/_authenticated/admin/products': typeof AuthenticatedAdminProductsRoute
@@ -195,6 +249,12 @@ export interface FileRouteTypes {
     | '/rss.xml'
     | '/sitemap.xml'
     | '/blog/$slug'
+    | '/print/cartes'
+    | '/print/coloriages'
+    | '/print/fiches'
+    | '/print/glossaire'
+    | '/print/poster'
+    | '/print/quiz'
     | '/blog/'
     | '/admin/blog'
     | '/admin/products'
@@ -214,6 +274,12 @@ export interface FileRouteTypes {
     | '/rss.xml'
     | '/sitemap.xml'
     | '/blog/$slug'
+    | '/print/cartes'
+    | '/print/coloriages'
+    | '/print/fiches'
+    | '/print/glossaire'
+    | '/print/poster'
+    | '/print/quiz'
     | '/blog'
     | '/admin/blog'
     | '/admin/products'
@@ -234,6 +300,12 @@ export interface FileRouteTypes {
     | '/rss.xml'
     | '/sitemap.xml'
     | '/blog/$slug'
+    | '/print/cartes'
+    | '/print/coloriages'
+    | '/print/fiches'
+    | '/print/glossaire'
+    | '/print/poster'
+    | '/print/quiz'
     | '/blog/'
     | '/_authenticated/admin/blog'
     | '/_authenticated/admin/products'
@@ -255,6 +327,12 @@ export interface RootRouteChildren {
   RssDotxmlRoute: typeof RssDotxmlRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   BlogSlugRoute: typeof BlogSlugRoute
+  PrintCartesRoute: typeof PrintCartesRoute
+  PrintColoriagesRoute: typeof PrintColoriagesRoute
+  PrintFichesRoute: typeof PrintFichesRoute
+  PrintGlossaireRoute: typeof PrintGlossaireRoute
+  PrintPosterRoute: typeof PrintPosterRoute
+  PrintQuizRoute: typeof PrintQuizRoute
   BlogIndexRoute: typeof BlogIndexRoute
 }
 
@@ -358,6 +436,48 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BlogIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/print/quiz': {
+      id: '/print/quiz'
+      path: '/print/quiz'
+      fullPath: '/print/quiz'
+      preLoaderRoute: typeof PrintQuizRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/print/poster': {
+      id: '/print/poster'
+      path: '/print/poster'
+      fullPath: '/print/poster'
+      preLoaderRoute: typeof PrintPosterRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/print/glossaire': {
+      id: '/print/glossaire'
+      path: '/print/glossaire'
+      fullPath: '/print/glossaire'
+      preLoaderRoute: typeof PrintGlossaireRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/print/fiches': {
+      id: '/print/fiches'
+      path: '/print/fiches'
+      fullPath: '/print/fiches'
+      preLoaderRoute: typeof PrintFichesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/print/coloriages': {
+      id: '/print/coloriages'
+      path: '/print/coloriages'
+      fullPath: '/print/coloriages'
+      preLoaderRoute: typeof PrintColoriagesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/print/cartes': {
+      id: '/print/cartes'
+      path: '/print/cartes'
+      fullPath: '/print/cartes'
+      preLoaderRoute: typeof PrintCartesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/blog/$slug': {
       id: '/blog/$slug'
       path: '/blog/$slug'
@@ -419,6 +539,12 @@ const rootRouteChildren: RootRouteChildren = {
   RssDotxmlRoute: RssDotxmlRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   BlogSlugRoute: BlogSlugRoute,
+  PrintCartesRoute: PrintCartesRoute,
+  PrintColoriagesRoute: PrintColoriagesRoute,
+  PrintFichesRoute: PrintFichesRoute,
+  PrintGlossaireRoute: PrintGlossaireRoute,
+  PrintPosterRoute: PrintPosterRoute,
+  PrintQuizRoute: PrintQuizRoute,
   BlogIndexRoute: BlogIndexRoute,
 }
 export const routeTree = rootRouteImport
