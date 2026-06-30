@@ -112,8 +112,12 @@ Deno.serve(async () => {
   <p style="font-size:12px;color:#aaa">Vous recevez cet email car vous êtes inscrit sur <a href="https://iss-direct-france.fr">iss-direct-france.fr</a>.</p>
 </div>`;
 
-    await sendEmail(lead.email, `🛰️ ISS visible depuis ${lead.city} ce soir`, html);
-    sent++;
+    try {
+      await sendEmail(lead.email, `🛰️ ISS visible depuis ${lead.city} ce soir`, html);
+      sent++;
+    } catch (err) {
+      console.error(`Failed to send alert to ${lead.email}:`, err);
+    }
   }
 
   return new Response(`Sent ${sent} alerts`, { status: 200 });
