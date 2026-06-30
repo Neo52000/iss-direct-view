@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Download, Printer } from "lucide-react";
 import { KitSection } from "@/components/KitSection";
+import { BackToTop } from "@/components/BackToTop";
 
 export const Route = createFileRoute("/ressources")({
   head: () => ({
@@ -240,6 +241,7 @@ function ResourcesPage() {
         </p>
       </section>
       <KitSection />
+      <BackToTop />
     </>
   );
 }

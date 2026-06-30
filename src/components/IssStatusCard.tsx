@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { Globe2, ArrowRight } from "lucide-react";
+import { Globe2, ArrowRight, Eye, EclipseIcon, Sun } from "lucide-react";
 import { useIssPosition } from "@/services/issApi";
 import {
   formatAltitude,
@@ -7,6 +7,26 @@ import {
   formatSpeed,
   getReadableDate,
 } from "@/lib/iss-utils";
+
+function VisibilityBadge({ visibility }: { visibility: string }) {
+  if (visibility === "visible")
+    return (
+      <span className="inline-flex items-center gap-1.5 rounded-full bg-[color:var(--iss-ok)]/15 px-2.5 py-1 text-xs font-semibold text-[color:var(--iss-ok)]">
+        <Eye className="h-3 w-3" /> Visible à l'œil nu
+      </span>
+    );
+  if (visibility === "eclipsed")
+    return (
+      <span className="inline-flex items-center gap-1.5 rounded-full bg-orange-500/15 px-2.5 py-1 text-xs font-semibold text-orange-300">
+        <EclipseIcon className="h-3 w-3" /> En éclipse
+      </span>
+    );
+  return (
+    <span className="inline-flex items-center gap-1.5 rounded-full bg-white/10 px-2.5 py-1 text-xs font-semibold text-white/60">
+      <Sun className="h-3 w-3" /> Plein jour
+    </span>
+  );
+}
 
 export function IssStatusCard() {
   const { position, error, loading } = useIssPosition();
@@ -34,7 +54,10 @@ export function IssStatusCard() {
         <p className="mt-4 text-sm text-white/70">{error}</p>
       ) : position ? (
         <>
-          <dl className="mt-4 grid grid-cols-2 gap-3 text-sm">
+          <div className="mt-3">
+            <VisibilityBadge visibility={position.visibility} />
+          </div>
+          <dl className="mt-3 grid grid-cols-2 gap-3 text-sm">
             <Stat label="Altitude" value={formatAltitude(position.altitude)} />
             <Stat label="Vitesse" value={formatSpeed(position.velocity)} />
             <Stat

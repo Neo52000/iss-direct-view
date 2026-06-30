@@ -23,8 +23,15 @@ export async function fetchIssPosition(signal?: AbortSignal): Promise<IssPositio
   };
 }
 
+export interface IssHistoryPoint {
+  t: number; // unix ms
+  altitude: number;
+  velocity: number;
+}
+
 export function useIssPosition(intervalMs = 7000) {
   const [position, setPosition] = useState<IssPosition | null>(null);
+  const [history, setHistory] = useState<IssHistoryPoint[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const lastErrorRef = useRef(0);
@@ -38,6 +45,9 @@ export function useIssPosition(intervalMs = 7000) {
         const p = await fetchIssPosition(ctrl.signal);
         if (cancelled) return;
         setPosition(p);
+        setHistory((prev) =>
+          [...prev, { t: p.timestamp * 1000, altitude: p.altitude, velocity: p.velocity }].slice(-60),
+        );
         setError(null);
         setLoading(false);
       } catch (e) {
@@ -57,5 +67,5 @@ export function useIssPosition(intervalMs = 7000) {
     };
   }, [intervalMs]);
 
-  return { position, error, loading };
+  return { position, history, error, loading };
 }

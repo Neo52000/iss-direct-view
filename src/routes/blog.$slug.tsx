@@ -3,6 +3,7 @@ import { blogPosts, getPost } from "@/data/blogPosts";
 import { getReadableDay } from "@/lib/iss-utils";
 import { EmailCapture } from "@/components/EmailCapture";
 import { fetchPostBySlug } from "@/lib/blog";
+import { BackToTop } from "@/components/BackToTop";
 
 export const Route = createFileRoute("/blog/$slug")({
   loader: async ({ params }) => {
@@ -132,6 +133,7 @@ function BlogPostPage() {
       </section>
 
       <EmailCapture />
+      <BackToTop />
     </>
   );
 }

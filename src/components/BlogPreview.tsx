@@ -3,6 +3,7 @@ import { blogPosts } from "@/data/blogPosts";
 import { getReadableDay } from "@/lib/iss-utils";
 import { useQuery } from "@tanstack/react-query";
 import { fetchPublishedPosts } from "@/lib/blog";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const STATIC_IMAGES: Record<string, string> = {
   "voir-iss-oeil-nu-france": "/blog/iss-trail-france.jpg",
@@ -16,7 +17,7 @@ const STATIC_IMAGES: Record<string, string> = {
 };
 
 export function BlogPreview({ count = 3 }: { count?: number }) {
-  const { data: dbPosts = [] } = useQuery({
+  const { data: dbPosts = [], isLoading } = useQuery({
     queryKey: ["blog", "published"],
     queryFn: fetchPublishedPosts,
   });
@@ -63,7 +64,19 @@ export function BlogPreview({ count = 3 }: { count?: number }) {
         </Link>
       </div>
       <div className="mt-8 grid gap-5 md:grid-cols-3">
-        {posts.map((p) => (
+        {isLoading && dbPosts.length === 0
+          ? Array.from({ length: count }).map((_, i) => (
+              <div key={i} className="iss-card flex flex-col overflow-hidden">
+                <Skeleton className="aspect-[16/10] w-full rounded-none" />
+                <div className="flex flex-1 flex-col gap-3 p-5">
+                  <Skeleton className="h-3 w-24" />
+                  <Skeleton className="h-5 w-full" />
+                  <Skeleton className="h-4 w-3/4" />
+                  <Skeleton className="mt-2 h-4 w-1/3" />
+                </div>
+              </div>
+            ))
+          : posts.map((p) => (
           <article key={p.slug} className="iss-card flex flex-col overflow-hidden">
             {p.image ? (
               <img
@@ -99,6 +112,7 @@ export function BlogPreview({ count = 3 }: { count?: number }) {
           </article>
         ))}
       </div>
+
     </section>
   );
 }

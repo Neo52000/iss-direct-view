@@ -110,6 +110,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         title: "ISS Direct France — Blog",
         href: "/rss.xml",
       },
+      { rel: "manifest", href: "/manifest.json" },
     ],
     scripts: [
       {
