@@ -50,7 +50,7 @@ function formatDate(unix: number, tz = "Europe/Paris") {
 }
 
 async function sendEmail(to: string, subject: string, html: string) {
-  await fetch("https://api.brevo.com/v3/smtp/email", {
+  const res = await fetch("https://api.brevo.com/v3/smtp/email", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -63,6 +63,10 @@ async function sendEmail(to: string, subject: string, html: string) {
       htmlContent: html,
     }),
   });
+  if (!res.ok) {
+    const errText = await res.text();
+    throw new Error(`Brevo API error: ${res.status} - ${errText}`);
+  }
 }
 
 Deno.serve(async () => {
