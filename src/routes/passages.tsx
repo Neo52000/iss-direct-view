@@ -1,8 +1,9 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
-import { LocateFixed, MapPin } from "lucide-react";
+import { LocateFixed, MapPin, Loader2 } from "lucide-react";
 import { getVisiblePasses, type VisiblePass } from "@/services/passesApi";
 import { generateCalendarEvent, getReadableDate } from "@/lib/iss-utils";
+import { geocodeCity } from "@/lib/geocoding.functions";
 
 export const Route = createFileRoute("/passages")({
   head: () => ({
@@ -26,6 +27,7 @@ function PassesPage() {
   const [coords, setCoords] = useState<{ lat: number; lon: number; label: string } | null>(null);
   const [manual, setManual] = useState("");
   const [loading, setLoading] = useState(false);
+  const [geocoding, setGeocoding] = useState(false);
   const [result, setResult] = useState<
     | { configured: false }
     | { configured: true; passes: VisiblePass[]; error?: string }
@@ -52,20 +54,34 @@ function PassesPage() {
     );
   };
 
-  const submitManual = (e: React.FormEvent) => {
+  const submitManual = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!manual.trim()) return;
+
+    // Coordonnées directes (ex: "48.85, 2.35")
     const m = manual.match(/(-?\d+(?:\.\d+)?)\s*,\s*(-?\d+(?:\.\d+)?)/);
     if (m) {
       const lat = parseFloat(m[1]);
       const lon = parseFloat(m[2]);
       setCoords({ lat, lon, label: manual });
       fetchPasses(lat, lon);
-    } else {
-      // V1 : faute de géocodage, on tombe sur Paris par défaut + message
-      const lat = 48.8566;
-      const lon = 2.3522;
-      setCoords({ lat, lon, label: `${manual} (approx. Paris)` });
-      fetchPasses(lat, lon);
+      return;
+    }
+
+    // Géocodage via Nominatim
+    setGeocoding(true);
+    try {
+      const result = await geocodeCity({ data: { query: manual.trim() } });
+      if (result) {
+        setCoords({ lat: result.lat, lon: result.lon, label: result.label });
+        fetchPasses(result.lat, result.lon);
+      } else {
+        alert(`Ville introuvable : "${manual}". Essayez d'entrer les coordonnées directement (ex: 48.85, 2.35).`);
+      }
+    } catch {
+      alert("Erreur de géocodage. Vérifiez votre connexion ou entrez des coordonnées.");
+    } finally {
+      setGeocoding(false);
     }
   };
 
@@ -94,8 +110,12 @@ function PassesPage() {
               placeholder="Ville ou coordonnées (ex. 48.85, 2.35)"
               className="rounded-full border border-white/15 bg-white/5 px-4 py-2.5 text-sm outline-none focus:border-[color:var(--iss-blue)]"
             />
-            <button className="rounded-full border border-white/15 bg-white/[0.04] px-4 py-2.5 text-sm font-semibold hover:bg-white/10">
-              Rechercher
+            <button
+              disabled={geocoding || loading}
+              className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/[0.04] px-4 py-2.5 text-sm font-semibold hover:bg-white/10 disabled:opacity-60"
+            >
+              {geocoding ? <Loader2 className="h-4 w-4 animate-spin" /> : null}
+              {geocoding ? "Recherche…" : "Rechercher"}
             </button>
           </form>
         </div>

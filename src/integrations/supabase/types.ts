@@ -14,6 +14,30 @@ export type Database = {
   }
   public: {
     Tables: {
+      leads: {
+        Row: {
+          id: string
+          email: string
+          city: string | null
+          consent: boolean
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          email: string
+          city?: string | null
+          consent?: boolean
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          email?: string
+          city?: string | null
+          consent?: boolean
+          created_at?: string
+        }
+        Relationships: []
+      }
       blog_posts: {
         Row: {
           category: string
