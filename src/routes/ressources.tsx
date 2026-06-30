@@ -121,12 +121,12 @@ function GlobeStarsIcon() {
 function PlanetIcon() {
   return (
     <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" className="h-full w-full">
+      {/* Back ring (behind planet) */}
+      <path d="M 4 26 A 20 6 0 0 1 44 26" stroke="white" strokeWidth="2" fill="none" strokeOpacity="0.8"/>
       {/* Planet body */}
       <circle cx="24" cy="26" r="12" fill="white" fillOpacity="0.15" stroke="white" strokeWidth="2"/>
-      {/* Ring */}
-      <ellipse cx="24" cy="26" rx="20" ry="6" stroke="white" strokeWidth="2" fill="none" strokeOpacity="0.8"/>
-      {/* Ring hidden part (behind planet) */}
-      <ellipse cx="24" cy="26" rx="20" ry="6" stroke="#1e293b" strokeWidth="2.5" fill="none" strokeDasharray="17 26" strokeDashoffset="-3"/>
+      {/* Front ring (in front of planet) */}
+      <path d="M 4 26 A 20 6 0 0 0 44 26" stroke="white" strokeWidth="2" fill="none" strokeOpacity="0.8"/>
       {/* Surface bands */}
       <path d="M13 23 Q24 21 35 23" stroke="white" strokeWidth="1" strokeOpacity="0.4" fill="none"/>
       <path d="M13 29 Q24 27 35 29" stroke="white" strokeWidth="1" strokeOpacity="0.4" fill="none"/>
