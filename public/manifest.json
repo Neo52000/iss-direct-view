@@ -1,0 +1,19 @@
+{
+  "name": "ISS Direct France",
+  "short_name": "ISS Direct",
+  "description": "Suivez la Station Spatiale Internationale en temps réel — position, passages visibles, live NASA.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0d1526",
+  "theme_color": "#0d1526",
+  "lang": "fr",
+  "icons": [
+    {
+      "src": "/favicon.ico",
+      "sizes": "48x48",
+      "type": "image/x-icon"
+    }
+  ],
+  "screenshots": [],
+  "categories": ["education", "science", "utilities"]
+}

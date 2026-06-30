@@ -7,7 +7,15 @@ import {
   formatSpeed,
   getReadableDate,
 } from "@/lib/iss-utils";
-import { Crosshair, Satellite, AlertTriangle, Loader2 } from "lucide-react";
+import { Crosshair, Satellite, AlertTriangle, Loader2, Maximize2, Minimize2 } from "lucide-react";
+import {
+  AreaChart,
+  Area,
+  XAxis,
+  YAxis,
+  Tooltip,
+  ResponsiveContainer,
+} from "recharts";
 
 export const Route = createFileRoute("/position")({
   head: () => ({
@@ -28,8 +36,10 @@ export const Route = createFileRoute("/position")({
 });
 
 function PositionPage() {
-  const { position, error, loading } = useIssPosition(7000);
+  const { position, history: telemetryHistory, error, loading } = useIssPosition(7000);
   const mapRef = useRef<HTMLDivElement>(null);
+  const mapContainerRef = useRef<HTMLDivElement>(null);
+  const [isFullscreen, setIsFullscreen] = useState(false);
   const leafletRef = useRef<{
     map: unknown;
     marker: unknown;
@@ -216,6 +226,22 @@ function PositionPage() {
     }
   };
 
+  const toggleFullscreen = () => {
+    const el = mapContainerRef.current;
+    if (!el) return;
+    if (!document.fullscreenElement) {
+      el.requestFullscreen().then(() => setIsFullscreen(true)).catch(() => {});
+    } else {
+      document.exitFullscreen().then(() => setIsFullscreen(false)).catch(() => {});
+    }
+  };
+
+  useEffect(() => {
+    const handler = () => setIsFullscreen(!!document.fullscreenElement);
+    document.addEventListener("fullscreenchange", handler);
+    return () => document.removeEventListener("fullscreenchange", handler);
+  }, []);
+
   return (
     <section className="mx-auto max-w-7xl px-4 py-10 md:px-6">
       <div className="flex flex-wrap items-end justify-between gap-3">
@@ -236,12 +262,19 @@ function PositionPage() {
       </div>
 
       <div className="mt-6 grid gap-5 lg:grid-cols-[1fr_320px]">
-        <div className="relative h-[60vh] min-h-[420px] overflow-hidden rounded-2xl border border-white/10 bg-black">
+        <div ref={mapContainerRef} className="relative h-[60vh] min-h-[420px] overflow-hidden rounded-2xl border border-white/10 bg-black">
           <div
             ref={mapRef}
             className="absolute inset-0"
             aria-label="Carte de la position actuelle de l'ISS"
           />
+          <button
+            onClick={toggleFullscreen}
+            title={isFullscreen ? "Quitter le plein écran" : "Plein écran"}
+            className="absolute right-3 top-3 z-[1000] flex h-9 w-9 items-center justify-center rounded-lg bg-black/60 text-white backdrop-blur-sm hover:bg-black/80"
+          >
+            {isFullscreen ? <Minimize2 className="h-4 w-4" /> : <Maximize2 className="h-4 w-4" />}
+          </button>
           {mapStatus === "loading" || !tilesLoaded ? (
             <div
               className="pointer-events-none absolute inset-0 grid place-items-center bg-[color:var(--iss-bg)]/80 backdrop-blur-sm"
@@ -304,6 +337,37 @@ function PositionPage() {
               MAJ : {getReadableDate(position.timestamp * 1000)}<br />
               {formatCoordinates(position.latitude, position.longitude)}
             </p>
+          ) : null}
+          {telemetryHistory.length > 1 ? (
+            <div className="mt-2">
+              <p className="mb-2 text-[11px] font-semibold uppercase tracking-wider text-white/50">
+                Altitude & vitesse (session)
+              </p>
+              <ResponsiveContainer width="100%" height={90}>
+                <AreaChart data={telemetryHistory} margin={{ top: 2, right: 2, bottom: 0, left: 0 }}>
+                  <defs>
+                    <linearGradient id="altGrad" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="5%" stopColor="#71D7FF" stopOpacity={0.3} />
+                      <stop offset="95%" stopColor="#71D7FF" stopOpacity={0} />
+                    </linearGradient>
+                  </defs>
+                  <XAxis dataKey="t" hide />
+                  <YAxis yAxisId="alt" domain={["auto", "auto"]} hide />
+                  <YAxis yAxisId="vel" orientation="right" domain={["auto", "auto"]} hide />
+                  <Tooltip
+                    contentStyle={{ background: "#0e1a2e", border: "1px solid rgba(255,255,255,.1)", borderRadius: 8, fontSize: 11 }}
+                    labelFormatter={() => ""}
+                    formatter={(val: number, name: string) =>
+                      name === "altitude"
+                        ? [`${val.toFixed(1)} km`, "Altitude"]
+                        : [`${Math.round(val)} km/h`, "Vitesse"]
+                    }
+                  />
+                  <Area yAxisId="alt" type="monotone" dataKey="altitude" stroke="#71D7FF" strokeWidth={1.5} fill="url(#altGrad)" dot={false} />
+                  <Area yAxisId="vel" type="monotone" dataKey="velocity" stroke="#2F80FF" strokeWidth={1} fill="none" dot={false} />
+                </AreaChart>
+              </ResponsiveContainer>
+            </div>
           ) : null}
           <div className="mt-2 rounded-lg bg-white/[0.04] p-3 text-xs text-white/60">
             La trace bleu cyan représente les 50 dernières positions enregistrées dans cette

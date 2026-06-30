@@ -1,9 +1,10 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
-import { LocateFixed, MapPin, Loader2 } from "lucide-react";
+import { LocateFixed, MapPin, Loader2, Share2, Copy, Check } from "lucide-react";
 import { getVisiblePasses, type VisiblePass } from "@/services/passesApi";
 import { generateCalendarEvent, getReadableDate } from "@/lib/iss-utils";
 import { geocodeCity } from "@/lib/geocoding.functions";
+import { BackToTop } from "@/components/BackToTop";
 
 export const Route = createFileRoute("/passages")({
   head: () => ({
@@ -22,6 +23,48 @@ export const Route = createFileRoute("/passages")({
   }),
   component: PassesPage,
 });
+
+function PassQuality({ maxEl }: { maxEl: number }) {
+  const pct = Math.min(100, Math.round((maxEl / 90) * 100));
+  const label = maxEl >= 60 ? "Excellent" : maxEl >= 30 ? "Bon" : "Faible";
+  const color = maxEl >= 60 ? "bg-[color:var(--iss-ok)]" : maxEl >= 30 ? "bg-amber-400" : "bg-red-400";
+  return (
+    <div className="flex items-center gap-2 text-xs text-white/60">
+      <span className="w-14 shrink-0">{label}</span>
+      <div className="h-1.5 w-20 overflow-hidden rounded-full bg-white/10">
+        <div className={`h-full rounded-full ${color}`} style={{ width: `${pct}%` }} />
+      </div>
+      <span>{Math.round(maxEl)}°</span>
+    </div>
+  );
+}
+
+function SharePassButton({ pass, location }: { pass: VisiblePass; location?: string }) {
+  const [copied, setCopied] = useState(false);
+  const date = getReadableDate(pass.startUTC * 1000);
+  const text = `🛰️ L'ISS passe au-dessus de ${location ?? "chez moi"} le ${date} (${Math.round(pass.duration / 60)} min, élévation max ${Math.round(pass.maxEl)}°) — iss-direct-france.fr/passages`;
+
+  const share = async () => {
+    if (navigator.share) {
+      await navigator.share({ title: "Passage ISS", text });
+    } else {
+      await navigator.clipboard.writeText(text);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    }
+  };
+
+  return (
+    <button
+      onClick={share}
+      title="Partager ce passage"
+      className="inline-flex items-center gap-1.5 rounded-full border border-white/15 bg-white/[0.04] px-3 py-2 text-sm font-semibold hover:bg-white/10"
+    >
+      {copied ? <Check className="h-4 w-4 text-[color:var(--iss-ok)]" /> : <Share2 className="h-4 w-4" />}
+      {copied ? "Copié !" : "Partager"}
+    </button>
+  );
+}
 
 function PassesPage() {
   const [coords, setCoords] = useState<{ lat: number; lon: number; label: string } | null>(null);
@@ -153,25 +196,32 @@ function PassesPage() {
           <ul className="space-y-3">
             {result.passes.map((p) => (
               <li key={p.startUTC} className="iss-card flex flex-wrap items-center justify-between gap-3 p-4">
-                <div>
+                <div className="flex-1 min-w-0">
                   <p className="font-display text-lg font-bold">
                     {getReadableDate(p.startUTC * 1000)}
                   </p>
-                  <p className="text-sm text-white/60">
-                    Durée {Math.round(p.duration / 60)} min · Hauteur max {Math.round(p.maxEl)}°
+                  <p className="mt-0.5 text-sm text-white/60">
+                    Durée {Math.round(p.duration / 60)} min
                   </p>
+                  <div className="mt-2">
+                    <PassQuality maxEl={p.maxEl} />
+                  </div>
                 </div>
-                <button
-                  onClick={() => generateCalendarEvent(p, coords?.label)}
-                  className="rounded-full bg-[color:var(--iss-blue)] px-4 py-2 text-sm font-semibold"
-                >
-                  Ajouter à mon calendrier
-                </button>
+                <div className="flex flex-wrap gap-2">
+                  <SharePassButton pass={p} location={coords?.label} />
+                  <button
+                    onClick={() => generateCalendarEvent(p, coords?.label)}
+                    className="rounded-full bg-[color:var(--iss-blue)] px-4 py-2 text-sm font-semibold"
+                  >
+                    Ajouter au calendrier
+                  </button>
+                </div>
               </li>
             ))}
           </ul>
         )}
       </div>
+      <BackToTop />
     </section>
   );
 }
