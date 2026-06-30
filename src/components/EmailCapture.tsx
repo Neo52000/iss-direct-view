@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Mail, Check } from "lucide-react";
 import { submitLead } from "@/services/leadService";
+import { sendLeadConfirmation } from "@/lib/lead.functions";
 
 export function EmailCapture() {
   const [email, setEmail] = useState("");
@@ -42,6 +43,7 @@ export function EmailCapture() {
                 if (!email) return;
                 setLoading(true);
                 await submitLead(email, city, consent);
+                sendLeadConfirmation({ data: { email, city: city || undefined } }).catch(() => {});
                 setLoading(false);
                 setDone(true);
               }}
