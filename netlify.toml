@@ -5,17 +5,14 @@
 [build.environment]
   NITRO_PRESET = "netlify"
 
-# Redirige le domaine Netlify par défaut vers le domaine personnalisé,
-# en conservant le chemin et la query string. `force = true` est requis
-# car une ressource existe déjà (le site) à l'URL source.
-[[redirects]]
-  from = "https://france-iss-live.netlify.app/*"
-  to = "https://iss-en-direct.com/:splat"
-  status = 301
-  force = true
-
-[[redirects]]
-  from = "http://france-iss-live.netlify.app/*"
-  to = "https://iss-en-direct.com/:splat"
-  status = 301
-  force = true
+# La redirection du domaine Netlify par défaut (france-iss-live.netlify.app)
+# vers le domaine personnalisé (iss-en-direct.com) est gérée par l'edge function
+# `netlify/edge-functions/domain-redirect.ts`.
+#
+# Une règle `[[redirects]]` classique ne fonctionne pas ici : ce site est rendu
+# côté serveur (TanStack Start + Nitro) et le preset Netlify génère un catch-all
+# `/* -> fonction serveur` dans le fichier `_redirects`, qui est toujours évalué
+# avant les règles de ce fichier. La fonction SSR répondait donc avant que la
+# redirection de domaine ne puisse se déclencher, même avec `force = true`.
+# Les edge functions s'exécutent avant toute redirection, ce qui garantit que la
+# redirection a bien lieu.
