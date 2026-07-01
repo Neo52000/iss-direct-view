@@ -61,7 +61,7 @@ function BlogIndex() {
             )}
             <div className="flex flex-1 flex-col p-5">
               <span className="text-[11px] font-semibold uppercase tracking-wider text-[color:var(--iss-cyan)]">
-                {p.category}{p.readingTime ? ` · ${p.readingTime} min` : null}
+                {p.category}{p.readingTime > 0 && ` · ${p.readingTime} min`}
               </span>
               <h2 className="mt-2 font-display text-lg font-bold leading-snug">{p.title}</h2>
               <p className="mt-2 line-clamp-3 text-sm text-white/70">{p.excerpt}</p>
@@ -94,17 +94,6 @@ type CardPost = {
   image?: string | null;
 };
 
-const STATIC_IMAGES: Record<string, string> = {
-  "voir-iss-oeil-nu-france": "/blog/iss-trail-france.jpg",
-  "pourquoi-live-iss-noir": "/blog/iss-live-night.jpg",
-  "altitude-iss": "/blog/iss-night-orbit.jpg",
-  "iss-tours-terre-par-jour": "/blog/earth-orbit-sunrise.jpg",
-  "vitesse-iss": "/blog/iss-night-orbit.jpg",
-  "photographier-iss-smartphone": "/blog/observation-telescope.jpg",
-  "activite-espace-a-imprimer": "/blog/kids-tracking-iss.jpg",
-  "expliquer-iss-primaire": "/blog/kids-tracking-iss.jpg",
-};
-
 function mergePosts(dbPosts: BlogPostRow[]): CardPost[] {
   const fromDb: CardPost[] = dbPosts.map((p) => ({
     slug: p.slug,
@@ -127,7 +116,7 @@ function mergePosts(dbPosts: BlogPostRow[]): CardPost[] {
       cover: p.cover,
       date: p.date,
       readingTime: p.readingTime,
-      image: STATIC_IMAGES[p.slug] ?? null,
+      image: p.image ?? null,
     }));
   return [...fromDb, ...fromStatic].sort((a, b) => (a.date < b.date ? 1 : -1));
 }

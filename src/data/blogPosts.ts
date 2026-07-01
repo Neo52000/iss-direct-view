@@ -8,11 +8,13 @@ export interface BlogPost {
   date: string; // ISO
   readingTime: number; // minutes
   cover: string; // emoji ou URL
+  image?: string;
 }
 
 export const blogPosts: BlogPost[] = [
   {
     slug: "voir-iss-oeil-nu-france",
+    image: "/blog/iss-trail-france.jpg",
     title: "Comment voir l'ISS à l'œil nu depuis la France ?",
     metaDescription: "Guide pratique pour observer la Station Spatiale Internationale depuis la France : créneaux, conditions, conseils.",
     excerpt: "Pas besoin de télescope : la Station Spatiale est l'un des objets les plus brillants du ciel nocturne. Voici comment la repérer.",
@@ -25,6 +27,7 @@ export const blogPosts: BlogPost[] = [
   },
   {
     slug: "pourquoi-live-iss-noir",
+    image: "/blog/iss-live-night.jpg",
     title: "Pourquoi le live ISS est parfois noir ?",
     metaDescription: "L'image du live ISS devient noire ou bleue par moments : voici les raisons techniques.",
     excerpt: "Trois raisons principales expliquent ces interruptions visuelles du flux en direct.",
@@ -37,6 +40,7 @@ export const blogPosts: BlogPost[] = [
   },
   {
     slug: "altitude-iss",
+    image: "/blog/iss-night-orbit.jpg",
     title: "À quelle altitude vole l'ISS ?",
     metaDescription: "L'ISS orbite entre 400 et 420 km d'altitude. Explications sur cette orbite basse et son entretien.",
     excerpt: "Une orbite basse permet une logistique simplifiée — au prix d'un entretien régulier.",
@@ -49,6 +53,7 @@ export const blogPosts: BlogPost[] = [
   },
   {
     slug: "iss-tours-terre-par-jour",
+    image: "/blog/earth-orbit-sunrise.jpg",
     title: "Combien de fois l'ISS fait-elle le tour de la Terre chaque jour ?",
     metaDescription: "L'ISS effectue environ 16 orbites complètes autour de la Terre chaque jour.",
     excerpt: "16 levers et couchers de soleil par jour pour les astronautes : c'est le rythme imposé par l'orbite.",
@@ -61,6 +66,7 @@ export const blogPosts: BlogPost[] = [
   },
   {
     slug: "vitesse-iss",
+    image: "/blog/iss-night-orbit.jpg",
     title: "Quelle est la vitesse de l'ISS ?",
     metaDescription: "L'ISS file à environ 28 000 km/h, soit près de 7,7 km par seconde.",
     excerpt: "Près de huit kilomètres parcourus chaque seconde : pourquoi est-il indispensable d'aller aussi vite ?",
@@ -73,6 +79,7 @@ export const blogPosts: BlogPost[] = [
   },
   {
     slug: "photographier-iss-smartphone",
+    image: "/blog/observation-telescope.jpg",
     title: "Peut-on photographier l'ISS avec un smartphone ?",
     metaDescription: "Astuces pour capturer le passage de l'ISS avec un smartphone moderne.",
     excerpt: "Avec le mode nuit ou astrophotographie, un smartphone récent peut immortaliser une trace lumineuse de l'ISS.",
@@ -85,6 +92,7 @@ export const blogPosts: BlogPost[] = [
   },
   {
     slug: "activite-espace-a-imprimer",
+    image: "/blog/kids-tracking-iss.jpg",
     title: "Activité espace à imprimer pour les enfants",
     metaDescription: "Téléchargez gratuitement un kit d'activités espace : coloriages, quiz, fiches pédagogiques.",
     excerpt: "Coloriages, quiz, fiches : de quoi occuper un mercredi après-midi tout en apprenant.",
@@ -97,6 +105,7 @@ export const blogPosts: BlogPost[] = [
   },
   {
     slug: "expliquer-iss-primaire",
+    image: "/blog/kids-tracking-iss.jpg",
     title: "Comment expliquer l'ISS à des élèves de primaire ?",
     metaDescription: "Pistes pédagogiques pour présenter la Station Spatiale Internationale en classe de primaire.",
     excerpt: "Comparaisons concrètes, expériences simples et supports visuels pour rendre l'ISS accessible aux 6–10 ans.",
