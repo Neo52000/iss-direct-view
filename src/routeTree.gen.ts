@@ -22,6 +22,7 @@ import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AProposRouteImport } from './routes/a-propos'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as PassageIssIndexRouteImport } from './routes/passage-iss.index'
 import { Route as BlogIndexRouteImport } from './routes/blog.index'
 import { Route as PrintQuizRouteImport } from './routes/print/quiz'
 import { Route as PrintPosterRouteImport } from './routes/print/poster'
@@ -29,7 +30,9 @@ import { Route as PrintGlossaireRouteImport } from './routes/print/glossaire'
 import { Route as PrintFichesRouteImport } from './routes/print/fiches'
 import { Route as PrintColoriagesRouteImport } from './routes/print/coloriages'
 import { Route as PrintCartesRouteImport } from './routes/print/cartes'
+import { Route as PassageIssVilleRouteImport } from './routes/passage-iss.$ville'
 import { Route as BlogSlugRouteImport } from './routes/blog.$slug'
+import { Route as AuthenticatedAdminShortsRouteImport } from './routes/_authenticated/admin.shorts'
 import { Route as AuthenticatedAdminSettingsRouteImport } from './routes/_authenticated/admin.settings'
 import { Route as AuthenticatedAdminProductsRouteImport } from './routes/_authenticated/admin.products'
 import { Route as AuthenticatedAdminBlogRouteImport } from './routes/_authenticated/admin.blog'
@@ -99,6 +102,11 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PassageIssIndexRoute = PassageIssIndexRouteImport.update({
+  id: '/passage-iss/',
+  path: '/passage-iss/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const BlogIndexRoute = BlogIndexRouteImport.update({
   id: '/blog/',
   path: '/blog/',
@@ -134,11 +142,22 @@ const PrintCartesRoute = PrintCartesRouteImport.update({
   path: '/print/cartes',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PassageIssVilleRoute = PassageIssVilleRouteImport.update({
+  id: '/passage-iss/$ville',
+  path: '/passage-iss/$ville',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const BlogSlugRoute = BlogSlugRouteImport.update({
   id: '/blog/$slug',
   path: '/blog/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedAdminShortsRoute =
+  AuthenticatedAdminShortsRouteImport.update({
+    id: '/admin/shorts',
+    path: '/admin/shorts',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedAdminSettingsRoute =
   AuthenticatedAdminSettingsRouteImport.update({
     id: '/admin/settings',
@@ -177,6 +196,7 @@ export interface FileRoutesByFullPath {
   '/rss.xml': typeof RssDotxmlRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/blog/$slug': typeof BlogSlugRoute
+  '/passage-iss/$ville': typeof PassageIssVilleRoute
   '/print/cartes': typeof PrintCartesRoute
   '/print/coloriages': typeof PrintColoriagesRoute
   '/print/fiches': typeof PrintFichesRoute
@@ -184,10 +204,12 @@ export interface FileRoutesByFullPath {
   '/print/poster': typeof PrintPosterRoute
   '/print/quiz': typeof PrintQuizRoute
   '/blog/': typeof BlogIndexRoute
+  '/passage-iss/': typeof PassageIssIndexRoute
   '/admin/analytics': typeof AuthenticatedAdminAnalyticsRoute
   '/admin/blog': typeof AuthenticatedAdminBlogRoute
   '/admin/products': typeof AuthenticatedAdminProductsRoute
   '/admin/settings': typeof AuthenticatedAdminSettingsRoute
+  '/admin/shorts': typeof AuthenticatedAdminShortsRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -203,6 +225,7 @@ export interface FileRoutesByTo {
   '/rss.xml': typeof RssDotxmlRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/blog/$slug': typeof BlogSlugRoute
+  '/passage-iss/$ville': typeof PassageIssVilleRoute
   '/print/cartes': typeof PrintCartesRoute
   '/print/coloriages': typeof PrintColoriagesRoute
   '/print/fiches': typeof PrintFichesRoute
@@ -210,10 +233,12 @@ export interface FileRoutesByTo {
   '/print/poster': typeof PrintPosterRoute
   '/print/quiz': typeof PrintQuizRoute
   '/blog': typeof BlogIndexRoute
+  '/passage-iss': typeof PassageIssIndexRoute
   '/admin/analytics': typeof AuthenticatedAdminAnalyticsRoute
   '/admin/blog': typeof AuthenticatedAdminBlogRoute
   '/admin/products': typeof AuthenticatedAdminProductsRoute
   '/admin/settings': typeof AuthenticatedAdminSettingsRoute
+  '/admin/shorts': typeof AuthenticatedAdminShortsRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -231,6 +256,7 @@ export interface FileRoutesById {
   '/rss.xml': typeof RssDotxmlRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/blog/$slug': typeof BlogSlugRoute
+  '/passage-iss/$ville': typeof PassageIssVilleRoute
   '/print/cartes': typeof PrintCartesRoute
   '/print/coloriages': typeof PrintColoriagesRoute
   '/print/fiches': typeof PrintFichesRoute
@@ -238,10 +264,12 @@ export interface FileRoutesById {
   '/print/poster': typeof PrintPosterRoute
   '/print/quiz': typeof PrintQuizRoute
   '/blog/': typeof BlogIndexRoute
+  '/passage-iss/': typeof PassageIssIndexRoute
   '/_authenticated/admin/analytics': typeof AuthenticatedAdminAnalyticsRoute
   '/_authenticated/admin/blog': typeof AuthenticatedAdminBlogRoute
   '/_authenticated/admin/products': typeof AuthenticatedAdminProductsRoute
   '/_authenticated/admin/settings': typeof AuthenticatedAdminSettingsRoute
+  '/_authenticated/admin/shorts': typeof AuthenticatedAdminShortsRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -259,6 +287,7 @@ export interface FileRouteTypes {
     | '/rss.xml'
     | '/sitemap.xml'
     | '/blog/$slug'
+    | '/passage-iss/$ville'
     | '/print/cartes'
     | '/print/coloriages'
     | '/print/fiches'
@@ -266,10 +295,12 @@ export interface FileRouteTypes {
     | '/print/poster'
     | '/print/quiz'
     | '/blog/'
+    | '/passage-iss/'
     | '/admin/analytics'
     | '/admin/blog'
     | '/admin/products'
     | '/admin/settings'
+    | '/admin/shorts'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -285,6 +316,7 @@ export interface FileRouteTypes {
     | '/rss.xml'
     | '/sitemap.xml'
     | '/blog/$slug'
+    | '/passage-iss/$ville'
     | '/print/cartes'
     | '/print/coloriages'
     | '/print/fiches'
@@ -292,10 +324,12 @@ export interface FileRouteTypes {
     | '/print/poster'
     | '/print/quiz'
     | '/blog'
+    | '/passage-iss'
     | '/admin/analytics'
     | '/admin/blog'
     | '/admin/products'
     | '/admin/settings'
+    | '/admin/shorts'
   id:
     | '__root__'
     | '/'
@@ -312,6 +346,7 @@ export interface FileRouteTypes {
     | '/rss.xml'
     | '/sitemap.xml'
     | '/blog/$slug'
+    | '/passage-iss/$ville'
     | '/print/cartes'
     | '/print/coloriages'
     | '/print/fiches'
@@ -319,10 +354,12 @@ export interface FileRouteTypes {
     | '/print/poster'
     | '/print/quiz'
     | '/blog/'
+    | '/passage-iss/'
     | '/_authenticated/admin/analytics'
     | '/_authenticated/admin/blog'
     | '/_authenticated/admin/products'
     | '/_authenticated/admin/settings'
+    | '/_authenticated/admin/shorts'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -340,6 +377,7 @@ export interface RootRouteChildren {
   RssDotxmlRoute: typeof RssDotxmlRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   BlogSlugRoute: typeof BlogSlugRoute
+  PassageIssVilleRoute: typeof PassageIssVilleRoute
   PrintCartesRoute: typeof PrintCartesRoute
   PrintColoriagesRoute: typeof PrintColoriagesRoute
   PrintFichesRoute: typeof PrintFichesRoute
@@ -347,6 +385,7 @@ export interface RootRouteChildren {
   PrintPosterRoute: typeof PrintPosterRoute
   PrintQuizRoute: typeof PrintQuizRoute
   BlogIndexRoute: typeof BlogIndexRoute
+  PassageIssIndexRoute: typeof PassageIssIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -442,6 +481,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/passage-iss/': {
+      id: '/passage-iss/'
+      path: '/passage-iss'
+      fullPath: '/passage-iss/'
+      preLoaderRoute: typeof PassageIssIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/blog/': {
       id: '/blog/'
       path: '/blog'
@@ -491,12 +537,26 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PrintCartesRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/passage-iss/$ville': {
+      id: '/passage-iss/$ville'
+      path: '/passage-iss/$ville'
+      fullPath: '/passage-iss/$ville'
+      preLoaderRoute: typeof PassageIssVilleRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/blog/$slug': {
       id: '/blog/$slug'
       path: '/blog/$slug'
       fullPath: '/blog/$slug'
       preLoaderRoute: typeof BlogSlugRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated/admin/shorts': {
+      id: '/_authenticated/admin/shorts'
+      path: '/admin/shorts'
+      fullPath: '/admin/shorts'
+      preLoaderRoute: typeof AuthenticatedAdminShortsRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/admin/settings': {
       id: '/_authenticated/admin/settings'
@@ -534,6 +594,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedAdminBlogRoute: typeof AuthenticatedAdminBlogRoute
   AuthenticatedAdminProductsRoute: typeof AuthenticatedAdminProductsRoute
   AuthenticatedAdminSettingsRoute: typeof AuthenticatedAdminSettingsRoute
+  AuthenticatedAdminShortsRoute: typeof AuthenticatedAdminShortsRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
@@ -541,6 +602,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedAdminBlogRoute: AuthenticatedAdminBlogRoute,
   AuthenticatedAdminProductsRoute: AuthenticatedAdminProductsRoute,
   AuthenticatedAdminSettingsRoute: AuthenticatedAdminSettingsRoute,
+  AuthenticatedAdminShortsRoute: AuthenticatedAdminShortsRoute,
 }
 
 const AuthenticatedRouteRouteWithChildren =
@@ -561,6 +623,7 @@ const rootRouteChildren: RootRouteChildren = {
   RssDotxmlRoute: RssDotxmlRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   BlogSlugRoute: BlogSlugRoute,
+  PassageIssVilleRoute: PassageIssVilleRoute,
   PrintCartesRoute: PrintCartesRoute,
   PrintColoriagesRoute: PrintColoriagesRoute,
   PrintFichesRoute: PrintFichesRoute,
@@ -568,6 +631,7 @@ const rootRouteChildren: RootRouteChildren = {
   PrintPosterRoute: PrintPosterRoute,
   PrintQuizRoute: PrintQuizRoute,
   BlogIndexRoute: BlogIndexRoute,
+  PassageIssIndexRoute: PassageIssIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

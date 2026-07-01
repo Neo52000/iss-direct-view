@@ -43,6 +43,7 @@ export const Route = createFileRoute("/rss.xml")({
               .from("blog_posts")
               .select("slug,title,excerpt,meta_description,published_at,category,cover_image_url")
               .eq("published", true)
+              .lte("published_at", new Date().toISOString()) // drip : ignore les articles à date future
               .order("published_at", { ascending: false });
             if (data && data.length) {
               const dbItems: Item[] = data.map((p: any) => ({

@@ -1,10 +1,10 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
-import { LocateFixed, MapPin, Loader2, Share2, Copy, Check } from "lucide-react";
+import { LocateFixed, MapPin, Loader2 } from "lucide-react";
 import { getVisiblePasses, type VisiblePass } from "@/services/passesApi";
-import { generateCalendarEvent, getReadableDate } from "@/lib/iss-utils";
 import { geocodeCity } from "@/lib/geocoding.functions";
 import { BackToTop } from "@/components/BackToTop";
+import { PassesList } from "@/components/PassesList";
 
 export const Route = createFileRoute("/passages")({
   head: () => ({
@@ -24,57 +24,13 @@ export const Route = createFileRoute("/passages")({
   component: PassesPage,
 });
 
-function PassQuality({ maxEl }: { maxEl: number }) {
-  const pct = Math.min(100, Math.round((maxEl / 90) * 100));
-  const label = maxEl >= 60 ? "Excellent" : maxEl >= 30 ? "Bon" : "Faible";
-  const color = maxEl >= 60 ? "bg-[color:var(--iss-ok)]" : maxEl >= 30 ? "bg-amber-400" : "bg-red-400";
-  return (
-    <div className="flex items-center gap-2 text-xs text-white/60">
-      <span className="w-14 shrink-0">{label}</span>
-      <div className="h-1.5 w-20 overflow-hidden rounded-full bg-white/10">
-        <div className={`h-full rounded-full ${color}`} style={{ width: `${pct}%` }} />
-      </div>
-      <span>{Math.round(maxEl)}°</span>
-    </div>
-  );
-}
-
-function SharePassButton({ pass, location }: { pass: VisiblePass; location?: string }) {
-  const [copied, setCopied] = useState(false);
-  const date = getReadableDate(pass.startUTC * 1000);
-  const text = `🛰️ L'ISS passe au-dessus de ${location ?? "chez moi"} le ${date} (${Math.round(pass.duration / 60)} min, élévation max ${Math.round(pass.maxEl)}°) — iss-direct-france.fr/passages`;
-
-  const share = async () => {
-    if (navigator.share) {
-      await navigator.share({ title: "Passage ISS", text });
-    } else {
-      await navigator.clipboard.writeText(text);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
-    }
-  };
-
-  return (
-    <button
-      onClick={share}
-      title="Partager ce passage"
-      className="inline-flex items-center gap-1.5 rounded-full border border-white/15 bg-white/[0.04] px-3 py-2 text-sm font-semibold hover:bg-white/10"
-    >
-      {copied ? <Check className="h-4 w-4 text-[color:var(--iss-ok)]" /> : <Share2 className="h-4 w-4" />}
-      {copied ? "Copié !" : "Partager"}
-    </button>
-  );
-}
-
 function PassesPage() {
   const [coords, setCoords] = useState<{ lat: number; lon: number; label: string } | null>(null);
   const [manual, setManual] = useState("");
   const [loading, setLoading] = useState(false);
   const [geocoding, setGeocoding] = useState(false);
   const [result, setResult] = useState<
-    | { configured: false }
-    | { configured: true; passes: VisiblePass[]; error?: string }
-    | null
+    { configured: false } | { configured: true; passes: VisiblePass[]; error?: string } | null
   >(null);
 
   const fetchPasses = async (lat: number, lon: number) => {
@@ -119,7 +75,9 @@ function PassesPage() {
         setCoords({ lat: result.lat, lon: result.lon, label: result.label });
         fetchPasses(result.lat, result.lon);
       } else {
-        alert(`Ville introuvable : "${manual}". Essayez d'entrer les coordonnées directement (ex: 48.85, 2.35).`);
+        alert(
+          `Ville introuvable : "${manual}". Essayez d'entrer les coordonnées directement (ex: 48.85, 2.35).`,
+        );
       }
     } catch {
       alert("Erreur de géocodage. Vérifiez votre connexion ou entrez des coordonnées.");
@@ -136,6 +94,10 @@ function PassesPage() {
       <p className="mt-2 text-white/70">
         L'ISS est visible uniquement dans certaines conditions : ciel sombre, station éclairée par
         le Soleil, passage suffisamment haut au-dessus de l'horizon.
+      </p>
+      <p className="mt-1 text-xs text-white/40">
+        Calcul en temps réel à partir des données orbitales (TLE) de la station — précision
+        indicative, sans clé API.
       </p>
 
       <div className="iss-card mt-8 p-6">
@@ -177,48 +139,14 @@ function PassesPage() {
           <div className="iss-card p-8 text-white/70">
             Détectez votre position ou indiquez une ville pour afficher les prochains passages.
           </div>
-        ) : result.configured === false ? (
-          <div className="iss-card p-8">
-            <h2 className="font-display text-xl font-bold">Fonction bientôt disponible</h2>
-            <p className="mt-2 text-white/70">
-              Pour activer le calcul des passages visibles, configurez une clé API N2YO dans la
-              variable d'environnement <code className="rounded bg-white/10 px-1.5 py-0.5">VITE_N2YO_API_KEY</code>.
-              N2YO offre 100 requêtes gratuites par heure sur la route <em>visualpasses</em>.
-            </p>
-          </div>
-        ) : result.passes.length === 0 ? (
+        ) : result.configured === false ? null : result.passes.length === 0 ? (
           <div className="iss-card p-8 text-white/70">
             {result.error
               ? `Erreur API : ${result.error}`
               : "Aucun passage visible trouvé pour cette position dans les prochains jours."}
           </div>
         ) : (
-          <ul className="space-y-3">
-            {result.passes.map((p) => (
-              <li key={p.startUTC} className="iss-card flex flex-wrap items-center justify-between gap-3 p-4">
-                <div className="flex-1 min-w-0">
-                  <p className="font-display text-lg font-bold">
-                    {getReadableDate(p.startUTC * 1000)}
-                  </p>
-                  <p className="mt-0.5 text-sm text-white/60">
-                    Durée {Math.round(p.duration / 60)} min
-                  </p>
-                  <div className="mt-2">
-                    <PassQuality maxEl={p.maxEl} />
-                  </div>
-                </div>
-                <div className="flex flex-wrap gap-2">
-                  <SharePassButton pass={p} location={coords?.label} />
-                  <button
-                    onClick={() => generateCalendarEvent(p, coords?.label)}
-                    className="rounded-full bg-[color:var(--iss-blue)] px-4 py-2 text-sm font-semibold"
-                  >
-                    Ajouter au calendrier
-                  </button>
-                </div>
-              </li>
-            ))}
-          </ul>
+          <PassesList passes={result.passes} location={coords?.label} />
         )}
       </div>
       <BackToTop />
