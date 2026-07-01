@@ -10,7 +10,7 @@ export interface AstrosResult {
 export const getAstros = createServerFn({ method: "GET" }).handler(
   async (): Promise<AstrosResult | null> => {
     try {
-      const res = await fetch("http://api.open-notify.org/astros.json", {
+      const res = await fetch("https://api.open-notify.org/astros.json", {
         signal: AbortSignal.timeout(6000),
       });
       if (!res.ok) return null;

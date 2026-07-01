@@ -15,12 +15,12 @@ import {
   sunPos,
   degreesToRadians,
   radiansToDegrees,
-  constants,
 } from "satellite.js";
 import type { VisiblePass } from "@/services/passesApi";
 
 const TLE_URL = "https://api.wheretheiss.at/v1/satellites/25544/tles";
 const AU_KM = 149_597_870.7;
+const EARTH_RADIUS_KM = 6378.137;
 const TLE_TTL_MS = 2 * 60 * 60 * 1000; // 2 h
 
 interface Tle {
@@ -29,23 +29,38 @@ interface Tle {
 }
 
 let tleCache: { tle: Tle; fetchedAt: number } | null = null;
+let tlePromise: Promise<Tle> | null = null;
 
-/** Récupère les TLE de l'ISS (cache mémoire ~2 h). */
+/** Récupère les TLE de l'ISS (cache mémoire ~2 h, requête en vol mutualisée). */
 export async function fetchIssTLE(): Promise<Tle> {
   if (tleCache && Date.now() - tleCache.fetchedAt < TLE_TTL_MS) {
     return tleCache.tle;
   }
-  const res = await fetch(TLE_URL);
-  if (!res.ok) throw new Error("TLE fetch error " + res.status);
-  const data = (await res.json()) as { line1: string; line2: string };
-  if (!data.line1 || !data.line2) throw new Error("TLE indisponible");
-  const tle: Tle = { line1: data.line1, line2: data.line2 };
-  tleCache = { tle, fetchedAt: Date.now() };
-  return tle;
+  if (tlePromise) return tlePromise;
+  tlePromise = (async () => {
+    try {
+      const res = await fetch(TLE_URL);
+      if (!res.ok) throw new Error("TLE fetch error " + res.status);
+      const data = (await res.json()) as { line1: string; line2: string };
+      if (!data.line1 || !data.line2) throw new Error("TLE indisponible");
+      const tle: Tle = { line1: data.line1, line2: data.line2 };
+      tleCache = { tle, fetchedAt: Date.now() };
+      return tle;
+    } finally {
+      tlePromise = null;
+    }
+  })();
+  return tlePromise;
 }
 
-/** Vecteur ECI (km) du Soleil à une date donnée. */
+// La position ECI du Soleil évolue très lentement : un cache horaire suffit.
+const sunEciCache = new Map<string, { x: number; y: number; z: number }>();
+
+/** Vecteur ECI (km) du Soleil à une date donnée (rsun renvoyé en UA par satellite.js). */
 function sunEciKm(date: Date) {
+  const key = `${date.getUTCFullYear()}-${date.getUTCMonth()}-${date.getUTCDate()}-${date.getUTCHours()}`;
+  const cached = sunEciCache.get(key);
+  if (cached) return cached;
   const jd = jday(
     date.getUTCFullYear(),
     date.getUTCMonth() + 1,
@@ -54,8 +69,10 @@ function sunEciKm(date: Date) {
     date.getUTCMinutes(),
     date.getUTCSeconds(),
   );
-  const { rsun } = sunPos(jd);
-  return { x: rsun.x * AU_KM, y: rsun.y * AU_KM, z: rsun.z * AU_KM };
+  const { rsun } = sunPos(jd); // rsun : [x, y, z] en UA
+  const result = { x: rsun[0] * AU_KM, y: rsun[1] * AU_KM, z: rsun[2] * AU_KM };
+  sunEciCache.set(key, result);
+  return result;
 }
 
 /** L'ISS est-elle éclairée par le Soleil (hors ombre de la Terre) ? */
@@ -74,7 +91,7 @@ function isSatelliteSunlit(
   const perpY = satEci.y - dot * sunHat.y;
   const perpZ = satEci.z - dot * sunHat.z;
   const perp = Math.hypot(perpX, perpY, perpZ);
-  return perp > constants.earthRadius;
+  return perp > EARTH_RADIUS_KM;
 }
 
 interface Sample {
