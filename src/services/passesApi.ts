@@ -1,4 +1,12 @@
-import { getVisiblePassesServer } from "@/lib/passes.functions";
+// Dynamic import so a createServerFn startup failure doesn't crash all routes
+async function loadServerFn() {
+  try {
+    const mod = await import("@/lib/passes.functions");
+    return mod.getVisiblePassesServer;
+  } catch {
+    return null;
+  }
+}
 
 export interface VisiblePass {
   startUTC: number;
@@ -26,7 +34,9 @@ export async function getVisiblePasses(
   days = 7,
   minVisibility = 60,
 ): Promise<PassesResult> {
+  const getVisiblePassesServer = await loadServerFn();
   try {
+    if (!getVisiblePassesServer) throw new Error("server fn unavailable");
     const result = await getVisiblePassesServer({
       data: { latitude, longitude, altitudeM, days, minVisibility },
     });

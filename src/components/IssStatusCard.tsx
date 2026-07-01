@@ -55,7 +55,7 @@ export function IssStatusCard() {
       ) : position ? (
         <>
           <div className="mt-3">
-            <VisibilityBadge visibility={position.visibility} />
+            <VisibilityBadge visibility={position.visibility ?? "daylight"} />
           </div>
           <dl className="mt-3 grid grid-cols-2 gap-3 text-sm">
             <Stat label="Altitude" value={formatAltitude(position.altitude)} />
