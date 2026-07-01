@@ -61,7 +61,7 @@ function BlogIndex() {
             )}
             <div className="flex flex-1 flex-col p-5">
               <span className="text-[11px] font-semibold uppercase tracking-wider text-[color:var(--iss-cyan)]">
-                {p.category} · {p.readingTime} min
+                {p.category}{p.readingTime > 0 && ` · ${p.readingTime} min`}
               </span>
               <h2 className="mt-2 font-display text-lg font-bold leading-snug">{p.title}</h2>
               <p className="mt-2 line-clamp-3 text-sm text-white/70">{p.excerpt}</p>
@@ -116,6 +116,7 @@ function mergePosts(dbPosts: BlogPostRow[]): CardPost[] {
       cover: p.cover,
       date: p.date,
       readingTime: p.readingTime,
+      image: p.image ?? null,
     }));
   return [...fromDb, ...fromStatic].sort((a, b) => (a.date < b.date ? 1 : -1));
 }

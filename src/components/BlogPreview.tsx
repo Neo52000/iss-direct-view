@@ -5,17 +5,6 @@ import { useQuery } from "@tanstack/react-query";
 import { fetchPublishedPosts } from "@/lib/blog";
 import { Skeleton } from "@/components/ui/skeleton";
 
-const STATIC_IMAGES: Record<string, string> = {
-  "voir-iss-oeil-nu-france": "/blog/iss-trail-france.jpg",
-  "pourquoi-live-iss-noir": "/blog/iss-live-night.jpg",
-  "altitude-iss": "/blog/iss-night-orbit.jpg",
-  "iss-tours-terre-par-jour": "/blog/earth-orbit-sunrise.jpg",
-  "vitesse-iss": "/blog/iss-night-orbit.jpg",
-  "photographier-iss-smartphone": "/blog/observation-telescope.jpg",
-  "activite-espace-a-imprimer": "/blog/kids-tracking-iss.jpg",
-  "expliquer-iss-primaire": "/blog/kids-tracking-iss.jpg",
-};
-
 export function BlogPreview({ count = 3 }: { count?: number }) {
   const { data: dbPosts = [], isLoading } = useQuery({
     queryKey: ["blog", "published"],
@@ -29,7 +18,7 @@ export function BlogPreview({ count = 3 }: { count?: number }) {
     cover: p.cover,
     date: p.published_at,
     readingTime: p.reading_time,
-    image: p.cover_image_url ?? STATIC_IMAGES[p.slug] ?? null,
+    image: p.cover_image_url ?? null,
   }));
   const seen = new Set(fromDb.map((p) => p.slug));
   const fromStatic = blogPosts
@@ -42,7 +31,7 @@ export function BlogPreview({ count = 3 }: { count?: number }) {
       cover: p.cover,
       date: p.date,
       readingTime: p.readingTime,
-      image: STATIC_IMAGES[p.slug] ?? null,
+      image: p.image ?? null,
     }));
   const posts = [...fromDb, ...fromStatic]
     .sort((a, b) => (a.date < b.date ? 1 : -1))
