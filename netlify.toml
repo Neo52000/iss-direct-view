@@ -4,3 +4,18 @@
 
 [build.environment]
   NITRO_PRESET = "netlify"
+
+# Redirige le domaine Netlify par défaut vers le domaine personnalisé,
+# en conservant le chemin et la query string. `force = true` est requis
+# car une ressource existe déjà (le site) à l'URL source.
+[[redirects]]
+  from = "https://france-iss-live.netlify.app/*"
+  to = "https://iss-en-direct.com/:splat"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "http://france-iss-live.netlify.app/*"
+  to = "https://iss-en-direct.com/:splat"
+  status = 301
+  force = true
