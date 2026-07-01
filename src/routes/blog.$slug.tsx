@@ -4,6 +4,7 @@ import { getReadableDay } from "@/lib/iss-utils";
 import { EmailCapture } from "@/components/EmailCapture";
 import { fetchPostBySlug } from "@/lib/blog";
 import { BackToTop } from "@/components/BackToTop";
+import { CrewWidget } from "@/components/CrewWidget";
 
 export const Route = createFileRoute("/blog/$slug")({
   loader: async ({ params }) => {
@@ -107,6 +108,7 @@ function BlogPostPage() {
             <span aria-hidden>{post.cover}</span>
           </div>
         )}
+        {post.slug === "qui-est-dans-iss-aujourdhui" ? <CrewWidget /> : null}
         <div className="space-y-5 text-white/85 md:text-lg">
           {post.content.split("\n\n").map((para: string, i: number) => (
             <p key={i}>{para}</p>

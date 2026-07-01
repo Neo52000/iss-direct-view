@@ -24,8 +24,8 @@ export type PassesResult =
 
 /**
  * Récupère les prochains passages visibles de l'ISS.
- * Appelle le server function (clé N2YO_API_KEY côté serveur uniquement).
- * Fallback sur appel direct si VITE_N2YO_API_KEY est présente (mode dev/legacy).
+ * Par défaut : calcul embarqué à partir des TLE (satellite.js), sans clé API.
+ * Fallbacks optionnels : server function N2YO, puis clé client legacy.
  */
 export async function getVisiblePasses(
   latitude: number,
@@ -34,24 +34,28 @@ export async function getVisiblePasses(
   days = 7,
   minVisibility = 60,
 ): Promise<PassesResult> {
-  const getVisiblePassesServer = await loadServerFn();
+  // 1) Calcul embarqué via TLE — fonctionne toujours, sans clé.
   try {
-    if (!getVisiblePassesServer) throw new Error("server fn unavailable");
-    const result = await getVisiblePassesServer({
-      data: { latitude, longitude, altitudeM, days, minVisibility },
-    });
-    if (!result.configured) {
-      // Server function reports no key — try legacy client-side key
-      const key = import.meta.env.VITE_N2YO_API_KEY;
-      if (!key) return { configured: false };
-      return fetchN2YODirect(key, latitude, longitude, altitudeM, days, minVisibility);
+    const { computeVisiblePasses } = await import("@/lib/issPasses");
+    const passes = await computeVisiblePasses(latitude, longitude, altitudeM, days);
+    return { configured: true, passes };
+  } catch (tleError) {
+    // 2) Fallback N2YO via server function (si clé N2YO_API_KEY configurée).
+    const getVisiblePassesServer = await loadServerFn();
+    try {
+      if (!getVisiblePassesServer) throw new Error("server fn unavailable");
+      const result = await getVisiblePassesServer({
+        data: { latitude, longitude, altitudeM, days, minVisibility },
+      });
+      if (result.configured) return result;
+    } catch {
+      /* passe au fallback client legacy */
     }
-    return result;
-  } catch {
-    // Server function unavailable — try legacy client-side key
+    // 3) Fallback clé client legacy (mode dev).
     const key = import.meta.env.VITE_N2YO_API_KEY;
-    if (!key) return { configured: false };
-    return fetchN2YODirect(key, latitude, longitude, altitudeM, days, minVisibility);
+    if (key) return fetchN2YODirect(key, latitude, longitude, altitudeM, days, minVisibility);
+    // Aucun fallback disponible : renvoie l'erreur du calcul TLE.
+    return { configured: true, passes: [], error: (tleError as Error).message };
   }
 }
 

@@ -24,6 +24,7 @@ export async function fetchPublishedPosts(): Promise<BlogPostRow[]> {
     .from("blog_posts")
     .select("*")
     .eq("published", true)
+    .lte("published_at", new Date().toISOString()) // drip : masque les articles datés dans le futur
     .order("published_at", { ascending: false });
   if (error) throw error;
   return (data ?? []) as BlogPostRow[];
