@@ -1,4 +1,4 @@
-const DEFAULT_ID = "FuuC4dpSQ1M";
+const DEFAULT_ID = "awQzjn72bI0";
 
 export function LiveVideo({ id }: { id?: string }) {
   const videoId = id || import.meta.env.VITE_YOUTUBE_LIVE_ID || DEFAULT_ID;
