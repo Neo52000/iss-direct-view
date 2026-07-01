@@ -67,6 +67,7 @@ async function sendEmail(to: string, subject: string, html: string) {
     const errText = await res.text();
     throw new Error(`Brevo API error: ${res.status} - ${errText}`);
   }
+  await res.body?.cancel();
 }
 
 Deno.serve(async () => {
