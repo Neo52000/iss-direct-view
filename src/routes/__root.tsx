@@ -90,8 +90,10 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { name: "twitter:title", content: "ISS Direct France — Voir l'ISS en direct depuis l'espace" },
       { property: "og:description", content: "Regardez la Station Spatiale Internationale en direct, suivez sa position en temps réel et découvrez quand l'observer depuis chez vous." },
       { name: "twitter:description", content: "Regardez la Station Spatiale Internationale en direct, suivez sa position en temps réel et découvrez quand l'observer depuis chez vous." },
-      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/65c8c63e-6260-4b6f-9c16-6ecc645e9e9f/id-preview-4a1dfac6--8dfe3ade-d89a-4a7a-aa56-14ea4e5c584f.lovable.app-1782466184054.png" },
-      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/65c8c63e-6260-4b6f-9c16-6ecc645e9e9f/id-preview-4a1dfac6--8dfe3ade-d89a-4a7a-aa56-14ea4e5c584f.lovable.app-1782466184054.png" },
+      { property: "og:image", content: "https://iss-en-direct.com/og-image.png" },
+      { property: "og:image:width", content: "1200" },
+      { property: "og:image:height", content: "630" },
+      { name: "twitter:image", content: "https://iss-en-direct.com/og-image.png" },
     ],
     links: [
       { rel: "preconnect", href: "https://fonts.googleapis.com" },

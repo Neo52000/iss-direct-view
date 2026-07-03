@@ -7,7 +7,7 @@ import { homeFaq } from "@/data/faq";
 import { BlogPreview } from "@/components/BlogPreview";
 import { KitSection, CommerceBenefits } from "@/components/KitSection";
 import { ProductGrid } from "@/components/ProductGrid";
-import { AdSlot } from "@/components/AdSlot";
+import { SponsorBanner } from "@/components/AdSlot";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -44,7 +44,7 @@ function Home() {
       <HeroLive />
       <FeatureCards />
       <div className="mx-auto max-w-7xl px-4 md:px-6">
-        <AdSlot label="Espace publicitaire" />
+        <SponsorBanner />
       </div>
       <EmailCapture />
       <FAQ items={homeFaq} />

@@ -3,7 +3,7 @@ import { LiveVideo } from "@/components/LiveVideo";
 import { FAQ, faqJsonLd } from "@/components/FAQ";
 import { homeFaq } from "@/data/faq";
 import { EmailCapture } from "@/components/EmailCapture";
-import { AdSlot } from "@/components/AdSlot";
+import { SponsorBanner } from "@/components/AdSlot";
 
 export const Route = createFileRoute("/live")({
   head: () => ({
@@ -42,7 +42,9 @@ function LivePage() {
           <LiveVideo />
         </div>
         <div className="mt-6">
-          <AdSlot label="Publicité — sous le lecteur" />
+          <SponsorBanner>
+            Cette page peut être sponsorisée par une marque éducative ou scientifique.
+          </SponsorBanner>
         </div>
       </section>
 

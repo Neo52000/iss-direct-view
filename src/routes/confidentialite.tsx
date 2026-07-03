@@ -22,8 +22,17 @@ function PrivacyPage() {
         <h2 className="font-display text-xl font-bold text-white">Données collectées</h2>
         <p>
           Les seules données collectées sont celles que vous fournissez volontairement via le
-          formulaire d'alertes (email, ville facultative). Ces données sont conservées localement en
-          V1 (stockage navigateur) et ne sont pas transmises à des tiers.
+          formulaire d'alertes : adresse email et ville (facultative). Ces données sont stockées de
+          façon sécurisée dans notre base de données (Supabase), protégée par des règles d'accès
+          strictes : personne ne peut consulter la liste des inscrits en dehors de l'équipe d'ISS
+          Direct France, et ces données ne sont jamais revendues ni transmises à des tiers à des
+          fins commerciales.
+        </p>
+        <p>
+          Elles servent uniquement à vous envoyer un email de confirmation d'inscription et, si vous
+          avez indiqué une ville, des alertes automatiques lorsqu'un passage visible de l'ISS est
+          prévu dans les 24 heures. L'envoi de ces emails est assuré par notre prestataire Brevo
+          (Sendinblue).
         </p>
         <h2 className="font-display text-xl font-bold text-white">Cookies</h2>
         <p>
@@ -38,7 +47,10 @@ function PrivacyPage() {
         </p>
         <h2 className="font-display text-xl font-bold text-white">Vos droits</h2>
         <p>
-          Vous pouvez à tout moment demander la suppression de vos données via la page contact.
+          Conformément au RGPD, vous disposez d'un droit d'accès, de rectification et de suppression
+          de vos données. Vous pouvez exercer ce droit à tout moment en écrivant via la{" "}
+          <a href="/contact" className="text-[color:var(--iss-cyan)] underline">page contact</a>,
+          ou en répondant "désinscription" à n'importe quel email reçu.
         </p>
       </div>
     </section>
