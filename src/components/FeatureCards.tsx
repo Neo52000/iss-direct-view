@@ -1,4 +1,6 @@
+import { motion } from "motion/react";
 import { Radio, MapPin, Eye, BellRing } from "lucide-react";
+import { fadeUp, revealOnView } from "@/lib/motion";
 
 const FEATURES = [
   {
@@ -26,17 +28,17 @@ const FEATURES = [
 export function FeatureCards() {
   return (
     <section className="mx-auto max-w-7xl px-4 py-12 md:px-6">
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      <motion.div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4" {...revealOnView}>
         {FEATURES.map((f) => (
-          <div key={f.title} className="iss-card p-5">
+          <motion.div key={f.title} variants={fadeUp} className="iss-card iss-card-interactive p-5">
             <span className="grid h-10 w-10 place-items-center rounded-xl bg-[color:var(--iss-blue)]/15 ring-1 ring-[color:var(--iss-blue)]/30">
               <f.icon className="h-5 w-5 text-[color:var(--iss-cyan)]" />
             </span>
             <h3 className="mt-4 font-display text-lg font-bold">{f.title}</h3>
             <p className="mt-1.5 text-sm text-white/70">{f.text}</p>
-          </div>
+          </motion.div>
         ))}
-      </div>
+      </motion.div>
     </section>
   );
 }

@@ -1,6 +1,8 @@
 import { Link } from "@tanstack/react-router";
+import { motion, AnimatePresence } from "motion/react";
 import { Globe2, ArrowRight, Eye, EclipseIcon, Sun } from "lucide-react";
 import { useIssPosition } from "@/services/issApi";
+import { useAnimatedNumber } from "@/hooks/useAnimatedNumber";
 import {
   formatAltitude,
   formatCoordinates,
@@ -9,30 +11,55 @@ import {
 } from "@/lib/iss-utils";
 
 function VisibilityBadge({ visibility }: { visibility: string }) {
-  if (visibility === "visible")
-    return (
-      <span className="inline-flex items-center gap-1.5 rounded-full bg-[color:var(--iss-ok)]/15 px-2.5 py-1 text-xs font-semibold text-[color:var(--iss-ok)]">
-        <Eye className="h-3 w-3" /> Visible à l'œil nu
-      </span>
-    );
-  if (visibility === "eclipsed")
-    return (
-      <span className="inline-flex items-center gap-1.5 rounded-full bg-orange-500/15 px-2.5 py-1 text-xs font-semibold text-orange-300">
-        <EclipseIcon className="h-3 w-3" /> En éclipse
-      </span>
-    );
   return (
-    <span className="inline-flex items-center gap-1.5 rounded-full bg-white/10 px-2.5 py-1 text-xs font-semibold text-white/60">
-      <Sun className="h-3 w-3" /> Plein jour
-    </span>
+    <AnimatePresence mode="wait">
+      {visibility === "visible" ? (
+        <motion.span
+          key="visible"
+          layout
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          exit={{ opacity: 0, scale: 0.9 }}
+          className="inline-flex items-center gap-1.5 rounded-full bg-[color:var(--iss-ok)]/15 px-2.5 py-1 text-xs font-semibold text-[color:var(--iss-ok)]"
+        >
+          <Eye className="h-3 w-3" /> Visible à l'œil nu
+        </motion.span>
+      ) : visibility === "eclipsed" ? (
+        <motion.span
+          key="eclipsed"
+          layout
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          exit={{ opacity: 0, scale: 0.9 }}
+          className="inline-flex items-center gap-1.5 rounded-full bg-orange-500/15 px-2.5 py-1 text-xs font-semibold text-orange-300"
+        >
+          <EclipseIcon className="h-3 w-3" /> En éclipse
+        </motion.span>
+      ) : (
+        <motion.span
+          key="daylight"
+          layout
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          exit={{ opacity: 0, scale: 0.9 }}
+          className="inline-flex items-center gap-1.5 rounded-full bg-white/10 px-2.5 py-1 text-xs font-semibold text-white/60"
+        >
+          <Sun className="h-3 w-3" /> Plein jour
+        </motion.span>
+      )}
+    </AnimatePresence>
   );
 }
 
 export function IssStatusCard() {
   const { position, error, loading } = useIssPosition();
+  const altitude = useAnimatedNumber(position?.altitude ?? 0);
+  const velocity = useAnimatedNumber(position?.velocity ?? 0);
+  const latitude = useAnimatedNumber(position?.latitude ?? 0);
+  const longitude = useAnimatedNumber(position?.longitude ?? 0);
 
   return (
-    <div className="iss-card p-5">
+    <div className="iss-card iss-card-interactive p-5">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
           <Globe2 className="h-5 w-5 text-[color:var(--iss-cyan)]" />
@@ -58,16 +85,10 @@ export function IssStatusCard() {
             <VisibilityBadge visibility={position.visibility ?? "daylight"} />
           </div>
           <dl className="mt-3 grid grid-cols-2 gap-3 text-sm">
-            <Stat label="Altitude" value={formatAltitude(position.altitude)} />
-            <Stat label="Vitesse" value={formatSpeed(position.velocity)} />
-            <Stat
-              label="Latitude"
-              value={`${position.latitude.toFixed(3)}°`}
-            />
-            <Stat
-              label="Longitude"
-              value={`${position.longitude.toFixed(3)}°`}
-            />
+            <Stat label="Altitude" value={formatAltitude(altitude)} />
+            <Stat label="Vitesse" value={formatSpeed(velocity)} />
+            <Stat label="Latitude" value={`${latitude.toFixed(3)}°`} />
+            <Stat label="Longitude" value={`${longitude.toFixed(3)}°`} />
           </dl>
           <p className="mt-3 text-[11px] text-white/40">
             MAJ : {getReadableDate(position.timestamp * 1000)} ·{" "}

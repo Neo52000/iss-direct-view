@@ -1,9 +1,11 @@
 import { Link } from "@tanstack/react-router";
+import { motion } from "motion/react";
 import { blogPosts } from "@/data/blogPosts";
 import { getReadableDay } from "@/lib/iss-utils";
 import { useQuery } from "@tanstack/react-query";
 import { fetchPublishedPosts } from "@/lib/blog";
 import { Skeleton } from "@/components/ui/skeleton";
+import { fadeUp, revealOnView } from "@/lib/motion";
 
 export function BlogPreview({ count = 3 }: { count?: number }) {
   const { data: dbPosts = [], isLoading } = useQuery({
@@ -52,7 +54,7 @@ export function BlogPreview({ count = 3 }: { count?: number }) {
           Tous les articles
         </Link>
       </div>
-      <div className="mt-8 grid gap-5 md:grid-cols-3">
+      <motion.div className="mt-8 grid gap-5 md:grid-cols-3" {...revealOnView}>
         {isLoading && dbPosts.length === 0
           ? Array.from({ length: count }).map((_, i) => (
               <div key={i} className="iss-card flex flex-col overflow-hidden">
@@ -66,7 +68,7 @@ export function BlogPreview({ count = 3 }: { count?: number }) {
               </div>
             ))
           : posts.map((p) => (
-          <article key={p.slug} className="iss-card flex flex-col overflow-hidden">
+          <motion.article key={p.slug} variants={fadeUp} className="iss-card iss-card-interactive flex flex-col overflow-hidden">
             {p.image ? (
               <img
                 src={p.image}
@@ -98,9 +100,9 @@ export function BlogPreview({ count = 3 }: { count?: number }) {
                 </Link>
               </div>
             </div>
-          </article>
+          </motion.article>
         ))}
-      </div>
+      </motion.div>
 
     </section>
   );

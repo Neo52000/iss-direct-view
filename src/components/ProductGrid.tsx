@@ -1,8 +1,10 @@
 import { Star } from "lucide-react";
+import { motion } from "motion/react";
 import { useQuery } from "@tanstack/react-query";
 import { fetchActiveProducts, trackClickAndOpen } from "@/lib/products";
 import { affiliateProducts } from "@/data/products";
 import { Skeleton } from "@/components/ui/skeleton";
+import { fadeUp, revealOnView } from "@/lib/motion";
 
 export function ProductGrid() {
   const { data: products = [], isLoading } = useQuery({
@@ -44,7 +46,7 @@ export function ProductGrid() {
           </p>
         </div>
 
-        <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+        <motion.div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3" {...revealOnView}>
           {isLoading && products.length === 0
             ? Array.from({ length: 3 }).map((_, i) => (
                 <div key={i} className="flex flex-col overflow-hidden rounded-2xl border border-[#0b1530]/10 bg-white">
@@ -58,9 +60,11 @@ export function ProductGrid() {
                 </div>
               ))
             : items.map((p) => (
-            <article
+            <motion.article
               key={p.id}
-              className="flex flex-col overflow-hidden rounded-2xl border border-[#0b1530]/10 bg-white shadow-sm transition hover:shadow-md"
+              variants={fadeUp}
+              whileHover={{ y: -4 }}
+              className="flex flex-col overflow-hidden rounded-2xl border border-[#0b1530]/10 bg-white shadow-sm transition-shadow hover:shadow-lg"
             >
               <div className="relative grid aspect-square place-items-center bg-gradient-to-br from-[#eef3ff] to-[#dbe7ff] text-7xl">
                 {p.image_url ? (
@@ -98,9 +102,9 @@ export function ProductGrid() {
                   </button>
                 </div>
               </div>
-            </article>
+            </motion.article>
           ))}
-        </div>
+        </motion.div>
 
         <p className="mt-6 text-xs text-[#0b1530]/50">
           Certains liens peuvent être affiliés. Cela peut nous reverser une commission sans surcoût pour vous.

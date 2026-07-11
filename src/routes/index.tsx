@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { HeroLive } from "@/components/HeroLive";
+import { StatsBar } from "@/components/StatsBar";
 import { FeatureCards } from "@/components/FeatureCards";
 import { EmailCapture } from "@/components/EmailCapture";
 import { FAQ, faqJsonLd } from "@/components/FAQ";
@@ -42,6 +43,7 @@ function Home() {
   return (
     <>
       <HeroLive />
+      <StatsBar />
       <FeatureCards />
       <div className="mx-auto max-w-7xl px-4 md:px-6">
         <SponsorBanner />

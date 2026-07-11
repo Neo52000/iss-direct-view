@@ -16,6 +16,7 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from "recharts";
+import { Radar } from "@/components/Radar";
 
 export const Route = createFileRoute("/position")({
   head: () => ({
@@ -281,11 +282,9 @@ function PositionPage() {
               aria-live="polite"
             >
               <div className="flex flex-col items-center gap-3 text-white/70">
-                <div className="relative h-16 w-16">
-                  <div className="absolute inset-0 animate-ping rounded-full bg-[color:var(--iss-cyan)]/30" />
-                  <div className="absolute inset-2 grid place-items-center rounded-full bg-[color:var(--iss-surface)] border border-white/10">
-                    <Loader2 className="h-6 w-6 animate-spin text-[color:var(--iss-cyan)]" />
-                  </div>
+                <div className="relative grid h-16 w-16 place-items-center rounded-full bg-[color:var(--iss-surface)] border border-white/10">
+                  <Radar color="var(--iss-cyan)" className="absolute h-16 w-16" />
+                  <Loader2 className="h-6 w-6 animate-spin text-[color:var(--iss-cyan)]" />
                 </div>
                 <p className="text-sm">Chargement de la carte…</p>
               </div>

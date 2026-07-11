@@ -1,8 +1,62 @@
 import { useEffect, useState } from "react";
 import { CalendarPlus, MapPin, Loader2 } from "lucide-react";
 import { Link } from "@tanstack/react-router";
+import { AnimatePresence, motion } from "motion/react";
 import { getVisiblePasses, type VisiblePass } from "@/services/passesApi";
 import { generateCalendarEvent, getReadableDate } from "@/lib/iss-utils";
+
+function useCountdown(targetMs: number) {
+  const [now, setNow] = useState(() => Date.now());
+  useEffect(() => {
+    const id = setInterval(() => setNow(Date.now()), 1000);
+    return () => clearInterval(id);
+  }, []);
+  const remaining = Math.max(0, Math.floor((targetMs - now) / 1000));
+  return {
+    days: Math.floor(remaining / 86400),
+    hours: Math.floor((remaining % 86400) / 3600),
+    minutes: Math.floor((remaining % 3600) / 60),
+    seconds: remaining % 60,
+  };
+}
+
+function CountdownDigit({ value, label }: { value: number; label: string }) {
+  const padded = String(value).padStart(2, "0");
+  return (
+    <div className="flex flex-col items-center gap-1">
+      <div className="relative h-9 w-11 overflow-hidden rounded-lg bg-white/[0.06]">
+        <AnimatePresence mode="popLayout">
+          <motion.span
+            key={padded}
+            initial={{ y: -20, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            exit={{ y: 20, opacity: 0 }}
+            transition={{ duration: 0.25, ease: "easeOut" }}
+            className="absolute inset-0 grid place-items-center font-display text-base font-bold text-white"
+          >
+            {padded}
+          </motion.span>
+        </AnimatePresence>
+      </div>
+      <span className="text-[10px] uppercase tracking-wider text-white/40">{label}</span>
+    </div>
+  );
+}
+
+function Countdown({ targetMs }: { targetMs: number }) {
+  const { days, hours, minutes, seconds } = useCountdown(targetMs);
+  return (
+    <div className="flex items-center justify-center gap-2 rounded-xl border border-white/10 bg-white/[0.02] py-3">
+      <CountdownDigit value={days} label="jours" />
+      <span className="pb-4 text-white/30">:</span>
+      <CountdownDigit value={hours} label="h" />
+      <span className="pb-4 text-white/30">:</span>
+      <CountdownDigit value={minutes} label="min" />
+      <span className="pb-4 text-white/30">:</span>
+      <CountdownDigit value={seconds} label="sec" />
+    </div>
+  );
+}
 
 type State =
   | { status: "idle" }
@@ -47,7 +101,7 @@ export function NextPassCard() {
   }, [hasKey]);
 
   return (
-    <div className="iss-card p-5">
+    <div className="iss-card iss-card-interactive p-5">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
           <MapPin className="h-5 w-5 text-[color:var(--iss-cyan)]" />
@@ -66,6 +120,7 @@ export function NextPassCard() {
 
       {state.status === "ok" && (
         <div className="mt-4 space-y-3 text-sm">
+          <Countdown targetMs={state.pass.startUTC * 1000} />
           <Row label="Localisation" value={state.label} />
           <Row label="Date" value={getReadableDate(state.pass.startUTC * 1000)} />
           <Row label="Durée" value={`${Math.round(state.pass.duration / 60)} min`} />

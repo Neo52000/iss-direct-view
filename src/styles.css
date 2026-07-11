@@ -163,10 +163,42 @@
       radial-gradient(1200px 600px at 80% -10%, color-mix(in oklab, var(--iss-blue) 22%, transparent), transparent 60%),
       radial-gradient(900px 500px at -10% 30%, color-mix(in oklab, var(--iss-cyan) 14%, transparent), transparent 60%);
     background-attachment: fixed;
+    background-size: 140% 140%, 140% 140%;
+    animation: nebula-drift 45s ease-in-out infinite alternate;
   }
   h1, h2, h3, h4 {
     font-family: var(--font-display);
     letter-spacing: -0.02em;
+  }
+}
+
+@keyframes nebula-drift {
+  from {
+    background-position: 80% -10%, -10% 30%;
+  }
+  to {
+    background-position: 65% 5%, 5% 45%;
+  }
+}
+
+@keyframes star-twinkle {
+  0%, 100% {
+    opacity: 0.9;
+  }
+  50% {
+    opacity: 0.35;
+  }
+}
+
+@keyframes shimmer {
+  to {
+    background-position: 200% center;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body {
+    animation: none;
   }
 }
 
@@ -175,4 +207,57 @@
   border: 1px solid color-mix(in oklab, white 10%, transparent);
   backdrop-filter: blur(8px);
   border-radius: 1rem;
+}
+
+@utility iss-card-interactive {
+  transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+
+  &:hover {
+    transform: translateY(-3px);
+    border-color: color-mix(in oklab, var(--iss-cyan) 35%, transparent);
+    box-shadow: 0 12px 32px -12px color-mix(in oklab, var(--iss-blue) 45%, transparent);
+  }
+}
+
+@utility text-shimmer {
+  background-size: 200% auto;
+  animation: shimmer 6s linear infinite;
+}
+
+@utility starfield {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-image:
+    radial-gradient(1.5px 1.5px at 10% 20%, white, transparent),
+    radial-gradient(1.5px 1.5px at 80% 10%, white, transparent),
+    radial-gradient(1px 1px at 60% 70%, white, transparent),
+    radial-gradient(1px 1px at 25% 85%, white, transparent),
+    radial-gradient(1.5px 1.5px at 90% 60%, white, transparent),
+    radial-gradient(1px 1px at 45% 40%, white, transparent),
+    radial-gradient(1px 1px at 15% 55%, white, transparent),
+    radial-gradient(1.5px 1.5px at 70% 90%, white, transparent);
+  background-repeat: repeat;
+  background-size: 600px 600px;
+  opacity: 0.5;
+  animation: star-twinkle 6s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .starfield,
+  .text-shimmer {
+    animation: none;
+  }
+}
+
+/* Smoothly interpolate the ISS marker between position updates on the Leaflet map. */
+.leaflet-marker-icon:has(.iss-marker) {
+  transition: transform 0.6s linear;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .leaflet-marker-icon:has(.iss-marker) {
+    transition: none;
+  }
 }
