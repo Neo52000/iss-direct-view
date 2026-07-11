@@ -1,6 +1,8 @@
 import { Download, GraduationCap } from "lucide-react";
 import { useEffect, useState } from "react";
+import { motion } from "motion/react";
 import { fetchSetting, SETTING_KEYS } from "@/lib/settings";
+import { fadeUp } from "@/lib/motion";
 
 export function KitSection() {
   const [url, setUrl] = useState<string>("/ressources");
@@ -11,7 +13,13 @@ export function KitSection() {
   }, []);
   const isExternal = /^https?:\/\//i.test(url);
   return (
-    <section className="mx-auto max-w-7xl px-4 py-12 md:px-6">
+    <motion.section
+      className="mx-auto max-w-7xl px-4 py-12 md:px-6"
+      initial="hidden"
+      whileInView="show"
+      viewport={{ once: true, margin: "-80px" }}
+      variants={fadeUp}
+    >
       <div className="overflow-hidden rounded-3xl bg-gradient-to-br from-[#FFB020] to-[#FF8A00] p-8 text-[#2a1a00] md:p-12">
         <div className="grid items-center gap-6 md:grid-cols-[1.4fr_1fr]">
           <div>
@@ -52,7 +60,7 @@ export function KitSection() {
           </div>
         </div>
       </div>
-    </section>
+    </motion.section>
   );
 }
 

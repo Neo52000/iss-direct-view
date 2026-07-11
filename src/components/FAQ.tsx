@@ -1,3 +1,4 @@
+import { motion } from "motion/react";
 import {
   Accordion,
   AccordionContent,
@@ -5,10 +6,17 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import type { FaqItem } from "@/data/faq";
+import { fadeUp } from "@/lib/motion";
 
 export function FAQ({ items, title = "Questions fréquentes" }: { items: FaqItem[]; title?: string }) {
   return (
-    <section className="mx-auto max-w-4xl px-4 py-16 md:px-6">
+    <motion.section
+      className="mx-auto max-w-4xl px-4 py-16 md:px-6"
+      initial="hidden"
+      whileInView="show"
+      viewport={{ once: true, margin: "-80px" }}
+      variants={fadeUp}
+    >
       <h2 className="font-display text-3xl font-extrabold md:text-4xl">{title}</h2>
       <p className="mt-2 text-white/70">
         Tout ce qu'il faut savoir sur le live et l'observation de l'ISS.
@@ -27,7 +35,7 @@ export function FAQ({ items, title = "Questions fréquentes" }: { items: FaqItem
           </AccordionItem>
         ))}
       </Accordion>
-    </section>
+    </motion.section>
   );
 }
 

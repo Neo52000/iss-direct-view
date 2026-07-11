@@ -1,3 +1,5 @@
+import { Radar } from "./Radar";
+
 const DEFAULT_ID = "awQzjn72bI0";
 
 export function LiveVideo({ id }: { id?: string }) {
@@ -15,10 +17,7 @@ export function LiveVideo({ id }: { id?: string }) {
         />
       </div>
       <div className="pointer-events-none absolute left-3 top-3 flex items-center gap-2 rounded-full bg-black/70 px-3 py-1.5 text-xs font-bold uppercase tracking-wider">
-        <span className="relative flex h-2 w-2">
-          <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[color:var(--iss-live)] opacity-75" />
-          <span className="relative inline-flex h-2 w-2 rounded-full bg-[color:var(--iss-live)]" />
-        </span>
+        <Radar color="var(--iss-live)" />
         En direct
       </div>
       <div className="border-t border-white/10 bg-black/40 px-4 py-2 text-xs text-white/60">
