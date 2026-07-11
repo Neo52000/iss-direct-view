@@ -153,6 +153,7 @@ function RootComponent() {
   return (
     <QueryClientProvider client={queryClient}>
       <MotionConfig reducedMotion="user">
+        <div className="nebula" aria-hidden />
         <div className="starfield" aria-hidden />
         <div className="flex min-h-screen flex-col">
           <Header />
