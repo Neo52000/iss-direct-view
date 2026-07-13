@@ -23,14 +23,28 @@ function renderParagraph(text: string, key: number) {
   let linkIndex = 0;
   while ((match = LINK_PATTERN.exec(text))) {
     if (match.index > lastIndex) parts.push(text.slice(lastIndex, match.index));
+    const url = match[2];
+    const isInternal = url.startsWith("/") && !url.startsWith("//");
     parts.push(
-      <a
-        key={`link-${key}-${linkIndex++}`}
-        href={match[2]}
-        className="text-[color:var(--iss-cyan)] underline underline-offset-2"
-      >
-        {match[1]}
-      </a>,
+      isInternal ? (
+        <Link
+          key={`link-${key}-${linkIndex++}`}
+          to={url}
+          className="text-[color:var(--iss-cyan)] underline underline-offset-2"
+        >
+          {match[1]}
+        </Link>
+      ) : (
+        <a
+          key={`link-${key}-${linkIndex++}`}
+          href={url}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-[color:var(--iss-cyan)] underline underline-offset-2"
+        >
+          {match[1]}
+        </a>
+      ),
     );
     lastIndex = match.index + match[0].length;
   }

@@ -12,7 +12,6 @@ import {
   type ContentTopicRow,
   type TopicStatus,
 } from "@/lib/topics";
-import { upsertPost } from "@/lib/blog";
 import { generateBlogArticle } from "@/lib/ai-blog.functions";
 import { Pencil, Plus, Trash2, ExternalLink, LogOut, Sparkles, Loader2 } from "lucide-react";
 
@@ -127,39 +126,41 @@ function AdminTopicsPage() {
         },
       });
       const content = out.cta ? `${out.content}\n\n${out.cta}` : out.content;
+      const stripDiacritics = (s: string) =>
+        Array.from(s)
+          .filter((ch) => {
+            const code = ch.codePointAt(0) ?? 0;
+            return code < 0x0300 || code > 0x036f; // plage Unicode des diacritiques combinants
+          })
+          .join("");
       const slugify = (s: string) =>
-        s
-          .toLowerCase()
-          .normalize("NFD")
-          .replace(/[̀-ͯ]/g, "")
+        stripDiacritics(s.toLowerCase().normalize("NFD"))
           .replace(/[^a-z0-9]+/g, "-")
           .replace(/(^-|-$)/g, "")
           .slice(0, 60);
 
-      await upsertPost({
-        slug: out.slug || slugify(topic.keyword),
-        title: out.title,
-        meta_description: out.meta_description,
-        excerpt: out.excerpt,
-        content,
-        category: out.category,
-        cover: out.cover,
-        reading_time: out.reading_time,
-        published: !out.to_verify,
-        published_at: new Date().toISOString(),
-        cover_image_url: null,
-        cover_image_alt: out.alt_text || null,
-        faq: out.faq,
-        social_suggestions: out.social_suggestions,
-        to_verify: out.to_verify || null,
-      });
-
-      // Le post généré n'a pas d'id renvoyé par upsertPost (insert) ; on relie via slug.
-      const { data: created } = await supabase
+      const { data: created, error: insertError } = await supabase
         .from("blog_posts")
+        .insert({
+          slug: out.slug || slugify(topic.keyword),
+          title: out.title,
+          meta_description: out.meta_description,
+          excerpt: out.excerpt,
+          content,
+          category: out.category,
+          cover: out.cover,
+          reading_time: out.reading_time,
+          published: !out.to_verify,
+          published_at: new Date().toISOString(),
+          cover_image_url: null,
+          cover_image_alt: out.alt_text || null,
+          faq: out.faq,
+          social_suggestions: out.social_suggestions,
+          to_verify: out.to_verify || null,
+        })
         .select("id")
-        .eq("slug", out.slug || slugify(topic.keyword))
-        .maybeSingle();
+        .single();
+      if (insertError) throw insertError;
 
       await upsertTopic({
         id: topic.id,

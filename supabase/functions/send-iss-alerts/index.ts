@@ -54,7 +54,10 @@ function formatDate(unix: number, tz = "Europe/Paris") {
 }
 
 function isMondayInParis(): boolean {
-  const weekday = new Date().toLocaleDateString("en-US", { timeZone: "Europe/Paris", weekday: "long" });
+  const weekday = new Date().toLocaleDateString("en-US", {
+    timeZone: "Europe/Paris",
+    weekday: "long",
+  });
   return weekday === "Monday";
 }
 
@@ -100,17 +103,34 @@ async function sendPassAlerts() {
   const now = Math.floor(Date.now() / 1000);
   let sent = 0;
 
+  // Beaucoup de leads partagent la même ville : on met en cache le géocodage et les
+  // passages par ville pour cette exécution afin d'éviter de spammer Nominatim/N2YO.
+  const geoCache = new Map<string, { lat: number; lon: number } | null>();
+  const passesCache = new Map<string, Awaited<ReturnType<typeof getPasses>>>();
+
   for (const lead of leads) {
-    const geo = await geocode(lead.city!);
+    const city = lead.city!;
+    let geo = geoCache.get(city);
+    if (geo === undefined) {
+      geo = await geocode(city);
+      geoCache.set(city, geo);
+    }
     if (!geo) continue;
 
-    const passes = await getPasses(geo.lat, geo.lon);
+    const cacheKey = `${geo.lat},${geo.lon}`;
+    let passes = passesCache.get(cacheKey);
+    if (passes === undefined) {
+      passes = await getPasses(geo.lat, geo.lon);
+      passesCache.set(cacheKey, passes);
+    }
     const upcoming = passes.filter((p) => p.startUTC > now && p.startUTC < now + 86400);
     if (!upcoming.length) continue;
 
     // Idempotence : si on a déjà alerté pour ce même prochain passage, on n'envoie pas deux fois.
+    // last_alert_pass_start est un bigint : Postgrest peut le sérialiser en string, d'où le Number().
     const nextPassStart = upcoming[0].startUTC;
-    if (lead.last_alert_pass_start === nextPassStart) continue;
+    if (lead.last_alert_pass_start != null && Number(lead.last_alert_pass_start) === nextPassStart)
+      continue;
 
     const passLines = upcoming
       .map(
@@ -132,7 +152,10 @@ async function sendPassAlerts() {
       await sendEmail(lead.email, `🛰️ ISS visible depuis ${lead.city} ce soir`, html);
       await supabase
         .from("leads")
-        .update({ last_alert_pass_start: nextPassStart, last_alert_sent_at: new Date().toISOString() })
+        .update({
+          last_alert_pass_start: nextPassStart,
+          last_alert_sent_at: new Date().toISOString(),
+        })
         .eq("id", lead.id);
       sent++;
     } catch (err) {
@@ -159,12 +182,17 @@ async function sendWeeklyDigest() {
   const { data: leads, error } = await supabase
     .from("leads")
     .select("id, email, last_digest_sent_at")
-    .or(`last_digest_sent_at.is.null,last_digest_sent_at.lt.${new Date(Date.now() - DIGEST_INTERVAL_DAYS * 86_400_000).toISOString()}`);
+    .or(
+      `last_digest_sent_at.is.null,last_digest_sent_at.lt.${new Date(Date.now() - DIGEST_INTERVAL_DAYS * 86_400_000).toISOString()}`,
+    );
   if (error) throw error;
   if (!leads?.length) return 0;
 
   const postLines = posts
-    .map((p) => `<li><a href="${SITE_URL}/blog/${p.slug}" style="color:#2F80FF">${p.title}</a>${p.excerpt ? ` — ${p.excerpt}` : ""}</li>`)
+    .map(
+      (p) =>
+        `<li><a href="${SITE_URL}/blog/${p.slug}" style="color:#2F80FF">${p.title}</a>${p.excerpt ? ` — ${p.excerpt}` : ""}</li>`,
+    )
     .join("");
 
   let sent = 0;
@@ -179,7 +207,10 @@ async function sendWeeklyDigest() {
       await sendEmail(lead.email, "🛰️ Vos actus ISS de la semaine", html);
       await supabase
         .from("leads")
-        .update({ last_digest_sent_at: new Date().toISOString(), last_alert_sent_at: new Date().toISOString() })
+        .update({
+          last_digest_sent_at: new Date().toISOString(),
+          last_alert_sent_at: new Date().toISOString(),
+        })
         .eq("id", lead.id);
       sent++;
     } catch (err) {
@@ -215,7 +246,10 @@ async function sendReactivation() {
       await sendEmail(lead.email, "🛰️ La fin de vie de l'ISS approche — le saviez-vous ?", html);
       await supabase
         .from("leads")
-        .update({ reactivation_sent_at: new Date().toISOString(), last_alert_sent_at: new Date().toISOString() })
+        .update({
+          reactivation_sent_at: new Date().toISOString(),
+          last_alert_sent_at: new Date().toISOString(),
+        })
         .eq("id", lead.id);
       sent++;
     } catch (err) {

@@ -118,11 +118,16 @@ Réponds uniquement avec cet objet JSON.`;
       throw new Error("Réponse IA non parsable.");
     }
 
+    const stripDiacritics = (s: string) =>
+      Array.from(s)
+        .filter((ch) => {
+          const code = ch.codePointAt(0) ?? 0;
+          return code < 0x0300 || code > 0x036f; // plage Unicode des diacritiques combinants
+        })
+        .join("");
+
     const slugify = (s: string) =>
-      s
-        .toLowerCase()
-        .normalize("NFD")
-        .replace(/[̀-ͯ]/g, "")
+      stripDiacritics(s.toLowerCase().normalize("NFD"))
         .replace(/[^a-z0-9]+/g, "-")
         .replace(/(^-|-$)/g, "")
         .slice(0, 60);

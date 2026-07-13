@@ -292,8 +292,8 @@ function EditDrawer({
     const warnings: string[] = [];
     const others = existingPosts.filter((p) => p.id !== form.id);
     if (
-      form.title &&
-      others.some((p) => p.meta_description && p.meta_description === form.meta_description)
+      form.meta_description?.trim() &&
+      others.some((p) => p.meta_description === form.meta_description)
     ) {
       warnings.push("Meta description déjà utilisée par un autre article.");
     }
