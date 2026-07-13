@@ -5,6 +5,10 @@ const SUPABASE_SERVICE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
 const N2YO_API_KEY = Deno.env.get("N2YO_API_KEY")!;
 const BREVO_API_KEY = Deno.env.get("BREVO_API_KEY")!;
 
+const SITE_URL = "https://iss-direct-france.fr";
+const DIGEST_INTERVAL_DAYS = 6; // évite un double envoi si le cron est redéclenché le même jour
+const REACTIVATION_AFTER_DAYS = 60;
+
 const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY);
 
 // Nominatim geocoding (city name → lat/lon)
@@ -49,6 +53,16 @@ function formatDate(unix: number, tz = "Europe/Paris") {
   });
 }
 
+function isMondayInParis(): boolean {
+  const weekday = new Date().toLocaleDateString("en-US", { timeZone: "Europe/Paris", weekday: "long" });
+  return weekday === "Monday";
+}
+
+function daysSince(iso: string | null): number {
+  if (!iso) return Infinity;
+  return (Date.now() - new Date(iso).getTime()) / 86_400_000;
+}
+
 async function sendEmail(to: string, subject: string, html: string) {
   const res = await fetch("https://api.brevo.com/v3/smtp/email", {
     method: "POST",
@@ -70,20 +84,20 @@ async function sendEmail(to: string, subject: string, html: string) {
   await res.body?.cancel();
 }
 
-Deno.serve(async () => {
-  if (!N2YO_API_KEY || !BREVO_API_KEY) {
-    return new Response("Missing env vars", { status: 500 });
-  }
+function footer() {
+  return `<hr style="border:none;border-top:1px solid #eee;margin:20px 0"/>
+  <p style="font-size:12px;color:#aaa">Vous recevez cet email car vous êtes inscrit sur <a href="${SITE_URL}">iss-direct-france.fr</a>.</p>`;
+}
 
-  // Fetch all leads with a city set
+async function sendPassAlerts() {
   const { data: leads, error } = await supabase
     .from("leads")
-    .select("email, city")
+    .select("id, email, city, last_alert_pass_start")
     .not("city", "is", null);
+  if (error) throw error;
+  if (!leads?.length) return 0;
 
-  if (error) return new Response(error.message, { status: 500 });
-  if (!leads?.length) return new Response("No leads", { status: 200 });
-
+  const now = Math.floor(Date.now() / 1000);
   let sent = 0;
 
   for (const lead of leads) {
@@ -91,10 +105,12 @@ Deno.serve(async () => {
     if (!geo) continue;
 
     const passes = await getPasses(geo.lat, geo.lon);
-    // Only alert for passes in the next 24h
-    const now = Math.floor(Date.now() / 1000);
     const upcoming = passes.filter((p) => p.startUTC > now && p.startUTC < now + 86400);
     if (!upcoming.length) continue;
+
+    // Idempotence : si on a déjà alerté pour ce même prochain passage, on n'envoie pas deux fois.
+    const nextPassStart = upcoming[0].startUTC;
+    if (lead.last_alert_pass_start === nextPassStart) continue;
 
     const passLines = upcoming
       .map(
@@ -109,17 +125,118 @@ Deno.serve(async () => {
   <p>Voici les passages visibles dans les prochaines 24 heures :</p>
   <ul style="line-height:2">${passLines}</ul>
   <p style="color:#555;font-size:13px">Pour observer l'ISS : ciel dégagé, regardez vers la direction indiquée. L'ISS apparaît comme un point brillant qui se déplace en 1 à 6 minutes.</p>
-  <hr style="border:none;border-top:1px solid #eee;margin:20px 0"/>
-  <p style="font-size:12px;color:#aaa">Vous recevez cet email car vous êtes inscrit sur <a href="https://iss-direct-france.fr">iss-direct-france.fr</a>.</p>
+  ${footer()}
 </div>`;
 
     try {
       await sendEmail(lead.email, `🛰️ ISS visible depuis ${lead.city} ce soir`, html);
+      await supabase
+        .from("leads")
+        .update({ last_alert_pass_start: nextPassStart, last_alert_sent_at: new Date().toISOString() })
+        .eq("id", lead.id);
       sent++;
     } catch (err) {
-      console.error(`Failed to send alert to ${lead.email}:`, err);
+      console.error(`Failed to send pass alert to ${lead.email}:`, err);
     }
   }
 
-  return new Response(`Sent ${sent} alerts`, { status: 200 });
+  return sent;
+}
+
+async function sendWeeklyDigest() {
+  if (!isMondayInParis()) return 0;
+
+  const { data: posts, error: postsError } = await supabase
+    .from("blog_posts")
+    .select("title, slug, excerpt")
+    .eq("published", true)
+    .lte("published_at", new Date().toISOString())
+    .order("published_at", { ascending: false })
+    .limit(2);
+  if (postsError) throw postsError;
+  if (!posts?.length) return 0;
+
+  const { data: leads, error } = await supabase
+    .from("leads")
+    .select("id, email, last_digest_sent_at")
+    .or(`last_digest_sent_at.is.null,last_digest_sent_at.lt.${new Date(Date.now() - DIGEST_INTERVAL_DAYS * 86_400_000).toISOString()}`);
+  if (error) throw error;
+  if (!leads?.length) return 0;
+
+  const postLines = posts
+    .map((p) => `<li><a href="${SITE_URL}/blog/${p.slug}" style="color:#2F80FF">${p.title}</a>${p.excerpt ? ` — ${p.excerpt}` : ""}</li>`)
+    .join("");
+
+  let sent = 0;
+  for (const lead of leads) {
+    const html = `
+<div style="font-family:Arial,sans-serif;max-width:560px;margin:0 auto">
+  <h2 style="color:#2F80FF">🛰️ Cette semaine sur ISS Direct France</h2>
+  <ul style="line-height:2">${postLines}</ul>
+  ${footer()}
+</div>`;
+    try {
+      await sendEmail(lead.email, "🛰️ Vos actus ISS de la semaine", html);
+      await supabase
+        .from("leads")
+        .update({ last_digest_sent_at: new Date().toISOString(), last_alert_sent_at: new Date().toISOString() })
+        .eq("id", lead.id);
+      sent++;
+    } catch (err) {
+      console.error(`Failed to send digest to ${lead.email}:`, err);
+    }
+  }
+
+  return sent;
+}
+
+async function sendReactivation() {
+  const { data: leads, error } = await supabase
+    .from("leads")
+    .select("id, email, created_at, last_alert_sent_at, reactivation_sent_at")
+    .is("reactivation_sent_at", null);
+  if (error) throw error;
+  if (!leads?.length) return 0;
+
+  let sent = 0;
+  for (const lead of leads) {
+    const idleDays = daysSince(lead.last_alert_sent_at ?? lead.created_at);
+    if (idleDays < REACTIVATION_AFTER_DAYS) continue;
+
+    const html = `
+<div style="font-family:Arial,sans-serif;max-width:560px;margin:0 auto">
+  <h2 style="color:#2F80FF">🛰️ Ça fait un moment...</h2>
+  <p>Saviez-vous que l'ISS ne restera pas en orbite indéfiniment ? Découvrez ce qui va se passer
+  lors de sa fin de vie prévue en 2030-2031, et retrouvez vos alertes de passage sur
+  <a href="${SITE_URL}/blog" style="color:#2F80FF">le blog ISS Direct France</a>.</p>
+  ${footer()}
+</div>`;
+    try {
+      await sendEmail(lead.email, "🛰️ La fin de vie de l'ISS approche — le saviez-vous ?", html);
+      await supabase
+        .from("leads")
+        .update({ reactivation_sent_at: new Date().toISOString(), last_alert_sent_at: new Date().toISOString() })
+        .eq("id", lead.id);
+      sent++;
+    } catch (err) {
+      console.error(`Failed to send reactivation to ${lead.email}:`, err);
+    }
+  }
+
+  return sent;
+}
+
+Deno.serve(async () => {
+  if (!N2YO_API_KEY || !BREVO_API_KEY) {
+    return new Response("Missing env vars", { status: 500 });
+  }
+
+  const passAlerts = await sendPassAlerts();
+  const digests = await sendWeeklyDigest();
+  const reactivations = await sendReactivation();
+
+  return new Response(
+    `Sent ${passAlerts} pass alerts, ${digests} digests, ${reactivations} reactivations`,
+    { status: 200 },
+  );
 });

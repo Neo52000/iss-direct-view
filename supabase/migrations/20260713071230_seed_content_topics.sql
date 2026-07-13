@@ -1,0 +1,32 @@
+-- Seed the P1-P3 keyword bank from the editorial plan (section 1.2).
+-- Topics #2/#3 (city-geo declinations) are intentionally omitted: they're
+-- already live as programmatic pages at /passage-iss/$ville for 45 cities.
+INSERT INTO public.content_topics (keyword, intent, format, priority, monetization_lever, target_length) VALUES
+  ('Qui est à bord de l''ISS en ce moment ?', 'Info fraîche, récurrente', 'Article à mise à jour mensuelle', 'P1', 'Email (CTA alerte)', 600),
+  ('ISS vs Starlink : comment les différencier dans le ciel', 'Confusion fréquente, fort volume', 'Article + visuel comparatif', 'P1', 'Boutique (jumelles)', 800),
+  ('Combien coûte l''ISS ?', 'Curiosité, partage social', 'Article chiffré', 'P1', NULL, 700),
+  ('Que mangent les astronautes sur l''ISS ?', 'Familles/enfants', 'Article + kit pédagogique', 'P1', 'Ressources (lead magnet)', 700),
+  ('Fin de vie de l''ISS : que va-t-il se passer en 2030-2031 ?', 'Actualité récurrente, evergreen', 'Article de fond', 'P1', NULL, 1000),
+  ('Peut-on voir l''ISS en plein jour ?', 'Question pratique', 'Article court', 'P2', 'Email', 500),
+  ('Combien de temps un astronaute reste-t-il sur l''ISS ?', 'Info factuelle', 'Article court', 'P2', NULL, 500),
+  ('Comment l''ISS est-elle ravitaillée ?', 'Curiosité technique', 'Article + schéma', 'P2', NULL, 800),
+  ('Douches, toilettes, hygiène sur l''ISS', 'Fort partage/curiosité enfants', 'Article + illustration', 'P2', 'Ressources', 700),
+  ('Différence ISS / station chinoise Tiangong', 'Comparatif géopolitique', 'Article de fond', 'P2', NULL, 900),
+  ('Comment devient-on astronaute ?', 'Orientation, enfants/ados', 'Article + CTA kit', 'P2', 'Ressources', 800),
+  ('Meilleures applications pour suivre l''ISS en 2026', 'Comparatif outils', 'Article comparatif', 'P2', 'Boutique/affiliation app', 700),
+  ('Meilleures jumelles/télescopes pour observer l''ISS', 'Commercial', 'Article shopping', 'P2', 'Boutique (prioritaire)', 700),
+  ('Record de temps passé dans l''espace : qui, combien ?', 'Curiosité', 'Article court', 'P3', NULL, 500),
+  ('Les modules de l''ISS expliqués (Zvezda, Columbus, Kibo...)', 'Approfondissement', 'Article de fond', 'P3', NULL, 900),
+  ('Prochaine mission Crew Dragon vers l''ISS', 'Actualité', 'Article à mise à jour', 'P3', 'Email', 600),
+  ('L''ISS a-t-elle des fenêtres ? Comment les astronautes voient-ils dehors ?', 'Curiosité', 'Article court', 'P3', NULL, 500),
+  ('Que se passe-t-il en cas d''urgence sur l''ISS ?', 'Curiosité/sécurité', 'Article de fond', 'P3', NULL, 900),
+  ('Histoire de l''ISS : de l''assemblage à aujourd''hui', 'Réserve / evergreen', 'Article de fond', 'P3', NULL, 900),
+  ('Les femmes astronautes qui ont marqué l''histoire de l''ISS', 'Réserve / evergreen', 'Article de fond', 'P3', NULL, 800),
+  ('Les expériences scientifiques les plus marquantes menées sur l''ISS', 'Réserve / evergreen', 'Article de fond', 'P3', NULL, 900),
+  ('Astronomie amateur : bien débuter l''observation du ciel', 'Réserve / débutants', 'Article de fond', 'P3', 'Boutique (jumelles)', 800),
+  ('Calendrier des meilleures périodes pour observer l''ISS par saison', 'Réserve / pratique', 'Article de fond', 'P3', 'Email', 700),
+  ('Glossaire spatial : tous les termes de l''ISS expliqués', 'Réserve / débutants', 'Article de fond', 'P3', NULL, 800),
+  ('L''ISS et le changement climatique : ce que la station observe', 'Réserve / evergreen', 'Article de fond', 'P3', NULL, 800),
+  ('Une journée type sur l''ISS : la vie quotidienne à bord', 'Réserve / familles', 'Article de fond', 'P3', 'Ressources', 800),
+  ('Comment l''ISS communique-t-elle avec la Terre ?', 'Réserve / technique', 'Article de fond', 'P3', NULL, 700),
+  ('Le retour sur Terre : comment se passe la rentrée atmosphérique ?', 'Réserve / evergreen', 'Article de fond', 'P3', NULL, 800);

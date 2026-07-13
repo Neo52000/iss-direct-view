@@ -6,8 +6,7 @@ import { EmailCapture } from "@/components/EmailCapture";
 import { FAQ, faqJsonLd } from "@/components/FAQ";
 import { homeFaq } from "@/data/faq";
 import { BlogPreview } from "@/components/BlogPreview";
-import { KitSection, CommerceBenefits } from "@/components/KitSection";
-import { ProductGrid } from "@/components/ProductGrid";
+import { KitSection } from "@/components/KitSection";
 import { SponsorBanner } from "@/components/AdSlot";
 
 export const Route = createFileRoute("/")({
@@ -52,8 +51,6 @@ function Home() {
       <FAQ items={homeFaq} />
       <BlogPreview />
       <KitSection />
-      <ProductGrid />
-      <CommerceBenefits />
     </>
   );
 }
