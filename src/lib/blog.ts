@@ -1,5 +1,10 @@
 import { supabase } from "@/integrations/supabase/client";
 
+export interface BlogFaqItem {
+  q: string;
+  a: string;
+}
+
 export interface BlogPostRow {
   id: string;
   slug: string;
@@ -11,6 +16,10 @@ export interface BlogPostRow {
   cover: string;
   reading_time: number;
   cover_image_url: string | null;
+  cover_image_alt: string | null;
+  faq: BlogFaqItem[];
+  social_suggestions: string[];
+  to_verify: string | null;
   published: boolean;
   published_at: string;
   created_at: string;

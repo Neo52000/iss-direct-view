@@ -36,6 +36,10 @@ const EMPTY: BlogPostInput = {
   published: true,
   published_at: new Date().toISOString(),
   cover_image_url: null,
+  cover_image_alt: null,
+  faq: [],
+  social_suggestions: [],
+  to_verify: null,
 };
 
 function AdminBlogPage() {
@@ -77,15 +81,22 @@ function AdminBlogPage() {
   }
 
   if (isAdmin === null) {
-    return <div className="mx-auto max-w-7xl px-4 py-16 text-white/60">Vérification des droits…</div>;
+    return (
+      <div className="mx-auto max-w-7xl px-4 py-16 text-white/60">Vérification des droits…</div>
+    );
   }
   if (isAdmin === false) {
     return (
       <section className="mx-auto max-w-2xl px-4 py-16">
         <div className="iss-card p-8">
           <h1 className="font-display text-2xl font-extrabold">Accès refusé</h1>
-          <p className="mt-3 text-white/70">Votre compte n'a pas le rôle <code>admin</code>.</p>
-          <button onClick={handleSignOut} className="mt-6 rounded-full border border-white/15 px-4 py-2 text-sm">
+          <p className="mt-3 text-white/70">
+            Votre compte n'a pas le rôle <code>admin</code>.
+          </p>
+          <button
+            onClick={handleSignOut}
+            className="mt-6 rounded-full border border-white/15 px-4 py-2 text-sm"
+          >
             Se déconnecter
           </button>
         </div>
@@ -143,7 +154,9 @@ function AdminBlogPage() {
                   <tr key={p.id} className="border-t border-white/5">
                     <td className="px-4 py-3">
                       <div className="flex items-center gap-3">
-                        <span className="grid h-9 w-9 place-items-center rounded-lg bg-white/5 text-xl">{p.cover}</span>
+                        <span className="grid h-9 w-9 place-items-center rounded-lg bg-white/5 text-xl">
+                          {p.cover}
+                        </span>
                         <div className="min-w-0">
                           <div className="truncate font-semibold">{p.title}</div>
                           <a
@@ -158,7 +171,9 @@ function AdminBlogPage() {
                       </div>
                     </td>
                     <td className="px-4 py-3 text-white/70">{p.category}</td>
-                    <td className="px-4 py-3 text-white/60">{new Date(p.published_at).toLocaleDateString("fr-FR")}</td>
+                    <td className="px-4 py-3 text-white/60">
+                      {new Date(p.published_at).toLocaleDateString("fr-FR")}
+                    </td>
                     <td className="px-4 py-3">
                       <span
                         className={`rounded-full px-2 py-1 text-xs ${p.published ? "bg-emerald-500/20 text-emerald-300" : "bg-white/10 text-white/50"}`}
@@ -193,7 +208,12 @@ function AdminBlogPage() {
       </div>
 
       {editing ? (
-        <EditDrawer initial={editing} onClose={() => setEditing(null)} onSave={handleSave} />
+        <EditDrawer
+          initial={editing}
+          existingPosts={posts}
+          onClose={() => setEditing(null)}
+          onSave={handleSave}
+        />
       ) : null}
     </section>
   );
@@ -210,10 +230,12 @@ function Stat({ label, value }: { label: string; value: number }) {
 
 function EditDrawer({
   initial,
+  existingPosts,
   onClose,
   onSave,
 }: {
   initial: BlogPostInput & { id?: string };
+  existingPosts: BlogPostRow[];
   onClose: () => void;
   onSave: (p: BlogPostInput & { id?: string }) => Promise<void>;
 }) {
@@ -239,7 +261,8 @@ function EditDrawer({
     }
     setAiLoading(true);
     try {
-      const out = await generate({ data: { topic: subject, angle } });
+      const out = await generate({ data: { keyword: subject, angle } });
+      const content = out.cta ? `${out.content}\n\n${out.cta}` : out.content;
       setForm((f) => ({
         ...f,
         title: out.title || f.title,
@@ -249,7 +272,14 @@ function EditDrawer({
         category: out.category || f.category,
         cover: out.cover || f.cover,
         reading_time: out.reading_time || f.reading_time,
-        content: out.content || f.content,
+        content: content || f.content,
+        cover_image_alt: out.alt_text || f.cover_image_alt,
+        faq: out.faq.length ? out.faq : f.faq,
+        social_suggestions: out.social_suggestions.length
+          ? out.social_suggestions
+          : f.social_suggestions,
+        to_verify: out.to_verify || null,
+        published: out.to_verify ? false : f.published,
       }));
     } catch (err) {
       setAiError(err instanceof Error ? err.message : "Erreur IA");
@@ -257,6 +287,27 @@ function EditDrawer({
       setAiLoading(false);
     }
   }
+
+  const duplicateWarnings = useMemo(() => {
+    const warnings: string[] = [];
+    const others = existingPosts.filter((p) => p.id !== form.id);
+    if (
+      form.meta_description?.trim() &&
+      others.some((p) => p.meta_description === form.meta_description)
+    ) {
+      warnings.push("Meta description déjà utilisée par un autre article.");
+    }
+    if (
+      form.title &&
+      others.some((p) => p.title.trim().toLowerCase() === form.title.trim().toLowerCase())
+    ) {
+      warnings.push("Titre déjà utilisé par un autre article.");
+    }
+    if (form.cover_image_url && others.some((p) => p.cover_image_url === form.cover_image_url)) {
+      warnings.push("Image de couverture déjà utilisée par un autre article.");
+    }
+    return warnings;
+  }, [existingPosts, form.id, form.title, form.meta_description, form.cover_image_url]);
 
   async function submit(e: React.FormEvent) {
     e.preventDefault();
@@ -281,7 +332,9 @@ function EditDrawer({
           <h2 className="font-display text-2xl font-extrabold">
             {form.id ? "Modifier l'article" : "Nouvel article"}
           </h2>
-          <button type="button" onClick={onClose} className="text-white/60 hover:text-white">✕</button>
+          <button type="button" onClick={onClose} className="text-white/60 hover:text-white">
+            ✕
+          </button>
         </div>
 
         <div className="iss-card mt-5 space-y-3 p-4">
@@ -312,26 +365,56 @@ function EditDrawer({
           {aiError ? <p className="text-xs text-rose-300">{aiError}</p> : null}
         </div>
 
+        {form.to_verify ? (
+          <div className="mt-4 rounded-xl border border-amber-400/30 bg-amber-400/10 px-4 py-3 text-sm text-amber-200">
+            <strong>À vérifier avant publication :</strong> {form.to_verify}
+          </div>
+        ) : null}
+
+        {duplicateWarnings.length ? (
+          <div className="mt-4 space-y-1 rounded-xl border border-rose-400/30 bg-rose-400/10 px-4 py-3 text-sm text-rose-200">
+            {duplicateWarnings.map((w) => (
+              <p key={w}>⚠ {w}</p>
+            ))}
+          </div>
+        ) : null}
+
         <div className="mt-6 grid gap-4">
           <Field label="Titre">
-            <input required value={form.title} onChange={(e) => set("title", e.target.value)} className={inputCls} />
+            <input
+              required
+              value={form.title}
+              onChange={(e) => set("title", e.target.value)}
+              className={inputCls}
+            />
           </Field>
           <div className="grid grid-cols-2 gap-3">
             <Field label="Slug">
               <input
                 required
                 value={form.slug}
-                onChange={(e) => set("slug", e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, "-"))}
+                onChange={(e) =>
+                  set("slug", e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, "-"))
+                }
                 className={inputCls}
               />
             </Field>
             <Field label="Catégorie">
-              <input required value={form.category} onChange={(e) => set("category", e.target.value)} className={inputCls} />
+              <input
+                required
+                value={form.category}
+                onChange={(e) => set("category", e.target.value)}
+                className={inputCls}
+              />
             </Field>
           </div>
           <div className="grid grid-cols-3 gap-3">
             <Field label="Emoji">
-              <input value={form.cover} onChange={(e) => set("cover", e.target.value)} className={inputCls} />
+              <input
+                value={form.cover}
+                onChange={(e) => set("cover", e.target.value)}
+                className={inputCls}
+              />
             </Field>
             <Field label="Lecture (min)">
               <input
@@ -377,6 +460,36 @@ function EditDrawer({
               className={`${inputCls} font-mono text-xs`}
             />
           </Field>
+          <Field label="Texte alternatif image de couverture">
+            <input
+              value={form.cover_image_alt ?? ""}
+              onChange={(e) => set("cover_image_alt", e.target.value || null)}
+              className={inputCls}
+            />
+          </Field>
+          <Field label="FAQ (JSON [{q,a}], 3 questions max recommandé)">
+            <textarea
+              rows={5}
+              value={JSON.stringify(form.faq ?? [], null, 2)}
+              onChange={(e) => {
+                try {
+                  set("faq", JSON.parse(e.target.value));
+                } catch {
+                  /* JSON invalide en cours de frappe, ignoré */
+                }
+              }}
+              className={`${inputCls} font-mono text-xs`}
+            />
+          </Field>
+          {form.social_suggestions?.length ? (
+            <Field label="Suggestions de partage social (générées par l'IA, à copier-coller)">
+              <ul className="space-y-1 rounded-lg border border-white/10 bg-white/5 p-3 text-xs text-white/70">
+                {form.social_suggestions.map((s, i) => (
+                  <li key={i}>{s}</li>
+                ))}
+              </ul>
+            </Field>
+          ) : null}
           <label className="flex items-center gap-2 text-sm">
             <input
               type="checkbox"
@@ -390,7 +503,11 @@ function EditDrawer({
         {error ? <p className="mt-4 text-sm text-rose-300">{error}</p> : null}
 
         <div className="mt-auto flex gap-2 pt-6">
-          <button type="button" onClick={onClose} className="flex-1 rounded-full border border-white/15 px-4 py-3 text-sm">
+          <button
+            type="button"
+            onClick={onClose}
+            className="flex-1 rounded-full border border-white/15 px-4 py-3 text-sm"
+          >
             Annuler
           </button>
           <button

@@ -2,9 +2,55 @@ import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { blogPosts, getPost } from "@/data/blogPosts";
 import { getReadableDay } from "@/lib/iss-utils";
 import { EmailCapture } from "@/components/EmailCapture";
-import { fetchPostBySlug } from "@/lib/blog";
+import { fetchPostBySlug, type BlogFaqItem } from "@/lib/blog";
 import { BackToTop } from "@/components/BackToTop";
 import { CrewWidget } from "@/components/CrewWidget";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
+import { faqJsonLd } from "@/components/FAQ";
+
+const LINK_PATTERN = /\[([^\]]+)\]\(([^)]+)\)/g;
+
+function renderParagraph(text: string, key: number) {
+  const parts: React.ReactNode[] = [];
+  let lastIndex = 0;
+  let match: RegExpExecArray | null;
+  LINK_PATTERN.lastIndex = 0;
+  let linkIndex = 0;
+  while ((match = LINK_PATTERN.exec(text))) {
+    if (match.index > lastIndex) parts.push(text.slice(lastIndex, match.index));
+    const url = match[2];
+    const isInternal = url.startsWith("/") && !url.startsWith("//");
+    parts.push(
+      isInternal ? (
+        <Link
+          key={`link-${key}-${linkIndex++}`}
+          to={url}
+          className="text-[color:var(--iss-cyan)] underline underline-offset-2"
+        >
+          {match[1]}
+        </Link>
+      ) : (
+        <a
+          key={`link-${key}-${linkIndex++}`}
+          href={url}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-[color:var(--iss-cyan)] underline underline-offset-2"
+        >
+          {match[1]}
+        </a>
+      ),
+    );
+    lastIndex = match.index + match[0].length;
+  }
+  if (lastIndex < text.length) parts.push(text.slice(lastIndex));
+  return <p key={key}>{parts}</p>;
+}
 
 export const Route = createFileRoute("/blog/$slug")({
   loader: async ({ params }) => {
@@ -22,6 +68,9 @@ export const Route = createFileRoute("/blog/$slug")({
           readingTime: row.reading_time,
           cover: row.cover,
           image: row.cover_image_url ?? null,
+          imageAlt: row.cover_image_alt ?? null,
+          faq: row.faq ?? [],
+          toVerify: row.to_verify ?? null,
         };
       }
     } catch {
@@ -29,7 +78,13 @@ export const Route = createFileRoute("/blog/$slug")({
     }
     const post = getPost(params.slug);
     if (!post) throw notFound();
-    return { ...post, image: null as string | null };
+    return {
+      ...post,
+      image: null as string | null,
+      imageAlt: null as string | null,
+      faq: [] as BlogFaqItem[],
+      toVerify: null as string | null,
+    };
   },
   head: ({ loaderData }) => {
     const post = loaderData;
@@ -64,6 +119,14 @@ export const Route = createFileRoute("/blog/$slug")({
             articleSection: post.category,
           }),
         },
+        ...(post.faq?.length
+          ? [
+              {
+                type: "application/ld+json",
+                children: JSON.stringify(faqJsonLd(post.faq)),
+              },
+            ]
+          : []),
       ],
     };
   },
@@ -95,10 +158,15 @@ function BlogPostPage() {
           {post.title}
         </h1>
         <p className="mt-3 text-sm text-white/50">Publié le {getReadableDay(post.date)}</p>
+        {post.toVerify ? (
+          <div className="mt-6 rounded-xl border border-amber-400/30 bg-amber-400/10 px-4 py-3 text-sm text-amber-200">
+            Brouillon — à vérifier avant publication définitive : {post.toVerify}
+          </div>
+        ) : null}
         {post.image ? (
           <img
             src={post.image}
-            alt={post.title}
+            alt={post.imageAlt || post.title}
             width={1280}
             height={720}
             className="my-8 aspect-[16/9] w-full rounded-2xl object-cover"
@@ -110,10 +178,24 @@ function BlogPostPage() {
         )}
         {post.slug === "qui-est-dans-iss-aujourdhui" ? <CrewWidget /> : null}
         <div className="space-y-5 text-white/85 md:text-lg">
-          {post.content.split("\n\n").map((para: string, i: number) => (
-            <p key={i}>{para}</p>
-          ))}
+          {post.content.split("\n\n").map((para: string, i: number) => renderParagraph(para, i))}
         </div>
+
+        {post.faq?.length ? (
+          <div className="mt-10">
+            <h2 className="font-display text-2xl font-extrabold">Questions fréquentes</h2>
+            <Accordion type="single" collapsible className="mt-4">
+              {post.faq.map((item: BlogFaqItem, i: number) => (
+                <AccordionItem key={i} value={`faq-${i}`} className="border-b border-white/10 px-1">
+                  <AccordionTrigger className="text-left font-display text-base font-bold hover:no-underline">
+                    {item.q}
+                  </AccordionTrigger>
+                  <AccordionContent className="text-white/75">{item.a}</AccordionContent>
+                </AccordionItem>
+              ))}
+            </Accordion>
+          </div>
+        ) : null}
       </article>
 
       <section className="mx-auto max-w-7xl px-4 py-10 md:px-6">

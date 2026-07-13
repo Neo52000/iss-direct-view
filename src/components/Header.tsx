@@ -95,6 +95,12 @@ export function Header() {
                 <Lock className="h-3.5 w-3.5" /> Blog
               </Link>
               <Link
+                to="/admin/topics"
+                className="inline-flex items-center gap-1.5 rounded-full border border-[color:var(--iss-cyan)]/40 px-3 py-2 text-xs font-semibold text-[color:var(--iss-cyan)] hover:bg-[color:var(--iss-cyan)]/10"
+              >
+                <Lock className="h-3.5 w-3.5" /> Sujets
+              </Link>
+              <Link
                 to="/admin/settings"
                 className="inline-flex items-center gap-1.5 rounded-full border border-[color:var(--iss-cyan)]/40 px-3 py-2 text-xs font-semibold text-[color:var(--iss-cyan)] hover:bg-[color:var(--iss-cyan)]/10"
               >
@@ -114,7 +120,11 @@ export function Header() {
               </Link>
             </div>
           ) : null}
-          <motion.div whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.96 }} className="hidden sm:inline-flex">
+          <motion.div
+            whileHover={{ scale: 1.04 }}
+            whileTap={{ scale: 0.96 }}
+            className="hidden sm:inline-flex"
+          >
             <Link
               to="/"
               hash="alertes"
