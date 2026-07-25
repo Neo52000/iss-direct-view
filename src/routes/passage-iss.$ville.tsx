@@ -291,6 +291,25 @@ function ObservationGuide({ city }: { city: FrenchCity }) {
           la position actuelle de l'ISS
         </Link>{" "}
         sur la carte.
+        <span className="mt-3 block">
+          Pour préparer l'observation, découvrez aussi{" "}
+          <Link
+            to="/blog/$slug"
+            params={{ slug: "pourquoi-iss-ne-tombe-pas" }}
+            className="font-semibold text-[color:var(--iss-cyan)] hover:underline"
+          >
+            pourquoi l'ISS reste en orbite
+          </Link>{" "}
+          et{" "}
+          <Link
+            to="/blog/$slug"
+            params={{ slug: "voir-iss-oeil-nu-france" }}
+            className="font-semibold text-[color:var(--iss-cyan)] hover:underline"
+          >
+            comment reconnaître l'ISS à l'œil nu
+          </Link>
+          .
+        </span>
       </div>
     </section>
   );

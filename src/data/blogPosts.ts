@@ -116,6 +116,104 @@ export const blogPosts: BlogPost[] = [
     readingTime: 5,
     cover: "🎒",
   },
+  {
+    slug: "pourquoi-iss-ne-tombe-pas",
+    title: "Pourquoi l'ISS ne tombe-t-elle pas sur la Terre ?",
+    metaDescription:
+      "L'ISS est attirée par la Terre et tombe en permanence : découvrez pourquoi sa vitesse l'empêche pourtant de s'écraser.",
+    excerpt:
+      "La station tombe continuellement vers la Terre, mais sa vitesse transforme cette chute en orbite.",
+    content:
+      "L'ISS est bien attirée par la gravité terrestre. À environ 400 kilomètres d'altitude, la gravité reste forte : elle vaut encore près de 90 % de celle ressentie au sol. La station n'est donc ni hors de portée de la Terre, ni maintenue en l'air par une absence de gravité. Elle est en chute libre permanente.\n\nCe qui l'empêche de s'écraser est sa vitesse horizontale, proche de 28 000 km/h. Pendant que l'ISS tombe vers le sol, la surface de la Terre se courbe sous sa trajectoire. Elle tombe ainsi autour de notre planète au lieu de la rejoindre. Cette combinaison entre attraction gravitationnelle et vitesse est ce que l'on appelle une orbite.\n\nL'atmosphère n'est toutefois pas complètement absente à cette altitude. Quelques particules freinent progressivement la station et font baisser son orbite. Des vaisseaux ravitailleurs utilisent donc régulièrement leurs moteurs pour la rehausser. Sans ces corrections, l'ISS finirait réellement par redescendre.\n\nPour visualiser cette chute autour de la planète, consultez [la position de l'ISS en temps réel](/position). Sa vitesse actuelle est expliquée dans notre article [Quelle est la vitesse de l'ISS ?](/blog/vitesse-iss), et vous pouvez vérifier [quand elle passera au-dessus de votre ville](/passages).",
+    category: "Sciences",
+    date: "2026-07-25",
+    readingTime: 4,
+    cover: "🌍",
+  },
+  {
+    slug: "combien-astronautes-dans-iss",
+    title: "Combien d'astronautes vivent dans l'ISS ?",
+    metaDescription:
+      "Découvrez combien d'astronautes vivent habituellement dans l'ISS, pourquoi l'effectif varie et comment les équipages se relaient.",
+    excerpt:
+      "L'ISS accueille généralement sept personnes, mais son équipage peut varier pendant les rotations et missions privées.",
+    content:
+      "L'équipage permanent de l'ISS compte généralement sept personnes. Ce nombre peut temporairement augmenter ou diminuer pendant l'arrivée d'un nouveau vaisseau, le départ d'un équipage ou une mission privée. Il faut donc distinguer la capacité habituelle de la station du nombre exact de personnes présentes à un instant donné.\n\nLes astronautes et cosmonautes restent le plus souvent environ six mois à bord. Ils viennent des agences partenaires de la Station Spatiale Internationale : NASA, Roscosmos, ESA, JAXA et Agence spatiale canadienne. Leurs journées alternent expériences scientifiques, maintenance, sport et échanges avec les équipes au sol.\n\nChaque membre dispose d'un petit espace pour dormir, mais les repas et une partie du travail sont partagés. L'équipage doit aussi consacrer environ deux heures par jour à l'exercice physique afin de limiter la perte musculaire et osseuse provoquée par l'impesanteur.\n\nLe nombre exact change au fil des missions. Pour découvrir la vie quotidienne à bord, lisez [comment vivent les astronautes dans l'ISS](/blog/vie-quotidienne-astronautes-iss). Les enfants peuvent aussi utiliser [nos fiches pédagogiques gratuites](/ressources) et regarder [la Terre depuis l'ISS en direct](/live).",
+    category: "Vie à bord",
+    date: "2026-07-25",
+    readingTime: 4,
+    cover: "🧑‍🚀",
+  },
+  {
+    slug: "expose-iss-primaire",
+    title: "Exposé sur l'ISS pour le primaire : plan et informations clés",
+    metaDescription:
+      "Préparez un exposé sur l'ISS au primaire avec un plan simple, des chiffres essentiels et des ressources gratuites à imprimer.",
+    excerpt:
+      "Un plan en cinq parties et des repères simples pour préparer un exposé clair sur la Station Spatiale Internationale.",
+    content:
+      "Pour réussir un exposé sur l'ISS au primaire, commencez par une question simple : qu'est-ce que la Station Spatiale Internationale ? Expliquez qu'il s'agit d'un grand laboratoire habité qui tourne autour de la Terre depuis plus de vingt ans. Elle se trouve à environ 400 kilomètres d'altitude et sa taille est comparable à celle d'un terrain de football.\n\nUn plan efficace comporte cinq parties : présentation de l'ISS, construction internationale, vie des astronautes, expériences scientifiques et observation depuis la Terre. Ajoutez quelques chiffres faciles à retenir : environ 28 000 km/h, un tour de Terre en près de 90 minutes et environ seize orbites par jour.\n\nPour rendre l'exposé vivant, montrez une image de la station, une capture de [sa position actuelle](/position) et expliquez qu'elle peut être observée à l'œil nu. Vous pouvez même annoncer [le prochain passage visible](/passages) pour proposer une observation à la classe.\n\nTéléchargez [les fiches pédagogiques et coloriages gratuits](/ressources) pour préparer une affiche ou distribuer un support. Notre guide [Comment expliquer l'ISS à des élèves de primaire ?](/blog/expliquer-iss-primaire) fournit également des comparaisons et expériences simples.",
+    category: "Enfants",
+    date: "2026-07-25",
+    readingTime: 4,
+    cover: "📝",
+  },
+  {
+    slug: "fiche-pedagogique-iss-cycle-2",
+    title: "Fiche pédagogique ISS cycle 2 à imprimer",
+    metaDescription:
+      "Fiche pédagogique gratuite sur l'ISS pour le cycle 2 : notions simples, questions de compréhension et support imprimable.",
+    excerpt:
+      "Une fiche prête à utiliser en CE1–CE2 pour découvrir l'ISS, son orbite et la vie des astronautes.",
+    content:
+      "Cette fiche pédagogique sur l'ISS est destinée au cycle 2, principalement aux classes de CE1 et CE2. Elle présente avec des mots simples ce qu'est une station spatiale, à quelle altitude elle se trouve et pourquoi des astronautes y vivent.\n\nLa séance peut commencer par l'observation de [la position de l'ISS sur la carte](/position), puis se poursuivre avec trois notions : la Terre est ronde, l'ISS tourne autour d'elle et la station est un laboratoire international. Les élèves peuvent ensuite répondre à quelques questions courtes et dessiner la station avec ses grands panneaux solaires.\n\nLe document imprimable regroupe le texte, les questions et une zone de dessin. Il peut être utilisé en classe, en instruction en famille ou comme prolongement d'une séquence sur le ciel et l'espace.\n\n[Ouvrir la fiche cycle 2 à imprimer](/print/fiches), puis utilisez la fonction d'impression du navigateur pour l'enregistrer en PDF. Retrouvez aussi [les coloriages de l'ISS](/print/coloriages) et [les prochains passages visibles](/passages).",
+    category: "Enseignants",
+    date: "2026-07-25",
+    readingTime: 3,
+    cover: "📘",
+  },
+  {
+    slug: "fiche-pedagogique-iss-cycle-3",
+    title: "Fiche pédagogique ISS cycle 3 à imprimer",
+    metaDescription:
+      "Fiche pédagogique gratuite sur l'ISS pour le cycle 3 : impesanteur, recyclage, sciences et coopération internationale.",
+    excerpt:
+      "Un support cycle 3 prêt à imprimer sur la vie à bord, les expériences et les contraintes de l'impesanteur.",
+    content:
+      "La fiche ISS cycle 3 approfondit les notions scientifiques adaptées aux élèves de CM1, CM2 et sixième. Elle aborde l'orbite, l'impesanteur, le recyclage de l'eau, l'entretien du corps et la coopération entre agences spatiales.\n\nLa vitesse de la station permet de travailler les grandeurs et les conversions : l'ISS avance à environ 7,7 kilomètres par seconde et effectue près de seize tours de Terre par jour. L'article [Quelle est la vitesse de l'ISS ?](/blog/vitesse-iss) fournit des comparaisons utiles pour préparer la séance.\n\nLes questions de compréhension invitent les élèves à expliquer pourquoi les astronautes font du sport, comment l'eau est recyclée et quels pays participent au programme. Une observation de [la Terre en direct depuis l'ISS](/live) peut compléter le travail.\n\n[Ouvrir la fiche cycle 3 à imprimer](/print/fiches). Le même espace propose [un quiz et d'autres ressources pédagogiques](/ressources) pour construire une séquence complète.",
+    category: "Enseignants",
+    date: "2026-07-25",
+    readingTime: 3,
+    cover: "🔬",
+  },
+  {
+    slug: "coloriage-espace-a-imprimer",
+    title: "Coloriage espace à imprimer gratuitement",
+    metaDescription:
+      "Téléchargez gratuitement cinq coloriages espace à imprimer : ISS, astronaute, fusée, Terre et constellation d'Orion.",
+    excerpt:
+      "Cinq coloriages gratuits pour découvrir l'ISS et l'espace à la maison ou en classe.",
+    content:
+      "La collection de coloriages espace comprend cinq dessins en noir et blanc : la Station Spatiale Internationale, un astronaute en sortie extravéhiculaire, une fusée, la Terre vue de l'espace et la constellation d'Orion. Les contours sont conçus pour rester nets sur une imprimante familiale ou scolaire.\n\nLe coloriage de l'ISS permet d'identifier ses panneaux solaires, ses modules habitables et ses antennes. Avant de commencer, montrez aux enfants [la Station Spatiale en direct](/live) ou [sa position autour de la Terre](/position) afin de relier l'activité à un objet réel.\n\nCes supports conviennent à une activité calme, un atelier scolaire ou une séquence sur le système solaire. Ils peuvent être complétés par [le quiz et les fiches pédagogiques](/ressources).\n\n[Ouvrir les cinq coloriages espace à imprimer](/print/coloriages). Dans la fenêtre d'impression, choisissez le noir et blanc et une échelle de 100 % pour conserver les proportions.",
+    category: "Enfants",
+    date: "2026-07-25",
+    readingTime: 3,
+    cover: "🎨",
+  },
+  {
+    slug: "carte-observation-iss-imprimable",
+    title: "Carte d'observation de l'ISS à imprimer",
+    metaDescription:
+      "Imprimez un guide d'observation de l'ISS avec conditions de visibilité, directions, étoiles brillantes et cartes saisonnières.",
+    excerpt:
+      "Un guide imprimable pour préparer une soirée d'observation et reconnaître l'ISS dans le ciel.",
+    content:
+      "Une carte d'observation aide à préparer la sortie avant le passage de l'ISS. Notez l'heure, la direction d'apparition, la hauteur maximale et la direction de disparition. Ces informations changent selon le lieu : commencez donc par consulter [les passages visibles au-dessus de votre position](/passages).\n\nL'ISS ressemble à une étoile blanche très brillante qui traverse régulièrement le ciel sans clignoter. Arrivez cinq minutes avant l'heure annoncée, éloignez-vous des lampadaires directs et utilisez une boussole pour repérer le bon horizon. Aucun télescope n'est nécessaire.\n\nLe guide imprimable rassemble les principales conditions d'observation, les constellations visibles selon les saisons et les étoiles brillantes utiles pour s'orienter. Il convient aux familles, clubs d'astronomie débutants et enseignants.\n\n[Ouvrir la carte d'observation à imprimer](/print/cartes), puis complétez-la avec [la page de passage ISS de votre ville](/passage-iss) et [la position en temps réel](/position).",
+    category: "Observation",
+    date: "2026-07-25",
+    readingTime: 3,
+    cover: "🗺️",
+  },
 ];
 
 export const getPost = (slug: string) => blogPosts.find((p) => p.slug === slug);

@@ -78,6 +78,7 @@ export const Route = createFileRoute("/blog/$slug")({
     }
     const post = getPost(params.slug);
     if (!post) throw notFound();
+    const canonicalUrl = `https://iss-en-direct.com/blog/${post.slug}`;
     return {
       ...post,
       image: null as string | null,
@@ -96,7 +97,7 @@ export const Route = createFileRoute("/blog/$slug")({
         { property: "og:title", content: post.title },
         { property: "og:description", content: post.metaDescription },
         { property: "og:type", content: "article" },
-        { property: "og:url", content: `/blog/${post.slug}` },
+        { property: "og:url", content: canonicalUrl },
         { property: "article:published_time", content: post.date },
         ...(post.image
           ? [
@@ -106,7 +107,7 @@ export const Route = createFileRoute("/blog/$slug")({
             ]
           : []),
       ],
-      links: [{ rel: "canonical", href: `/blog/${post.slug}` }],
+      links: [{ rel: "canonical", href: canonicalUrl }],
       scripts: [
         {
           type: "application/ld+json",
@@ -141,9 +142,55 @@ export const Route = createFileRoute("/blog/$slug")({
   ),
 });
 
+function ArticleNextSteps({ category }: { category: string }) {
+  const education = category === "Enfants" || category === "Enseignants";
+  return (
+    <aside className="mt-10 rounded-2xl border border-white/10 bg-white/[0.04] p-6">
+      <h2 className="font-display text-xl font-extrabold">Poursuivre la découverte de l'ISS</h2>
+      <ul className="mt-4 space-y-3 text-sm text-white/75">
+        <li>
+          <Link to="/live" className="font-semibold text-[color:var(--iss-cyan)] hover:underline">
+            Voir la Terre en direct depuis la Station Spatiale Internationale
+          </Link>
+        </li>
+        <li>
+          <Link to="/position" className="font-semibold text-[color:var(--iss-cyan)] hover:underline">
+            Suivre la position actuelle de l'ISS sur la carte
+          </Link>
+        </li>
+        <li>
+          <Link to="/passage-iss" className="font-semibold text-[color:var(--iss-cyan)] hover:underline">
+            Connaître le prochain passage de l'ISS dans votre ville
+          </Link>
+        </li>
+        <li>
+          {education ? (
+            <Link
+              to="/ressources"
+              className="font-semibold text-[color:var(--iss-cyan)] hover:underline"
+            >
+              Télécharger les ressources espace à imprimer
+            </Link>
+          ) : (
+            <Link
+              to="/passages"
+              className="font-semibold text-[color:var(--iss-cyan)] hover:underline"
+            >
+              Calculer les prochains passages visibles depuis votre position
+            </Link>
+          )}
+        </li>
+      </ul>
+    </aside>
+  );
+}
+
 function BlogPostPage() {
   const post = Route.useLoaderData();
-  const related = blogPosts.filter((p) => p.slug !== post.slug).slice(0, 3);
+  const related = blogPosts
+    .filter((p) => p.slug !== post.slug)
+    .sort((a, b) => Number(b.category === post.category) - Number(a.category === post.category))
+    .slice(0, 3);
 
   return (
     <>
@@ -180,6 +227,8 @@ function BlogPostPage() {
         <div className="space-y-5 text-white/85 md:text-lg">
           {post.content.split("\n\n").map((para: string, i: number) => renderParagraph(para, i))}
         </div>
+
+        <ArticleNextSteps category={post.category} />
 
         {post.faq?.length ? (
           <div className="mt-10">
