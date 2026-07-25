@@ -2,10 +2,12 @@ import { Link } from "@tanstack/react-router";
 import { Satellite } from "lucide-react";
 import { useState } from "react";
 import { submitLead } from "@/services/leadService";
+import { trackConversion } from "@/lib/analytics";
 
 export function Footer() {
   const [email, setEmail] = useState("");
   const [ok, setOk] = useState(false);
+  const [consent, setConsent] = useState(false);
 
   return (
     <footer className="mt-24 border-t border-white/10 bg-[color:var(--iss-surface)]/60">
@@ -58,8 +60,9 @@ export function Footer() {
             className="mt-3 flex flex-col gap-2"
             onSubmit={async (e) => {
               e.preventDefault();
-              if (!email) return;
-              await submitLead(email);
+              if (!email || !consent) return;
+              await submitLead(email, undefined, consent);
+              trackConversion("alert_signup", { source: "footer" });
               setOk(true);
               setEmail("");
             }}
@@ -72,7 +75,20 @@ export function Footer() {
               placeholder="votre@email.fr"
               className="rounded-lg border border-white/15 bg-white/5 px-3 py-2 text-sm outline-none focus:border-[color:var(--iss-blue)]"
             />
-            <button className="rounded-lg bg-[color:var(--iss-blue)] px-3 py-2 text-sm font-semibold">
+            <label className="flex items-start gap-2 text-[11px] text-white/60">
+              <input
+                type="checkbox"
+                checked={consent}
+                onChange={(e) => setConsent(e.target.checked)}
+                required
+                className="mt-0.5"
+              />
+              J'accepte de recevoir les alertes ISS par email.
+            </label>
+            <button
+              disabled={!consent}
+              className="rounded-lg bg-[color:var(--iss-blue)] px-3 py-2 text-sm font-semibold disabled:opacity-60"
+            >
               OK
             </button>
             {ok ? <p className="text-xs text-[color:var(--iss-ok)]">Merci, à bientôt !</p> : null}

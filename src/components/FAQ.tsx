@@ -8,7 +8,15 @@ import {
 import type { FaqItem } from "@/data/faq";
 import { fadeUp } from "@/lib/motion";
 
-export function FAQ({ items, title = "Questions fréquentes" }: { items: FaqItem[]; title?: string }) {
+export function FAQ({
+  items,
+  title = "Questions fréquentes",
+  intro = "Tout ce qu'il faut savoir sur le live et l'observation de l'ISS.",
+}: {
+  items: FaqItem[];
+  title?: string;
+  intro?: string;
+}) {
   return (
     <motion.section
       className="mx-auto max-w-4xl px-4 py-16 md:px-6"
@@ -18,9 +26,7 @@ export function FAQ({ items, title = "Questions fréquentes" }: { items: FaqItem
       variants={fadeUp}
     >
       <h2 className="font-display text-3xl font-extrabold md:text-4xl">{title}</h2>
-      <p className="mt-2 text-white/70">
-        Tout ce qu'il faut savoir sur le live et l'observation de l'ISS.
-      </p>
+      <p className="mt-2 text-white/70">{intro}</p>
       <Accordion type="single" collapsible className="mt-8">
         {items.map((item, i) => (
           <AccordionItem

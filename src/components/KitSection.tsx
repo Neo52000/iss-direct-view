@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { motion } from "motion/react";
 import { fetchSetting, SETTING_KEYS } from "@/lib/settings";
 import { fadeUp } from "@/lib/motion";
+import { trackConversion } from "@/lib/analytics";
 
 export function KitSection() {
   const [url, setUrl] = useState<string>("/ressources");
@@ -36,6 +37,12 @@ export function KitSection() {
             <div className="mt-5 flex flex-wrap gap-3">
               <a
                 href={url}
+                onClick={() =>
+                  trackConversion("kit_download", {
+                    destination: url,
+                    external: isExternal,
+                  })
+                }
                 target={isExternal ? "_blank" : undefined}
                 rel={isExternal ? "noopener noreferrer" : undefined}
                 className="inline-flex items-center gap-2 rounded-full bg-[#0b1530] px-5 py-3 text-sm font-semibold text-white hover:bg-black"

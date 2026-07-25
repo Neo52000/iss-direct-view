@@ -1,12 +1,12 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { MapPin, Loader2 } from "lucide-react";
+import { MapPin, Loader2, Binoculars, Compass, Clock3, BellRing } from "lucide-react";
 import { getCity, frenchCities, type FrenchCity } from "@/data/frenchCities";
 import { getVisiblePasses, type VisiblePass } from "@/services/passesApi";
 import { PassesList } from "@/components/PassesList";
 import { EmailCapture } from "@/components/EmailCapture";
 import { BackToTop } from "@/components/BackToTop";
-import { faqJsonLd } from "@/components/FAQ";
+import { FAQ, faqJsonLd } from "@/components/FAQ";
 import type { FaqItem } from "@/data/faq";
 
 export const Route = createFileRoute("/passage-iss/$ville")({
@@ -21,6 +21,7 @@ export const Route = createFileRoute("/passage-iss/$ville")({
     const title = `Passage de l'ISS au-dessus de ${city.name} — horaires ce soir`;
     const description = `Quand voir la Station Spatiale Internationale au-dessus de ${city.name} (${city.region}) ? Prochains passages visibles à l'œil nu : heure, durée, direction et hauteur.`;
     const url = `/passage-iss/${city.slug}`;
+    const canonicalUrl = `https://iss-en-direct.com${url}`;
     return {
       meta: [
         { title: `${title} — ISS Direct France` },
@@ -28,9 +29,9 @@ export const Route = createFileRoute("/passage-iss/$ville")({
         { property: "og:title", content: title },
         { property: "og:description", content: description },
         { property: "og:type", content: "website" },
-        { property: "og:url", content: url },
+        { property: "og:url", content: canonicalUrl },
       ],
-      links: [{ rel: "canonical", href: url }],
+      links: [{ rel: "canonical", href: canonicalUrl }],
       scripts: [
         {
           type: "application/ld+json",
@@ -50,6 +51,33 @@ export const Route = createFileRoute("/passage-iss/$ville")({
         {
           type: "application/ld+json",
           children: JSON.stringify(faqJsonLd(cityFaq(city))),
+        },
+        {
+          type: "application/ld+json",
+          children: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "BreadcrumbList",
+            itemListElement: [
+              {
+                "@type": "ListItem",
+                position: 1,
+                name: "Accueil",
+                item: "https://iss-en-direct.com/",
+              },
+              {
+                "@type": "ListItem",
+                position: 2,
+                name: "Passages ISS par ville",
+                item: "https://iss-en-direct.com/passage-iss",
+              },
+              {
+                "@type": "ListItem",
+                position: 3,
+                name: city.name,
+                item: canonicalUrl,
+              },
+            ],
+          }),
         },
       ],
     };
@@ -160,12 +188,111 @@ function CityPassPage() {
           </Link>
         </div>
 
+        <ObservationGuide city={city} />
         <NearbyCities current={city} />
       </section>
 
-      <EmailCapture />
+      <EmailCapture defaultCity={city.name} />
+      <FAQ
+        items={cityFaq(city)}
+        title={`Questions fréquentes sur le passage de l'ISS à ${city.name}`}
+        intro={`Horaires, visibilité et conseils pratiques pour observer la Station Spatiale Internationale depuis ${city.name}.`}
+      />
       <BackToTop />
     </>
+  );
+}
+
+const regionalAdvice: Record<string, string> = {
+  Bretagne:
+    "Privilégiez une éclaircie durable et un horizon dégagé : les nuages bas peuvent masquer un passage pourtant bien calculé.",
+  Normandie:
+    "Surveillez la couverture nuageuse peu avant l'horaire prévu et choisissez un point haut avec une vue large.",
+  "Hauts-de-France":
+    "Éloignez-vous des éclairages directs et recherchez un horizon dégagé, notamment lorsque l'élévation annoncée est faible.",
+  "Île-de-France":
+    "La pollution lumineuse n'empêche pas de voir l'ISS, mais placez-vous à l'écart des lampadaires pour mieux l'identifier.",
+  "Provence-Alpes-Côte d'Azur":
+    "Un point offrant une vue dégagée au-dessus du relief facilite le suivi complet du passage d'un horizon à l'autre.",
+  Corse:
+    "Choisissez un site ouvert où le relief ne masque pas la direction d'arrivée indiquée dans les prévisions.",
+};
+
+function ObservationGuide({ city }: { city: FrenchCity }) {
+  const longitudeHint =
+    city.lon < -1
+      ? `${city.name} se situe dans l'ouest de la France`
+      : city.lon > 5
+        ? `${city.name} se situe dans l'est de la France`
+        : `${city.name} se situe dans la partie centrale de la France`;
+  const advice =
+    regionalAdvice[city.region] ??
+    "Choisissez un lieu ouvert, éloigné des obstacles proches, afin de conserver une vue large sur le ciel.";
+
+  return (
+    <section className="mt-12" aria-labelledby="conseils-observation">
+      <h2 id="conseils-observation" className="font-display text-2xl font-extrabold">
+        Comment observer l'ISS depuis {city.name} ?
+      </h2>
+      <p className="mt-3 max-w-3xl text-white/70">
+        Les horaires affichés sont calculés pour le centre de {city.name}, aux coordonnées{" "}
+        {city.lat.toFixed(2)}°, {city.lon.toFixed(2)}°. Ils restent utilisables dans les communes
+        voisines, avec un décalage généralement faible. {longitudeHint} : fiez-vous surtout aux
+        directions d'apparition et de disparition indiquées pour chaque passage.
+      </p>
+
+      <div className="mt-6 grid gap-4 md:grid-cols-2">
+        <article className="iss-card p-5">
+          <div className="flex items-center gap-3">
+            <Clock3 className="h-5 w-5 text-[color:var(--iss-cyan)]" />
+            <h3 className="font-display font-bold">Arrivez cinq minutes avant</h3>
+          </div>
+          <p className="mt-2 text-sm text-white/65">
+            L'ISS traverse le ciel rapidement. Vérifiez l'heure du passage et laissez vos yeux
+            s'habituer à l'obscurité avant son apparition.
+          </p>
+        </article>
+        <article className="iss-card p-5">
+          <div className="flex items-center gap-3">
+            <Compass className="h-5 w-5 text-[color:var(--iss-cyan)]" />
+            <h3 className="font-display font-bold">Repérez la direction annoncée</h3>
+          </div>
+          <p className="mt-2 text-sm text-white/65">
+            Orientez-vous avec la boussole de votre téléphone, puis balayez lentement l'horizon dans
+            la direction d'arrivée du passage.
+          </p>
+        </article>
+        <article className="iss-card p-5">
+          <div className="flex items-center gap-3">
+            <Binoculars className="h-5 w-5 text-[color:var(--iss-cyan)]" />
+            <h3 className="font-display font-bold">Aucun télescope nécessaire</h3>
+          </div>
+          <p className="mt-2 text-sm text-white/65">
+            Cherchez un point blanc très lumineux, sans feu clignotant et sans traînée. Des jumelles
+            peuvent aider, mais l'observation à l'œil nu reste la plus simple.
+          </p>
+        </article>
+        <article className="iss-card p-5">
+          <div className="flex items-center gap-3">
+            <BellRing className="h-5 w-5 text-[color:var(--iss-cyan)]" />
+            <h3 className="font-display font-bold">Tenez compte de la météo locale</h3>
+          </div>
+          <p className="mt-2 text-sm text-white/65">{advice}</p>
+        </article>
+      </div>
+
+      <div className="mt-6 rounded-2xl border border-white/10 bg-white/[0.03] p-5 text-sm text-white/70">
+        Vous observez avec des enfants ?{" "}
+        <Link to="/ressources" className="font-semibold text-[color:var(--iss-cyan)] hover:underline">
+          Téléchargez le kit espace à imprimer
+        </Link>{" "}
+        et suivez ensuite{" "}
+        <Link to="/position" className="font-semibold text-[color:var(--iss-cyan)] hover:underline">
+          la position actuelle de l'ISS
+        </Link>{" "}
+        sur la carte.
+      </div>
+    </section>
   );
 }
 

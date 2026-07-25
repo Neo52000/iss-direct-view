@@ -3,7 +3,7 @@ import type {} from "@tanstack/react-start";
 import { blogPosts } from "@/data/blogPosts";
 import { frenchCities } from "@/data/frenchCities";
 
-const BASE_URL = process.env.VITE_SITE_URL || "https://iss-direct-view.lovable.app";
+const BASE_URL = (process.env.VITE_SITE_URL || "https://iss-en-direct.com").replace(/\/$/, "");
 
 interface SitemapEntry {
   path: string;
