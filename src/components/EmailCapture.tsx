@@ -2,11 +2,12 @@ import { useState } from "react";
 import { Mail, Check } from "lucide-react";
 import { submitLead } from "@/services/leadService";
 import { sendLeadConfirmation } from "@/lib/lead.functions";
+import { trackConversion } from "@/lib/analytics";
 
-export function EmailCapture() {
+export function EmailCapture({ defaultCity = "" }: { defaultCity?: string }) {
   const [email, setEmail] = useState("");
-  const [city, setCity] = useState("");
-  const [consent, setConsent] = useState(true);
+  const [city, setCity] = useState(defaultCity);
+  const [consent, setConsent] = useState(false);
   const [done, setDone] = useState(false);
   const [loading, setLoading] = useState(false);
 
@@ -40,10 +41,14 @@ export function EmailCapture() {
             <form
               onSubmit={async (e) => {
                 e.preventDefault();
-                if (!email) return;
+                if (!email || !consent) return;
                 setLoading(true);
                 await submitLead(email, city, consent);
                 sendLeadConfirmation({ data: { email, city: city || undefined } }).catch(() => {});
+                trackConversion("alert_signup", {
+                  city: city || undefined,
+                  source: defaultCity ? "city_page" : "email_capture",
+                });
                 setLoading(false);
                 setDone(true);
               }}
@@ -71,12 +76,13 @@ export function EmailCapture() {
                   type="checkbox"
                   checked={consent}
                   onChange={(e) => setConsent(e.target.checked)}
+                  required
                   className="mt-0.5"
                 />
                 J'accepte de recevoir les alertes ISS et les ressources espace par email.
               </label>
               <button
-                disabled={loading}
+                disabled={loading || !consent}
                 className="mt-2 inline-flex items-center justify-center rounded-full bg-[color:var(--iss-blue)] px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-[color:var(--iss-blue)]/30 disabled:opacity-60"
               >
                 {loading ? "Inscription…" : "Je m'inscris"}
