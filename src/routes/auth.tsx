@@ -89,7 +89,9 @@ function AuthPage() {
           onClick={() => setMode(mode === "signin" ? "signup" : "signin")}
           className="text-xs text-white/60 hover:text-white"
         >
-          {mode === "signin" ? "Pas encore de compte ? S'inscrire" : "Déjà un compte ? Se connecter"}
+          {mode === "signin"
+            ? "Pas encore de compte ? S'inscrire"
+            : "Déjà un compte ? Se connecter"}
         </button>
         <Link to="/" className="text-center text-xs text-white/40 hover:text-white/70">
           ← Retour au site

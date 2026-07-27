@@ -15,14 +15,15 @@ export const Route = createFileRoute("/live")({
           "Live vidéo officiel de l'ISS, fourni par la NASA via YouTube. Regardez la Terre depuis l'espace 24/7.",
       },
       { property: "og:title", content: "Live ISS — Regardez la Terre depuis l'espace" },
-      { property: "og:description", content: "Flux vidéo en direct de la Station Spatiale Internationale." },
+      {
+        property: "og:description",
+        content: "Flux vidéo en direct de la Station Spatiale Internationale.",
+      },
       { property: "og:url", content: "/live" },
       { property: "og:type", content: "website" },
     ],
     links: [{ rel: "canonical", href: "/live" }],
-    scripts: [
-      { type: "application/ld+json", children: JSON.stringify(faqJsonLd(homeFaq)) },
-    ],
+    scripts: [{ type: "application/ld+json", children: JSON.stringify(faqJsonLd(homeFaq)) }],
   }),
   component: LivePage,
 });
@@ -49,7 +50,9 @@ function LivePage() {
       </section>
 
       <article className="mx-auto max-w-3xl space-y-5 px-4 pb-12 text-white/80 md:px-6">
-        <h2 className="font-display text-2xl font-extrabold text-white">Comment fonctionne le live ?</h2>
+        <h2 className="font-display text-2xl font-extrabold text-white">
+          Comment fonctionne le live ?
+        </h2>
         <p>
           Le live est composé de plusieurs flux vidéo issus des caméras montées à l'extérieur de la
           Station Spatiale Internationale. Lorsque l'ISS passe du côté nuit de la Terre, l'image
@@ -64,7 +67,9 @@ function LivePage() {
           Terre toutes les 90 minutes environ. Elle est exploitée conjointement par la NASA,
           Roscosmos, l'ESA, la JAXA et l'Agence spatiale canadienne.
         </p>
-        <h2 className="font-display text-2xl font-extrabold text-white">Le live est-il continu ?</h2>
+        <h2 className="font-display text-2xl font-extrabold text-white">
+          Le live est-il continu ?
+        </h2>
         <p>
           Oui, hors interruptions techniques. Quand la caméra principale est indisponible, la NASA
           diffuse une mire bleue ou grise. Le live reprend automatiquement dès que possible. Pour
@@ -73,10 +78,15 @@ function LivePage() {
         </p>
         <h2 className="font-display text-2xl font-extrabold text-white">Aller plus loin</h2>
         <p>
-          Découvrez la <Link to="/position" className="text-[color:var(--iss-cyan)] underline">position en temps réel</Link>
-          {" "}de l'ISS sur une carte interactive, ou consultez les{" "}
-          <Link to="/passages" className="text-[color:var(--iss-cyan)] underline">prochains passages visibles</Link>
-          {" "}au-dessus de votre ville.
+          Découvrez la{" "}
+          <Link to="/position" className="text-[color:var(--iss-cyan)] underline">
+            position en temps réel
+          </Link>{" "}
+          de l'ISS sur une carte interactive, ou consultez les{" "}
+          <Link to="/passages" className="text-[color:var(--iss-cyan)] underline">
+            prochains passages visibles
+          </Link>{" "}
+          au-dessus de votre ville.
         </p>
       </article>
 

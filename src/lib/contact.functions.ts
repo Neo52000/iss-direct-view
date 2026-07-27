@@ -12,7 +12,9 @@ export const sendContactMessage = createServerFn({ method: "POST" })
   .handler(async ({ data }) => {
     const apiKey = process.env.BREVO_API_KEY;
     if (!apiKey) {
-      throw new Error("BREVO_API_KEY non configurée. Ajoutez-la dans les variables d'environnement.");
+      throw new Error(
+        "BREVO_API_KEY non configurée. Ajoutez-la dans les variables d'environnement.",
+      );
     }
 
     const res = await fetch("https://api.brevo.com/v3/smtp/email", {
@@ -49,5 +51,10 @@ export const sendContactMessage = createServerFn({ method: "POST" })
   });
 
 function escapeHtml(s: string) {
-  return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#x27;");
+  return s
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#x27;");
 }

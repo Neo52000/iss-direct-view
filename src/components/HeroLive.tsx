@@ -33,7 +33,10 @@ export function HeroLive() {
                 en direct
               </span>
             </motion.h1>
-            <motion.p variants={fadeUp} className="mt-5 max-w-2xl text-base text-white/70 md:text-lg">
+            <motion.p
+              variants={fadeUp}
+              className="mt-5 max-w-2xl text-base text-white/70 md:text-lg"
+            >
               Live vidéo de la Station Spatiale Internationale, position en temps réel et prochains
               passages visibles au-dessus de chez vous.
             </motion.p>

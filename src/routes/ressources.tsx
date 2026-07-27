@@ -13,7 +13,10 @@ export const Route = createFileRoute("/ressources")({
           "Kit espace à imprimer, coloriages, quiz, fiches pédagogiques, cartes du ciel et glossaire spatial.",
       },
       { property: "og:title", content: "Ressources espace gratuites" },
-      { property: "og:description", content: "Kit ISS, activités enfants et fiches pédagogiques à télécharger." },
+      {
+        property: "og:description",
+        content: "Kit ISS, activités enfants et fiches pédagogiques à télécharger.",
+      },
       { property: "og:url", content: "/ressources" },
     ],
     links: [{ rel: "canonical", href: "/ressources" }],
@@ -24,116 +27,262 @@ export const Route = createFileRoute("/ressources")({
 // SVG illustrations — space-themed, white on accent background
 function IssIcon() {
   return (
-    <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" className="h-full w-full">
+    <svg
+      viewBox="0 0 48 48"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      className="h-full w-full"
+    >
       {/* Solar panels left */}
-      <rect x="2" y="18" width="12" height="6" rx="1" fill="white" fillOpacity="0.9"/>
-      <rect x="2" y="26" width="12" height="6" rx="1" fill="white" fillOpacity="0.7"/>
+      <rect x="2" y="18" width="12" height="6" rx="1" fill="white" fillOpacity="0.9" />
+      <rect x="2" y="26" width="12" height="6" rx="1" fill="white" fillOpacity="0.7" />
       {/* Truss left */}
-      <rect x="13" y="22" width="5" height="2" rx="0.5" fill="white"/>
+      <rect x="13" y="22" width="5" height="2" rx="0.5" fill="white" />
       {/* Main body */}
-      <rect x="17" y="19" width="14" height="10" rx="2" fill="white"/>
+      <rect x="17" y="19" width="14" height="10" rx="2" fill="white" />
       {/* Module node */}
-      <rect x="20" y="15" width="8" height="4" rx="1" fill="white" fillOpacity="0.8"/>
-      <rect x="20" y="29" width="8" height="4" rx="1" fill="white" fillOpacity="0.8"/>
+      <rect x="20" y="15" width="8" height="4" rx="1" fill="white" fillOpacity="0.8" />
+      <rect x="20" y="29" width="8" height="4" rx="1" fill="white" fillOpacity="0.8" />
       {/* Truss right */}
-      <rect x="30" y="22" width="5" height="2" rx="0.5" fill="white"/>
+      <rect x="30" y="22" width="5" height="2" rx="0.5" fill="white" />
       {/* Solar panels right */}
-      <rect x="34" y="18" width="12" height="6" rx="1" fill="white" fillOpacity="0.9"/>
-      <rect x="34" y="26" width="12" height="6" rx="1" fill="white" fillOpacity="0.7"/>
+      <rect x="34" y="18" width="12" height="6" rx="1" fill="white" fillOpacity="0.9" />
+      <rect x="34" y="26" width="12" height="6" rx="1" fill="white" fillOpacity="0.7" />
     </svg>
   );
 }
 
 function RocketIcon() {
   return (
-    <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" className="h-full w-full">
+    <svg
+      viewBox="0 0 48 48"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      className="h-full w-full"
+    >
       {/* Body */}
-      <path d="M24 6 C20 14 18 22 18 30 L30 30 C30 22 28 14 24 6Z" fill="white"/>
+      <path d="M24 6 C20 14 18 22 18 30 L30 30 C30 22 28 14 24 6Z" fill="white" />
       {/* Nose */}
-      <path d="M24 6 C22 10 22 12 24 6Z" fill="white" fillOpacity="0.6"/>
+      <path d="M24 6 C22 10 22 12 24 6Z" fill="white" fillOpacity="0.6" />
       {/* Fins */}
-      <path d="M18 30 L13 38 L18 36Z" fill="white" fillOpacity="0.8"/>
-      <path d="M30 30 L35 38 L30 36Z" fill="white" fillOpacity="0.8"/>
+      <path d="M18 30 L13 38 L18 36Z" fill="white" fillOpacity="0.8" />
+      <path d="M30 30 L35 38 L30 36Z" fill="white" fillOpacity="0.8" />
       {/* Window */}
-      <circle cx="24" cy="22" r="3.5" fill="none" stroke="white" strokeWidth="1.5" strokeOpacity="0.5"/>
+      <circle
+        cx="24"
+        cy="22"
+        r="3.5"
+        fill="none"
+        stroke="white"
+        strokeWidth="1.5"
+        strokeOpacity="0.5"
+      />
       {/* Flame */}
-      <path d="M20 36 C20 40 22 44 24 46 C26 44 28 40 28 36Z" fill="white" fillOpacity="0.5"/>
-      <path d="M21 36 C21 40 23 43 24 44 C25 43 27 40 27 36Z" fill="white" fillOpacity="0.8"/>
+      <path d="M20 36 C20 40 22 44 24 46 C26 44 28 40 28 36Z" fill="white" fillOpacity="0.5" />
+      <path d="M21 36 C21 40 23 43 24 44 C25 43 27 40 27 36Z" fill="white" fillOpacity="0.8" />
     </svg>
   );
 }
 
 function TelescopeIcon() {
   return (
-    <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" className="h-full w-full">
+    <svg
+      viewBox="0 0 48 48"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      className="h-full w-full"
+    >
       {/* Main tube */}
-      <rect x="8" y="19" width="26" height="8" rx="4" fill="white" transform="rotate(-30 8 19)"/>
+      <rect x="8" y="19" width="26" height="8" rx="4" fill="white" transform="rotate(-30 8 19)" />
       {/* Eyepiece */}
-      <rect x="26" y="26" width="8" height="5" rx="2" fill="white" fillOpacity="0.8" transform="rotate(-30 26 26)"/>
+      <rect
+        x="26"
+        y="26"
+        width="8"
+        height="5"
+        rx="2"
+        fill="white"
+        fillOpacity="0.8"
+        transform="rotate(-30 26 26)"
+      />
       {/* Stars */}
-      <circle cx="10" cy="10" r="1.5" fill="white" fillOpacity="0.7"/>
-      <circle cx="18" cy="6" r="1" fill="white" fillOpacity="0.5"/>
-      <circle cx="6" cy="16" r="1" fill="white" fillOpacity="0.4"/>
+      <circle cx="10" cy="10" r="1.5" fill="white" fillOpacity="0.7" />
+      <circle cx="18" cy="6" r="1" fill="white" fillOpacity="0.5" />
+      <circle cx="6" cy="16" r="1" fill="white" fillOpacity="0.4" />
       {/* Tripod */}
-      <line x1="20" y1="36" x2="14" y2="46" stroke="white" strokeWidth="1.5" strokeOpacity="0.8" strokeLinecap="round"/>
-      <line x1="24" y1="36" x2="24" y2="46" stroke="white" strokeWidth="1.5" strokeOpacity="0.8" strokeLinecap="round"/>
-      <line x1="28" y1="36" x2="34" y2="46" stroke="white" strokeWidth="1.5" strokeOpacity="0.8" strokeLinecap="round"/>
+      <line
+        x1="20"
+        y1="36"
+        x2="14"
+        y2="46"
+        stroke="white"
+        strokeWidth="1.5"
+        strokeOpacity="0.8"
+        strokeLinecap="round"
+      />
+      <line
+        x1="24"
+        y1="36"
+        x2="24"
+        y2="46"
+        stroke="white"
+        strokeWidth="1.5"
+        strokeOpacity="0.8"
+        strokeLinecap="round"
+      />
+      <line
+        x1="28"
+        y1="36"
+        x2="34"
+        y2="46"
+        stroke="white"
+        strokeWidth="1.5"
+        strokeOpacity="0.8"
+        strokeLinecap="round"
+      />
     </svg>
   );
 }
 
 function BookIcon() {
   return (
-    <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" className="h-full w-full">
+    <svg
+      viewBox="0 0 48 48"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      className="h-full w-full"
+    >
       {/* Book left page */}
-      <path d="M8 10 C8 10 16 12 24 10 L24 40 C16 42 8 40 8 40Z" fill="white" fillOpacity="0.85"/>
+      <path d="M8 10 C8 10 16 12 24 10 L24 40 C16 42 8 40 8 40Z" fill="white" fillOpacity="0.85" />
       {/* Book right page */}
-      <path d="M24 10 C32 12 40 10 40 10 L40 40 C40 40 32 42 24 40Z" fill="white"/>
+      <path d="M24 10 C32 12 40 10 40 10 L40 40 C40 40 32 42 24 40Z" fill="white" />
       {/* Spine */}
-      <rect x="22.5" y="10" width="3" height="30" rx="1" fill="white" fillOpacity="0.4"/>
+      <rect x="22.5" y="10" width="3" height="30" rx="1" fill="white" fillOpacity="0.4" />
       {/* Lines on right page */}
-      <line x1="28" y1="18" x2="37" y2="17" stroke="white" strokeWidth="1" strokeOpacity="0.4" strokeLinecap="round"/>
-      <line x1="28" y1="22" x2="37" y2="21" stroke="white" strokeWidth="1" strokeOpacity="0.4" strokeLinecap="round"/>
-      <line x1="28" y1="26" x2="37" y2="25" stroke="white" strokeWidth="1" strokeOpacity="0.4" strokeLinecap="round"/>
+      <line
+        x1="28"
+        y1="18"
+        x2="37"
+        y2="17"
+        stroke="white"
+        strokeWidth="1"
+        strokeOpacity="0.4"
+        strokeLinecap="round"
+      />
+      <line
+        x1="28"
+        y1="22"
+        x2="37"
+        y2="21"
+        stroke="white"
+        strokeWidth="1"
+        strokeOpacity="0.4"
+        strokeLinecap="round"
+      />
+      <line
+        x1="28"
+        y1="26"
+        x2="37"
+        y2="25"
+        stroke="white"
+        strokeWidth="1"
+        strokeOpacity="0.4"
+        strokeLinecap="round"
+      />
       {/* Star on left page */}
-      <path d="M16 22 L17 19 L18 22 L21 22 L19 24 L20 27 L17 25 L14 27 L15 24 L13 22Z" fill="white" fillOpacity="0.5"/>
+      <path
+        d="M16 22 L17 19 L18 22 L21 22 L19 24 L20 27 L17 25 L14 27 L15 24 L13 22Z"
+        fill="white"
+        fillOpacity="0.5"
+      />
     </svg>
   );
 }
 
 function GlobeStarsIcon() {
   return (
-    <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" className="h-full w-full">
+    <svg
+      viewBox="0 0 48 48"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      className="h-full w-full"
+    >
       {/* Planet */}
-      <circle cx="22" cy="26" r="14" stroke="white" strokeWidth="2" fill="none"/>
+      <circle cx="22" cy="26" r="14" stroke="white" strokeWidth="2" fill="none" />
       {/* Meridians */}
-      <ellipse cx="22" cy="26" rx="7" ry="14" stroke="white" strokeWidth="1.2" strokeOpacity="0.5" fill="none"/>
-      <line x1="8" y1="26" x2="36" y2="26" stroke="white" strokeWidth="1.2" strokeOpacity="0.5"/>
-      <line x1="10" y1="19" x2="34" y2="19" stroke="white" strokeWidth="1" strokeOpacity="0.3"/>
-      <line x1="10" y1="33" x2="34" y2="33" stroke="white" strokeWidth="1" strokeOpacity="0.3"/>
+      <ellipse
+        cx="22"
+        cy="26"
+        rx="7"
+        ry="14"
+        stroke="white"
+        strokeWidth="1.2"
+        strokeOpacity="0.5"
+        fill="none"
+      />
+      <line x1="8" y1="26" x2="36" y2="26" stroke="white" strokeWidth="1.2" strokeOpacity="0.5" />
+      <line x1="10" y1="19" x2="34" y2="19" stroke="white" strokeWidth="1" strokeOpacity="0.3" />
+      <line x1="10" y1="33" x2="34" y2="33" stroke="white" strokeWidth="1" strokeOpacity="0.3" />
       {/* Stars */}
-      <circle cx="38" cy="10" r="2" fill="white" fillOpacity="0.9"/>
-      <circle cx="8" cy="8" r="1.5" fill="white" fillOpacity="0.7"/>
-      <circle cx="42" cy="20" r="1" fill="white" fillOpacity="0.5"/>
+      <circle cx="38" cy="10" r="2" fill="white" fillOpacity="0.9" />
+      <circle cx="8" cy="8" r="1.5" fill="white" fillOpacity="0.7" />
+      <circle cx="42" cy="20" r="1" fill="white" fillOpacity="0.5" />
     </svg>
   );
 }
 
 function PlanetIcon() {
   return (
-    <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" className="h-full w-full">
+    <svg
+      viewBox="0 0 48 48"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      className="h-full w-full"
+    >
       {/* Back ring (behind planet) */}
-      <path d="M 4 26 A 20 6 0 0 1 44 26" stroke="white" strokeWidth="2" fill="none" strokeOpacity="0.8"/>
+      <path
+        d="M 4 26 A 20 6 0 0 1 44 26"
+        stroke="white"
+        strokeWidth="2"
+        fill="none"
+        strokeOpacity="0.8"
+      />
       {/* Planet body */}
-      <circle cx="24" cy="26" r="12" fill="white" fillOpacity="0.15" stroke="white" strokeWidth="2"/>
+      <circle
+        cx="24"
+        cy="26"
+        r="12"
+        fill="white"
+        fillOpacity="0.15"
+        stroke="white"
+        strokeWidth="2"
+      />
       {/* Front ring (in front of planet) */}
-      <path d="M 4 26 A 20 6 0 0 0 44 26" stroke="white" strokeWidth="2" fill="none" strokeOpacity="0.8"/>
+      <path
+        d="M 4 26 A 20 6 0 0 0 44 26"
+        stroke="white"
+        strokeWidth="2"
+        fill="none"
+        strokeOpacity="0.8"
+      />
       {/* Surface bands */}
-      <path d="M13 23 Q24 21 35 23" stroke="white" strokeWidth="1" strokeOpacity="0.4" fill="none"/>
-      <path d="M13 29 Q24 27 35 29" stroke="white" strokeWidth="1" strokeOpacity="0.4" fill="none"/>
+      <path
+        d="M13 23 Q24 21 35 23"
+        stroke="white"
+        strokeWidth="1"
+        strokeOpacity="0.4"
+        fill="none"
+      />
+      <path
+        d="M13 29 Q24 27 35 29"
+        stroke="white"
+        strokeWidth="1"
+        strokeOpacity="0.4"
+        fill="none"
+      />
       {/* Moons */}
-      <circle cx="10" cy="10" r="2.5" fill="white" fillOpacity="0.7"/>
-      <circle cx="40" cy="8" r="1.5" fill="white" fillOpacity="0.5"/>
+      <circle cx="10" cy="10" r="2.5" fill="white" fillOpacity="0.7" />
+      <circle cx="40" cy="8" r="1.5" fill="white" fillOpacity="0.5" />
     </svg>
   );
 }
@@ -217,7 +366,10 @@ function ResourcesPage() {
           {RESOURCES.map((r) => (
             <article key={r.title} className="iss-card flex flex-col p-6">
               <div className="flex items-start justify-between">
-                <div className={`flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br p-3 ${r.iconBg}`} aria-hidden>
+                <div
+                  className={`flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br p-3 ${r.iconBg}`}
+                  aria-hidden
+                >
                   {r.icon}
                 </div>
                 <span className="rounded-full bg-white/10 px-2.5 py-0.5 text-xs text-white/60">
@@ -237,7 +389,8 @@ function ResourcesPage() {
         </div>
 
         <p className="mt-6 text-center text-xs text-white/40">
-          Cliquez sur « Télécharger » → dans le nouvel onglet, utilisez Fichier › Imprimer › Enregistrer en PDF
+          Cliquez sur « Télécharger » → dans le nouvel onglet, utilisez Fichier › Imprimer ›
+          Enregistrer en PDF
         </p>
       </section>
       <KitSection />

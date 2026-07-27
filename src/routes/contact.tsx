@@ -53,10 +53,7 @@ function ContactPage() {
           <p className="mt-2 text-white/70">Nous vous répondrons dans les meilleurs délais.</p>
         </div>
       ) : (
-        <form
-          className="iss-card mt-8 flex flex-col gap-3 p-6"
-          onSubmit={handleSubmit}
-        >
+        <form className="iss-card mt-8 flex flex-col gap-3 p-6" onSubmit={handleSubmit}>
           <input
             required
             maxLength={100}

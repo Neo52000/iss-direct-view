@@ -1,4 +1,10 @@
-export function AdSlot({ label = "Emplacement publicitaire", className = "" }: { label?: string; className?: string }) {
+export function AdSlot({
+  label = "Emplacement publicitaire",
+  className = "",
+}: {
+  label?: string;
+  className?: string;
+}) {
   return (
     <div
       className={`grid place-items-center rounded-2xl border border-dashed border-white/15 bg-white/[0.02] p-6 text-xs uppercase tracking-wider text-white/40 ${className}`}
@@ -15,8 +21,7 @@ export function SponsorBanner({ children }: { children?: React.ReactNode }) {
     <div className="mx-auto max-w-7xl px-4 md:px-6">
       <div className="iss-card flex flex-wrap items-center justify-between gap-3 p-4 text-sm text-white/70">
         <span>
-          {children ??
-            "Cette page peut être sponsorisée par une marque éducative ou scientifique."}
+          {children ?? "Cette page peut être sponsorisée par une marque éducative ou scientifique."}
         </span>
         <a
           href="/contact"

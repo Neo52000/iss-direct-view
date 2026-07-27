@@ -46,7 +46,9 @@ export function useIssPosition(intervalMs = 7000) {
         if (cancelled) return;
         setPosition(p);
         setHistory((prev) =>
-          [...prev, { t: p.timestamp * 1000, altitude: p.altitude, velocity: p.velocity }].slice(-60),
+          [...prev, { t: p.timestamp * 1000, altitude: p.altitude, velocity: p.velocity }].slice(
+            -60,
+          ),
         );
         setError(null);
         setLoading(false);

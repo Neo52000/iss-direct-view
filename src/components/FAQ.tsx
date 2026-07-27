@@ -29,11 +29,7 @@ export function FAQ({
       <p className="mt-2 text-white/70">{intro}</p>
       <Accordion type="single" collapsible className="mt-8">
         {items.map((item, i) => (
-          <AccordionItem
-            key={i}
-            value={`item-${i}`}
-            className="border-b border-white/10 px-1"
-          >
+          <AccordionItem key={i} value={`item-${i}`} className="border-b border-white/10 px-1">
             <AccordionTrigger className="text-left font-display text-base font-bold hover:no-underline">
               {item.q}
             </AccordionTrigger>

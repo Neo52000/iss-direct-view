@@ -86,13 +86,19 @@ export function NextPassCard() {
             return;
           }
           if ("error" in result || !result.passes.length) {
-            setState({ status: "error", message: "error" in result ? result.error : "Aucun passage trouvé" });
+            setState({
+              status: "error",
+              message: "error" in result ? result.error : "Aucun passage trouvé",
+            });
             return;
           }
           const label = `${lat.toFixed(1)}°N, ${Math.abs(lon).toFixed(1)}°${lon >= 0 ? "E" : "O"}`;
           setState({ status: "ok", pass: result.passes[0], label });
         } catch (err) {
-          setState({ status: "error", message: err instanceof Error ? err.message : "Erreur réseau" });
+          setState({
+            status: "error",
+            message: err instanceof Error ? err.message : "Erreur réseau",
+          });
         }
       },
       () => setState({ status: "nolocation" }),

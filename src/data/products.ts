@@ -31,7 +31,7 @@ export const affiliateProducts: AffiliateProduct[] = [
     rating: 4.3,
     category: "Observation",
     image: "🪐",
-  affiliateUrl: "#",
+    affiliateUrl: "#",
   },
   {
     id: "maquette-iss",
