@@ -90,6 +90,7 @@ export const Route = createFileRoute("/blog/$slug")({
   head: ({ loaderData }) => {
     const post = loaderData;
     if (!post) return { meta: [{ title: "Article — ISS Direct France" }] };
+    const canonicalUrl = `https://iss-en-direct.com/blog/${post.slug}`;
     return {
       meta: [
         { title: `${post.title} — ISS Direct France` },
@@ -154,12 +155,18 @@ function ArticleNextSteps({ category }: { category: string }) {
           </Link>
         </li>
         <li>
-          <Link to="/position" className="font-semibold text-[color:var(--iss-cyan)] hover:underline">
+          <Link
+            to="/position"
+            className="font-semibold text-[color:var(--iss-cyan)] hover:underline"
+          >
             Suivre la position actuelle de l'ISS sur la carte
           </Link>
         </li>
         <li>
-          <Link to="/passage-iss" className="font-semibold text-[color:var(--iss-cyan)] hover:underline">
+          <Link
+            to="/passage-iss"
+            className="font-semibold text-[color:var(--iss-cyan)] hover:underline"
+          >
             Connaître le prochain passage de l'ISS dans votre ville
           </Link>
         </li>
