@@ -283,7 +283,10 @@ function ObservationGuide({ city }: { city: FrenchCity }) {
 
       <div className="mt-6 rounded-2xl border border-white/10 bg-white/[0.03] p-5 text-sm text-white/70">
         Vous observez avec des enfants ?{" "}
-        <Link to="/ressources" className="font-semibold text-[color:var(--iss-cyan)] hover:underline">
+        <Link
+          to="/ressources"
+          className="font-semibold text-[color:var(--iss-cyan)] hover:underline"
+        >
           Téléchargez le kit espace à imprimer
         </Link>{" "}
         et suivez ensuite{" "}

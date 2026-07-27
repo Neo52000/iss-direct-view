@@ -75,7 +75,9 @@ function AdminSettingsPage() {
       <header className="flex items-center justify-between">
         <div>
           <h1 className="font-display text-3xl font-extrabold md:text-4xl">Réglages du site</h1>
-          <p className="text-sm text-white/60">Liens et contenus globaux affichés sur le site public.</p>
+          <p className="text-sm text-white/60">
+            Liens et contenus globaux affichés sur le site public.
+          </p>
         </div>
         <button
           onClick={handleSignOut}
@@ -90,8 +92,8 @@ function AdminSettingsPage() {
           <Download className="h-4 w-4" /> Kit espace à imprimer
         </div>
         <p className="text-xs text-white/60">
-          URL utilisée par le bouton « Télécharger gratuitement » de la section pédagogique.
-          Accepte une URL absolue (https://…) ou un chemin interne (/ressources).
+          URL utilisée par le bouton « Télécharger gratuitement » de la section pédagogique. Accepte
+          une URL absolue (https://…) ou un chemin interne (/ressources).
         </p>
         <label className="flex flex-col gap-1">
           <span className="text-xs font-semibold text-white/60">Lien du kit</span>

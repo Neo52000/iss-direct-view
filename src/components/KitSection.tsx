@@ -72,12 +72,7 @@ export function KitSection() {
 }
 
 export function CommerceBenefits() {
-  const items = [
-    "Paiement sécurisé",
-    "Livraison rapide",
-    "Retour facile",
-    "Support client",
-  ];
+  const items = ["Paiement sécurisé", "Livraison rapide", "Retour facile", "Support client"];
   return (
     <div className="bg-white py-6 text-[#0b1530]">
       <div className="mx-auto grid max-w-7xl grid-cols-2 gap-4 px-4 text-center text-sm font-semibold md:grid-cols-4 md:px-6">

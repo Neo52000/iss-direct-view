@@ -1,21 +1,9 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
 import { useIssPosition } from "@/services/issApi";
-import {
-  formatAltitude,
-  formatCoordinates,
-  formatSpeed,
-  getReadableDate,
-} from "@/lib/iss-utils";
+import { formatAltitude, formatCoordinates, formatSpeed, getReadableDate } from "@/lib/iss-utils";
 import { Crosshair, Satellite, AlertTriangle, Loader2, Maximize2, Minimize2 } from "lucide-react";
-import {
-  AreaChart,
-  Area,
-  XAxis,
-  YAxis,
-  Tooltip,
-  ResponsiveContainer,
-} from "recharts";
+import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer } from "recharts";
 import { Radar } from "@/components/Radar";
 
 export const Route = createFileRoute("/position")({
@@ -65,53 +53,53 @@ function PositionPage() {
         await import("leaflet/dist/leaflet.css");
         if (cancelled || !mapRef.current || leafletRef.current.map) return;
         const map = L.map(mapRef.current, {
-        center: [0, 0],
-        zoom: 3,
-        worldCopyJump: true,
-        zoomControl: true,
-      });
-      const tileLayer = L.tileLayer(
-        "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png",
-        {
-          attribution: "© OpenStreetMap, © CartoDB",
-          subdomains: "abcd",
-          maxZoom: 19,
-          keepBuffer: 4,
-          updateWhenIdle: false,
-          updateWhenZooming: false,
-        },
-      ).addTo(map);
-      tileLayerRef.current = tileLayer;
+          center: [0, 0],
+          zoom: 3,
+          worldCopyJump: true,
+          zoomControl: true,
+        });
+        const tileLayer = L.tileLayer(
+          "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png",
+          {
+            attribution: "© OpenStreetMap, © CartoDB",
+            subdomains: "abcd",
+            maxZoom: 19,
+            keepBuffer: 4,
+            updateWhenIdle: false,
+            updateWhenZooming: false,
+          },
+        ).addTo(map);
+        tileLayerRef.current = tileLayer;
 
-      // Fallback: if tiles don't load within 10s, mark as error
-      timeoutId = setTimeout(() => {
-        if (!cancelled) {
-          setMapStatus((s) => (s === "loading" ? "error" : s));
-        }
-      }, 10000);
+        // Fallback: if tiles don't load within 10s, mark as error
+        timeoutId = setTimeout(() => {
+          if (!cancelled) {
+            setMapStatus((s) => (s === "loading" ? "error" : s));
+          }
+        }, 10000);
 
-      tileLayer.on("load", () => {
-        if (cancelled) return;
-        if (timeoutId) clearTimeout(timeoutId);
-        setTilesLoaded(true);
-        setMapStatus("ready");
-      });
-      tileLayer.on("tileerror", () => {
-        if (cancelled) return;
-        // Only flip to error if no tile ever loaded
-        setMapStatus((s) => (s === "ready" ? s : "error"));
-      });
+        tileLayer.on("load", () => {
+          if (cancelled) return;
+          if (timeoutId) clearTimeout(timeoutId);
+          setTilesLoaded(true);
+          setMapStatus("ready");
+        });
+        tileLayer.on("tileerror", () => {
+          if (cancelled) return;
+          // Only flip to error if no tile ever loaded
+          setMapStatus((s) => (s === "ready" ? s : "error"));
+        });
 
-      const icon = L.divIcon({
-        className: "iss-marker",
-        html: `<div style="width:34px;height:34px;border-radius:50%;background:rgba(47,128,255,.25);display:grid;place-items:center;border:2px solid #71D7FF;box-shadow:0 0 30px rgba(113,215,255,.6)"><span style="font-size:18px">🛰️</span></div>`,
-        iconSize: [34, 34],
-        iconAnchor: [17, 17],
-      });
-      const marker = L.marker([0, 0], { icon }).addTo(map);
-      const polyline = L.polyline([], { color: "#71D7FF", weight: 2, opacity: 0.7 }).addTo(map);
+        const icon = L.divIcon({
+          className: "iss-marker",
+          html: `<div style="width:34px;height:34px;border-radius:50%;background:rgba(47,128,255,.25);display:grid;place-items:center;border:2px solid #71D7FF;box-shadow:0 0 30px rgba(113,215,255,.6)"><span style="font-size:18px">🛰️</span></div>`,
+          iconSize: [34, 34],
+          iconAnchor: [17, 17],
+        });
+        const marker = L.marker([0, 0], { icon }).addTo(map);
+        const polyline = L.polyline([], { color: "#71D7FF", weight: 2, opacity: 0.7 }).addTo(map);
 
-      leafletRef.current = { map, marker, polyline, follow: true, L };
+        leafletRef.current = { map, marker, polyline, follow: true, L };
       } catch (e) {
         console.error("Leaflet init failed", e);
         if (!cancelled) setMapStatus("error");
@@ -153,7 +141,7 @@ function PositionPage() {
       );
       for (let dx = -radius; dx <= radius; dx++) {
         for (let dy = -radius; dy <= radius; dy++) {
-          const x = ((xC + dx) % n + n) % n;
+          const x = (((xC + dx) % n) + n) % n;
           const y = yC + dy;
           if (y < 0 || y >= n) continue;
           const s = subdomains[Math.abs(x + y) % subdomains.length];
@@ -231,9 +219,14 @@ function PositionPage() {
     const el = mapContainerRef.current;
     if (!el) return;
     if (!document.fullscreenElement) {
-      el.requestFullscreen().then(() => setIsFullscreen(true)).catch(() => {});
+      el.requestFullscreen()
+        .then(() => setIsFullscreen(true))
+        .catch(() => {});
     } else {
-      document.exitFullscreen().then(() => setIsFullscreen(false)).catch(() => {});
+      document
+        .exitFullscreen()
+        .then(() => setIsFullscreen(false))
+        .catch(() => {});
     }
   };
 
@@ -263,7 +256,10 @@ function PositionPage() {
       </div>
 
       <div className="mt-6 grid gap-5 lg:grid-cols-[1fr_320px]">
-        <div ref={mapContainerRef} className="relative h-[60vh] min-h-[420px] overflow-hidden rounded-2xl border border-white/10 bg-black">
+        <div
+          ref={mapContainerRef}
+          className="relative h-[60vh] min-h-[420px] overflow-hidden rounded-2xl border border-white/10 bg-black"
+        >
           <div
             ref={mapRef}
             className="absolute inset-0"
@@ -333,7 +329,8 @@ function PositionPage() {
           )}
           {position ? (
             <p className="text-xs text-white/50">
-              MAJ : {getReadableDate(position.timestamp * 1000)}<br />
+              MAJ : {getReadableDate(position.timestamp * 1000)}
+              <br />
               {formatCoordinates(position.latitude, position.longitude)}
             </p>
           ) : null}
@@ -343,7 +340,10 @@ function PositionPage() {
                 Altitude & vitesse (session)
               </p>
               <ResponsiveContainer width="100%" height={90}>
-                <AreaChart data={telemetryHistory} margin={{ top: 2, right: 2, bottom: 0, left: 0 }}>
+                <AreaChart
+                  data={telemetryHistory}
+                  margin={{ top: 2, right: 2, bottom: 0, left: 0 }}
+                >
                   <defs>
                     <linearGradient id="altGrad" x1="0" y1="0" x2="0" y2="1">
                       <stop offset="5%" stopColor="#71D7FF" stopOpacity={0.3} />
@@ -354,7 +354,12 @@ function PositionPage() {
                   <YAxis yAxisId="alt" domain={["auto", "auto"]} hide />
                   <YAxis yAxisId="vel" orientation="right" domain={["auto", "auto"]} hide />
                   <Tooltip
-                    contentStyle={{ background: "#0e1a2e", border: "1px solid rgba(255,255,255,.1)", borderRadius: 8, fontSize: 11 }}
+                    contentStyle={{
+                      background: "#0e1a2e",
+                      border: "1px solid rgba(255,255,255,.1)",
+                      borderRadius: 8,
+                      fontSize: 11,
+                    }}
                     labelFormatter={() => ""}
                     formatter={(val: number, name: string) =>
                       name === "altitude"
@@ -362,8 +367,24 @@ function PositionPage() {
                         : [`${Math.round(val)} km/h`, "Vitesse"]
                     }
                   />
-                  <Area yAxisId="alt" type="monotone" dataKey="altitude" stroke="#71D7FF" strokeWidth={1.5} fill="url(#altGrad)" dot={false} />
-                  <Area yAxisId="vel" type="monotone" dataKey="velocity" stroke="#2F80FF" strokeWidth={1} fill="none" dot={false} />
+                  <Area
+                    yAxisId="alt"
+                    type="monotone"
+                    dataKey="altitude"
+                    stroke="#71D7FF"
+                    strokeWidth={1.5}
+                    fill="url(#altGrad)"
+                    dot={false}
+                  />
+                  <Area
+                    yAxisId="vel"
+                    type="monotone"
+                    dataKey="velocity"
+                    stroke="#2F80FF"
+                    strokeWidth={1}
+                    fill="none"
+                    dot={false}
+                  />
                 </AreaChart>
               </ResponsiveContainer>
             </div>

@@ -4,7 +4,10 @@ export const Route = createFileRoute("/confidentialite")({
   head: () => ({
     meta: [
       { title: "Politique de confidentialité — ISS Direct France" },
-      { name: "description", content: "Politique de confidentialité et cookies du site ISS Direct France." },
+      {
+        name: "description",
+        content: "Politique de confidentialité et cookies du site ISS Direct France.",
+      },
       { property: "og:url", content: "/confidentialite" },
     ],
     links: [{ rel: "canonical", href: "/confidentialite" }],
@@ -49,8 +52,10 @@ function PrivacyPage() {
         <p>
           Conformément au RGPD, vous disposez d'un droit d'accès, de rectification et de suppression
           de vos données. Vous pouvez exercer ce droit à tout moment en écrivant via la{" "}
-          <a href="/contact" className="text-[color:var(--iss-cyan)] underline">page contact</a>,
-          ou en répondant "désinscription" à n'importe quel email reçu.
+          <a href="/contact" className="text-[color:var(--iss-cyan)] underline">
+            page contact
+          </a>
+          , ou en répondant "désinscription" à n'importe quel email reçu.
         </p>
       </div>
     </section>

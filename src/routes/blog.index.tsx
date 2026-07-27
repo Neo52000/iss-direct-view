@@ -37,7 +37,7 @@ function BlogIndex() {
       <a
         href="/rss.xml"
         className="mt-4 inline-flex items-center gap-2 rounded-full border border-[color:var(--iss-cyan)]/40 bg-[color:var(--iss-cyan)]/10 px-4 py-2 text-sm font-semibold text-[color:var(--iss-cyan)] transition hover:bg-[color:var(--iss-cyan)]/20"
-          target="_blank"
+        target="_blank"
         rel="noopener"
       >
         <span aria-hidden>📡</span> S'abonner au flux RSS
@@ -61,7 +61,8 @@ function BlogIndex() {
             )}
             <div className="flex flex-1 flex-col p-5">
               <span className="text-[11px] font-semibold uppercase tracking-wider text-[color:var(--iss-cyan)]">
-                {p.category}{p.readingTime > 0 && ` · ${p.readingTime} min`}
+                {p.category}
+                {p.readingTime > 0 && ` · ${p.readingTime} min`}
               </span>
               <h2 className="mt-2 font-display text-lg font-bold leading-snug">{p.title}</h2>
               <p className="mt-2 line-clamp-3 text-sm text-white/70">{p.excerpt}</p>

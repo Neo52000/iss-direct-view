@@ -68,42 +68,46 @@ export function BlogPreview({ count = 3 }: { count?: number }) {
               </div>
             ))
           : posts.map((p) => (
-          <motion.article key={p.slug} variants={fadeUp} className="iss-card iss-card-interactive flex flex-col overflow-hidden">
-            {p.image ? (
-              <img
-                src={p.image}
-                alt={p.title}
-                loading="lazy"
-                width={1024}
-                height={640}
-                className="aspect-[16/10] w-full object-cover"
-              />
-            ) : (
-              <div className="grid aspect-[16/10] place-items-center bg-gradient-to-br from-[color:var(--iss-surface)] to-[#0a1f4a] text-6xl">
-                <span aria-hidden>{p.cover}</span>
-              </div>
-            )}
-            <div className="flex flex-1 flex-col p-5">
-              <span className="text-[11px] font-semibold uppercase tracking-wider text-[color:var(--iss-cyan)]">
-                {p.category}{p.readingTime ? ` · ${p.readingTime} min` : null}
-              </span>
-              <h3 className="mt-2 font-display text-lg font-bold leading-snug">{p.title}</h3>
-              <p className="mt-2 line-clamp-3 text-sm text-white/70">{p.excerpt}</p>
-              <div className="mt-4 flex items-center justify-between">
-                <span className="text-xs text-white/40">{getReadableDay(p.date)}</span>
-                <Link
-                  to="/blog/$slug"
-                  params={{ slug: p.slug }}
-                  className="text-sm font-semibold text-[color:var(--iss-cyan)] hover:underline"
-                >
-                  Lire l'article →
-                </Link>
-              </div>
-            </div>
-          </motion.article>
-        ))}
+              <motion.article
+                key={p.slug}
+                variants={fadeUp}
+                className="iss-card iss-card-interactive flex flex-col overflow-hidden"
+              >
+                {p.image ? (
+                  <img
+                    src={p.image}
+                    alt={p.title}
+                    loading="lazy"
+                    width={1024}
+                    height={640}
+                    className="aspect-[16/10] w-full object-cover"
+                  />
+                ) : (
+                  <div className="grid aspect-[16/10] place-items-center bg-gradient-to-br from-[color:var(--iss-surface)] to-[#0a1f4a] text-6xl">
+                    <span aria-hidden>{p.cover}</span>
+                  </div>
+                )}
+                <div className="flex flex-1 flex-col p-5">
+                  <span className="text-[11px] font-semibold uppercase tracking-wider text-[color:var(--iss-cyan)]">
+                    {p.category}
+                    {p.readingTime ? ` · ${p.readingTime} min` : null}
+                  </span>
+                  <h3 className="mt-2 font-display text-lg font-bold leading-snug">{p.title}</h3>
+                  <p className="mt-2 line-clamp-3 text-sm text-white/70">{p.excerpt}</p>
+                  <div className="mt-4 flex items-center justify-between">
+                    <span className="text-xs text-white/40">{getReadableDay(p.date)}</span>
+                    <Link
+                      to="/blog/$slug"
+                      params={{ slug: p.slug }}
+                      className="text-sm font-semibold text-[color:var(--iss-cyan)] hover:underline"
+                    >
+                      Lire l'article →
+                    </Link>
+                  </div>
+                </div>
+              </motion.article>
+            ))}
       </motion.div>
-
     </section>
   );
 }

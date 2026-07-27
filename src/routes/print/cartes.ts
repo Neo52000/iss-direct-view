@@ -7,32 +7,92 @@ const SAISONS = [
     nom: "Printemps (mars – mai)",
     emoji: "🌸",
     constellations: [
-      { nom: "Lion", etoile: "Régulus", mag: "1.4", note: "Reconnaissable à sa forme de point d'interrogation inversé" },
+      {
+        nom: "Lion",
+        etoile: "Régulus",
+        mag: "1.4",
+        note: "Reconnaissable à sa forme de point d'interrogation inversé",
+      },
       { nom: "Vierge", etoile: "Spica", mag: "1.0", note: "Étoile bleue très brillante au sud" },
-      { nom: "Chevelure de Bérénice", etoile: "aucune très brillante", mag: "—", note: "Amas d'étoiles faibles mais nombreuses" },
-      { nom: "Bouvier", etoile: "Arcturus", mag: "−0.05", note: "La 4e étoile la plus brillante du ciel nocturne" },
-      { nom: "Grande Ourse", etoile: "Alioth", mag: "1.7", note: "Haute dans le ciel, permet de trouver l'étoile polaire" },
+      {
+        nom: "Chevelure de Bérénice",
+        etoile: "aucune très brillante",
+        mag: "—",
+        note: "Amas d'étoiles faibles mais nombreuses",
+      },
+      {
+        nom: "Bouvier",
+        etoile: "Arcturus",
+        mag: "−0.05",
+        note: "La 4e étoile la plus brillante du ciel nocturne",
+      },
+      {
+        nom: "Grande Ourse",
+        etoile: "Alioth",
+        mag: "1.7",
+        note: "Haute dans le ciel, permet de trouver l'étoile polaire",
+      },
     ],
   },
   {
     nom: "Été (juin – août)",
     emoji: "☀️",
     constellations: [
-      { nom: "Scorpion", etoile: "Antares", mag: "1.1", note: "Visible bas sur l'horizon sud, étoile rouge-orangé" },
-      { nom: "Lyre", etoile: "Véga", mag: "0.0", note: "Quasi au zénith, très brillante, forme le Triangle d'Été" },
+      {
+        nom: "Scorpion",
+        etoile: "Antares",
+        mag: "1.1",
+        note: "Visible bas sur l'horizon sud, étoile rouge-orangé",
+      },
+      {
+        nom: "Lyre",
+        etoile: "Véga",
+        mag: "0.0",
+        note: "Quasi au zénith, très brillante, forme le Triangle d'Été",
+      },
       { nom: "Cygne", etoile: "Deneb", mag: "1.3", note: "Grande croix dans la Voie lactée" },
-      { nom: "Aigle", etoile: "Altaïr", mag: "0.8", note: "3e sommet du Triangle d'Été, reconnaissable à ses 2 étoiles flanquantes" },
-      { nom: "Sagittaire", etoile: "Nunki", mag: "2.0", note: "Forme une théière, centre galactique derrière" },
+      {
+        nom: "Aigle",
+        etoile: "Altaïr",
+        mag: "0.8",
+        note: "3e sommet du Triangle d'Été, reconnaissable à ses 2 étoiles flanquantes",
+      },
+      {
+        nom: "Sagittaire",
+        etoile: "Nunki",
+        mag: "2.0",
+        note: "Forme une théière, centre galactique derrière",
+      },
     ],
   },
   {
     nom: "Automne (sept. – nov.)",
     emoji: "🍂",
     constellations: [
-      { nom: "Pégase", etoile: "Markab", mag: "2.5", note: "Grand carré facilement repérable au zénith" },
-      { nom: "Andromède", etoile: "Mirach", mag: "2.1", note: "Contient la galaxie M31 visible à l'œil nu" },
-      { nom: "Persée", etoile: "Algol (étoile variable)", mag: "2.1-3.4", note: "Double étoile à éclipses, clignote tous les 2,9 jours" },
-      { nom: "Cassiopée", etoile: "Shedir", mag: "2.2", note: "Forme un W très visible toute l'année vers le nord" },
+      {
+        nom: "Pégase",
+        etoile: "Markab",
+        mag: "2.5",
+        note: "Grand carré facilement repérable au zénith",
+      },
+      {
+        nom: "Andromède",
+        etoile: "Mirach",
+        mag: "2.1",
+        note: "Contient la galaxie M31 visible à l'œil nu",
+      },
+      {
+        nom: "Persée",
+        etoile: "Algol (étoile variable)",
+        mag: "2.1-3.4",
+        note: "Double étoile à éclipses, clignote tous les 2,9 jours",
+      },
+      {
+        nom: "Cassiopée",
+        etoile: "Shedir",
+        mag: "2.2",
+        note: "Forme un W très visible toute l'année vers le nord",
+      },
       { nom: "Bélier", etoile: "Hamal", mag: "2.0", note: "Triangle légèrement aplati" },
     ],
   },
@@ -40,11 +100,36 @@ const SAISONS = [
     nom: "Hiver (déc. – fév.)",
     emoji: "❄️",
     constellations: [
-      { nom: "Orion", etoile: "Rigel + Bételgeuse", mag: "0.1 / 0.4", note: "La plus reconnaissable : ceinture de 3 étoiles alignées" },
-      { nom: "Taureau", etoile: "Aldébaran", mag: "0.9", note: "Les Pléiades (amas des 7 Sœurs) sont dans cette constellation" },
-      { nom: "Gémeaux", etoile: "Castor & Pollux", mag: "1.6 / 1.1", note: "Deux étoiles brillantes côte à côte" },
-      { nom: "Grand Chien", etoile: "Sirius", mag: "−1.5", note: "L'étoile la plus brillante du ciel nocturne" },
-      { nom: "Cocher", etoile: "Capella", mag: "0.1", note: "Presque au zénith en hiver, étoile jaune très brillante" },
+      {
+        nom: "Orion",
+        etoile: "Rigel + Bételgeuse",
+        mag: "0.1 / 0.4",
+        note: "La plus reconnaissable : ceinture de 3 étoiles alignées",
+      },
+      {
+        nom: "Taureau",
+        etoile: "Aldébaran",
+        mag: "0.9",
+        note: "Les Pléiades (amas des 7 Sœurs) sont dans cette constellation",
+      },
+      {
+        nom: "Gémeaux",
+        etoile: "Castor & Pollux",
+        mag: "1.6 / 1.1",
+        note: "Deux étoiles brillantes côte à côte",
+      },
+      {
+        nom: "Grand Chien",
+        etoile: "Sirius",
+        mag: "−1.5",
+        note: "L'étoile la plus brillante du ciel nocturne",
+      },
+      {
+        nom: "Cocher",
+        etoile: "Capella",
+        mag: "0.1",
+        note: "Presque au zénith en hiver, étoile jaune très brillante",
+      },
     ],
   },
 ];
@@ -53,7 +138,8 @@ export const Route = createFileRoute("/print/cartes")({
   server: {
     handlers: {
       GET: async () => {
-        const saisonsHtml = SAISONS.map(s => `
+        const saisonsHtml = SAISONS.map(
+          (s) => `
 <div style="margin-bottom:24px;break-inside:avoid">
   <h2>${s.emoji} ${s.nom}</h2>
   <table style="width:100%;border-collapse:collapse;font-family:Arial,sans-serif;font-size:11px;margin-top:8px">
@@ -66,16 +152,21 @@ export const Route = createFileRoute("/print/cartes")({
       </tr>
     </thead>
     <tbody>
-      ${s.constellations.map((c, i) => `
+      ${s.constellations
+        .map(
+          (c, i) => `
       <tr style="background:${i % 2 === 0 ? "#f9f9f9" : "#fff"}">
         <td style="padding:5px 8px;font-weight:700">${c.nom}</td>
         <td style="padding:5px 8px">${c.etoile}</td>
         <td style="padding:5px 8px;text-align:center">${c.mag}</td>
         <td style="padding:5px 8px;color:#444">${c.note}</td>
-      </tr>`).join("")}
+      </tr>`,
+        )
+        .join("")}
     </tbody>
   </table>
-</div>`).join("");
+</div>`,
+        ).join("");
 
         const body = `
 <h1>🗺️ Cartes du ciel — Guide d'observation</h1>
@@ -143,9 +234,13 @@ ${saisonsHtml}
     ["8", "Altaïr", "Aigle", "0.8", "Blanc", "Été"],
     ["9", "Aldébaran", "Taureau", "0.9", "Orange-rouge", "Hiver"],
     ["10", "Antares", "Scorpion", "1.1", "Rouge", "Été (bas)"],
-  ].map((r, i) => `<tr style="background:${i%2===0?"#f9f9f9":"#fff"}">
-    ${r.map(c => `<td style="padding:5px 8px;text-align:${["#","Magnitude"].includes(r[0]) ? "center" : "left"}">${c}</td>`).join("")}
-  </tr>`).join("")}
+  ]
+    .map(
+      (r, i) => `<tr style="background:${i % 2 === 0 ? "#f9f9f9" : "#fff"}">
+    ${r.map((c) => `<td style="padding:5px 8px;text-align:${["#", "Magnitude"].includes(r[0]) ? "center" : "left"}">${c}</td>`).join("")}
+  </tr>`,
+    )
+    .join("")}
 </table>
 <p style="font-family:Arial,sans-serif;font-size:10px;color:#888;margin-top:4px">* Bételgeuse est une étoile variable — sa magnitude varie dans le temps.</p>
 
@@ -155,7 +250,10 @@ ${saisonsHtml}
 `;
 
         return new Response(printDoc("Cartes du ciel — Guide d'observation", body), {
-          headers: { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" },
+          headers: {
+            "Content-Type": "text/html; charset=utf-8",
+            "Cache-Control": "public, max-age=3600",
+          },
         });
       },
     },

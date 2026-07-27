@@ -67,18 +67,22 @@ export const Route = createFileRoute("/rss.xml")({
           .map((it) => {
             const link = `${BASE_URL}/blog/${it.slug}`;
             const pubDate = new Date(it.date).toUTCString();
-            return [
-              `    <item>`,
-              `      <title>${escapeXml(it.title)}</title>`,
-              `      <link>${link}</link>`,
-              `      <guid isPermaLink="true">${link}</guid>`,
-              `      <pubDate>${pubDate}</pubDate>`,
-              `      <category>${escapeXml(it.category)}</category>`,
-              `      <description>${escapeXml(it.excerpt)}</description>`,
-              it.image ? `      <enclosure url="${escapeXml(it.image)}" type="image/jpeg" />` : null,
-            ]
-              .filter(Boolean)
-              .join("\n") + `\n    </item>`;
+            return (
+              [
+                `    <item>`,
+                `      <title>${escapeXml(it.title)}</title>`,
+                `      <link>${link}</link>`,
+                `      <guid isPermaLink="true">${link}</guid>`,
+                `      <pubDate>${pubDate}</pubDate>`,
+                `      <category>${escapeXml(it.category)}</category>`,
+                `      <description>${escapeXml(it.excerpt)}</description>`,
+                it.image
+                  ? `      <enclosure url="${escapeXml(it.image)}" type="image/jpeg" />`
+                  : null,
+              ]
+                .filter(Boolean)
+                .join("\n") + `\n    </item>`
+            );
           })
           .join("\n");
 

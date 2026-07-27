@@ -3,12 +3,7 @@ import { motion, AnimatePresence } from "motion/react";
 import { Globe2, ArrowRight, Eye, EclipseIcon, Sun } from "lucide-react";
 import { useIssPosition } from "@/services/issApi";
 import { useAnimatedNumber } from "@/hooks/useAnimatedNumber";
-import {
-  formatAltitude,
-  formatCoordinates,
-  formatSpeed,
-  getReadableDate,
-} from "@/lib/iss-utils";
+import { formatAltitude, formatCoordinates, formatSpeed, getReadableDate } from "@/lib/iss-utils";
 
 function VisibilityBadge({ visibility }: { visibility: string }) {
   return (

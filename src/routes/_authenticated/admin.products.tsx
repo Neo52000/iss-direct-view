@@ -80,7 +80,9 @@ function AdminProductsPage() {
   }
 
   if (isAdmin === null) {
-    return <div className="mx-auto max-w-7xl px-4 py-16 text-white/60">Vérification des droits…</div>;
+    return (
+      <div className="mx-auto max-w-7xl px-4 py-16 text-white/60">Vérification des droits…</div>
+    );
   }
 
   if (isAdmin === false) {
@@ -93,7 +95,7 @@ function AdminProductsPage() {
             d'exécuter dans la base :
           </p>
           <pre className="mt-4 overflow-x-auto rounded-lg bg-black/40 p-4 text-xs">
-{`INSERT INTO public.user_roles (user_id, role)
+            {`INSERT INTO public.user_roles (user_id, role)
 VALUES ('${"<votre user_id>"}', 'admin');`}
           </pre>
           <button
@@ -111,12 +113,8 @@ VALUES ('${"<votre user_id>"}', 'admin');`}
     <section className="mx-auto max-w-7xl px-4 py-10 md:px-6">
       <header className="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <h1 className="font-display text-3xl font-extrabold md:text-4xl">
-            Liens d'affiliation
-          </h1>
-          <p className="text-sm text-white/60">
-            Gérez le catalogue affiché sur la page d'accueil.
-          </p>
+          <h1 className="font-display text-3xl font-extrabold md:text-4xl">Liens d'affiliation</h1>
+          <p className="text-sm text-white/60">Gérez le catalogue affiché sur la page d'accueil.</p>
         </div>
         <div className="flex items-center gap-2">
           <button
@@ -137,7 +135,11 @@ VALUES ('${"<votre user_id>"}', 'admin');`}
       <div className="mt-6 grid gap-3 sm:grid-cols-3">
         <Stat label="Produits" value={totals.total} />
         <Stat label="Actifs" value={totals.active} />
-        <Stat label="Clics affiliés cumulés" value={totals.clicks} icon={<BarChart3 className="h-4 w-4" />} />
+        <Stat
+          label="Clics affiliés cumulés"
+          value={totals.clicks}
+          icon={<BarChart3 className="h-4 w-4" />}
+        />
       </div>
 
       <div className="iss-card mt-6 overflow-hidden">
@@ -168,7 +170,11 @@ VALUES ('${"<votre user_id>"}', 'admin');`}
                       <div className="flex items-center gap-3">
                         <span className="grid h-9 w-9 place-items-center rounded-lg bg-white/5 text-xl">
                           {p.image_url ? (
-                            <img src={p.image_url} alt="" className="h-9 w-9 rounded-lg object-cover" />
+                            <img
+                              src={p.image_url}
+                              alt=""
+                              className="h-9 w-9 rounded-lg object-cover"
+                            />
                           ) : (
                             p.image_emoji
                           )}
@@ -224,11 +230,7 @@ VALUES ('${"<votre user_id>"}', 'admin');`}
       </div>
 
       {editing ? (
-        <EditDrawer
-          initial={editing}
-          onClose={() => setEditing(null)}
-          onSave={handleSave}
-        />
+        <EditDrawer initial={editing} onClose={() => setEditing(null)} onSave={handleSave} />
       ) : null}
     </section>
   );
@@ -337,7 +339,9 @@ function EditDrawer({
               <input
                 required
                 value={form.slug}
-                onChange={(e) => set("slug", e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, "-"))}
+                onChange={(e) =>
+                  set("slug", e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, "-"))
+                }
                 className={inputCls}
               />
             </Field>

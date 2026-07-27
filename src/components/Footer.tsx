@@ -20,8 +20,8 @@ export function Footer() {
             <span className="font-display text-base font-extrabold">ISS Direct France</span>
           </div>
           <p className="mt-3 text-sm text-white/70">
-            ISS Direct France vous permet de suivre la Station Spatiale Internationale en direct,
-            de connaître sa position et de savoir quand l'observer depuis chez vous.
+            ISS Direct France vous permet de suivre la Station Spatiale Internationale en direct, de
+            connaître sa position et de savoir quand l'observer depuis chez vous.
           </p>
           <p className="mt-3 text-xs text-white/50">
             Sources de données : NASA, YouTube et APIs publiques de suivi orbital. Site indépendant,

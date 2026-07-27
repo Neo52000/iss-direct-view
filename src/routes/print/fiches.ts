@@ -82,7 +82,10 @@ export const Route = createFileRoute("/print/fiches")({
 `;
 
         return new Response(printDoc("Fiches pédagogiques — L'ISS", body), {
-          headers: { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" },
+          headers: {
+            "Content-Type": "text/html; charset=utf-8",
+            "Cache-Control": "public, max-age=3600",
+          },
         });
       },
     },

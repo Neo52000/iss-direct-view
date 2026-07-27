@@ -3,52 +3,108 @@ import { printDoc } from "@/lib/print-utils";
 
 const PLANETES = [
   {
-    nom: "Mercure", emoji: "⚫", couleur: "#8a8a8a",
-    distance: "58 millions km", diametre: "4 879 km", masse: "0,055 × Terre",
-    orbite: "88 jours", rotation: "59 jours", satellites: "0",
-    temp: "−180 à +430°C", note: "La plus petite planète et la plus proche du Soleil. Sans atmosphère, les températures y sont extrêmes.",
+    nom: "Mercure",
+    emoji: "⚫",
+    couleur: "#8a8a8a",
+    distance: "58 millions km",
+    diametre: "4 879 km",
+    masse: "0,055 × Terre",
+    orbite: "88 jours",
+    rotation: "59 jours",
+    satellites: "0",
+    temp: "−180 à +430°C",
+    note: "La plus petite planète et la plus proche du Soleil. Sans atmosphère, les températures y sont extrêmes.",
   },
   {
-    nom: "Vénus", emoji: "🟡", couleur: "#e8c84a",
-    distance: "108 millions km", diametre: "12 104 km", masse: "0,815 × Terre",
-    orbite: "225 jours", rotation: "243 jours (rétrograde)", satellites: "0",
-    temp: "+465°C (constante)", note: "La planète la plus chaude du système solaire, malgré sa position plus éloignée que Mercure. Épaisse atmosphère de CO₂.",
+    nom: "Vénus",
+    emoji: "🟡",
+    couleur: "#e8c84a",
+    distance: "108 millions km",
+    diametre: "12 104 km",
+    masse: "0,815 × Terre",
+    orbite: "225 jours",
+    rotation: "243 jours (rétrograde)",
+    satellites: "0",
+    temp: "+465°C (constante)",
+    note: "La planète la plus chaude du système solaire, malgré sa position plus éloignée que Mercure. Épaisse atmosphère de CO₂.",
   },
   {
-    nom: "Terre", emoji: "🔵", couleur: "#2a7de1",
-    distance: "150 millions km", diametre: "12 742 km", masse: "5,97 × 10²⁴ kg",
-    orbite: "365,25 jours", rotation: "24 heures", satellites: "1 (Lune)",
-    temp: "−89 à +58°C", note: "La seule planète connue abritant la vie. 71% de sa surface est couverte d'eau liquide.",
+    nom: "Terre",
+    emoji: "🔵",
+    couleur: "#2a7de1",
+    distance: "150 millions km",
+    diametre: "12 742 km",
+    masse: "5,97 × 10²⁴ kg",
+    orbite: "365,25 jours",
+    rotation: "24 heures",
+    satellites: "1 (Lune)",
+    temp: "−89 à +58°C",
+    note: "La seule planète connue abritant la vie. 71% de sa surface est couverte d'eau liquide.",
   },
   {
-    nom: "Mars", emoji: "🔴", couleur: "#c0392b",
-    distance: "228 millions km", diametre: "6 779 km", masse: "0,107 × Terre",
-    orbite: "687 jours", rotation: "24h 37min", satellites: "2 (Phobos, Deimos)",
-    temp: "−125 à +20°C", note: "La planète rouge. Possède le plus grand volcan du système solaire : Olympus Mons (25 km de haut).",
+    nom: "Mars",
+    emoji: "🔴",
+    couleur: "#c0392b",
+    distance: "228 millions km",
+    diametre: "6 779 km",
+    masse: "0,107 × Terre",
+    orbite: "687 jours",
+    rotation: "24h 37min",
+    satellites: "2 (Phobos, Deimos)",
+    temp: "−125 à +20°C",
+    note: "La planète rouge. Possède le plus grand volcan du système solaire : Olympus Mons (25 km de haut).",
   },
   {
-    nom: "Jupiter", emoji: "🟤", couleur: "#c8834a",
-    distance: "778 millions km", diametre: "139 820 km", masse: "318 × Terre",
-    orbite: "11,9 ans", rotation: "9h 56min", satellites: "95+",
-    temp: "−110°C (nuages)", note: "La plus grande planète du système solaire. La Grande Tache Rouge est une tempête géante en activité depuis +350 ans.",
+    nom: "Jupiter",
+    emoji: "🟤",
+    couleur: "#c8834a",
+    distance: "778 millions km",
+    diametre: "139 820 km",
+    masse: "318 × Terre",
+    orbite: "11,9 ans",
+    rotation: "9h 56min",
+    satellites: "95+",
+    temp: "−110°C (nuages)",
+    note: "La plus grande planète du système solaire. La Grande Tache Rouge est une tempête géante en activité depuis +350 ans.",
   },
   {
-    nom: "Saturne", emoji: "🪐", couleur: "#e8d58a",
-    distance: "1,4 milliard km", diametre: "116 460 km", masse: "95 × Terre",
-    orbite: "29,5 ans", rotation: "10h 42min", satellites: "146+",
-    temp: "−140°C (nuages)", note: "Ses anneaux sont composés de glace et de roches. Sa densité est si faible qu'elle flotterait sur l'eau.",
+    nom: "Saturne",
+    emoji: "🪐",
+    couleur: "#e8d58a",
+    distance: "1,4 milliard km",
+    diametre: "116 460 km",
+    masse: "95 × Terre",
+    orbite: "29,5 ans",
+    rotation: "10h 42min",
+    satellites: "146+",
+    temp: "−140°C (nuages)",
+    note: "Ses anneaux sont composés de glace et de roches. Sa densité est si faible qu'elle flotterait sur l'eau.",
   },
   {
-    nom: "Uranus", emoji: "🩵", couleur: "#72c0d6",
-    distance: "2,9 milliards km", diametre: "50 724 km", masse: "14,5 × Terre",
-    orbite: "84 ans", rotation: "17h 14min (rétrograde)", satellites: "28",
-    temp: "−195°C", note: "Tourne sur le côté (axe incliné à 98°). La planète la plus froide du système solaire.",
+    nom: "Uranus",
+    emoji: "🩵",
+    couleur: "#72c0d6",
+    distance: "2,9 milliards km",
+    diametre: "50 724 km",
+    masse: "14,5 × Terre",
+    orbite: "84 ans",
+    rotation: "17h 14min (rétrograde)",
+    satellites: "28",
+    temp: "−195°C",
+    note: "Tourne sur le côté (axe incliné à 98°). La planète la plus froide du système solaire.",
   },
   {
-    nom: "Neptune", emoji: "🔵", couleur: "#2055c8",
-    distance: "4,5 milliards km", diametre: "49 244 km", masse: "17 × Terre",
-    orbite: "165 ans", rotation: "16h 6min", satellites: "16",
-    temp: "−200°C", note: "Les vents les plus rapides du système solaire (jusqu'à 2 100 km/h). Triton, son plus grand satellite, orbite à l'envers.",
+    nom: "Neptune",
+    emoji: "🔵",
+    couleur: "#2055c8",
+    distance: "4,5 milliards km",
+    diametre: "49 244 km",
+    masse: "17 × Terre",
+    orbite: "165 ans",
+    rotation: "16h 6min",
+    satellites: "16",
+    temp: "−200°C",
+    note: "Les vents les plus rapides du système solaire (jusqu'à 2 100 km/h). Triton, son plus grand satellite, orbite à l'envers.",
   },
 ];
 
@@ -56,7 +112,8 @@ export const Route = createFileRoute("/print/poster")({
   server: {
     handlers: {
       GET: async () => {
-        const planetesHtml = PLANETES.map((p, i) => `
+        const planetesHtml = PLANETES.map(
+          (p, i) => `
 <div style="margin-bottom:16px;break-inside:avoid;border-left:4px solid ${p.couleur};padding-left:12px">
   <div style="display:flex;align-items:baseline;gap:8px;margin-bottom:4px">
     <span style="font-size:22px">${p.emoji}</span>
@@ -73,7 +130,8 @@ export const Route = createFileRoute("/print/poster")({
     <span>🌡️ Températures : <strong>${p.temp}</strong></span>
   </div>
   <p style="font-family:Arial,sans-serif;font-size:11px;color:#444;margin:0">${p.note}</p>
-</div>`).join("");
+</div>`,
+        ).join("");
 
         const body = `
 <h1>🪐 Poster — Le système solaire</h1>
@@ -154,14 +212,38 @@ ${planetesHtml}
     <th style="padding:6px 8px;text-align:left">Exemple célèbre</th>
   </tr>
   ${[
-    ["Planète naine", "Corps sphérique en orbite autour du Soleil, n'ayant pas nettoyé son voisinage orbital", "Pluton, Cérès, Éris"],
-    ["Astéroïde", "Petit corps rocheux orbitant autour du Soleil, principalement dans la ceinture d'astéroïdes (entre Mars et Jupiter)", "Cérès, Vesta, Bennu"],
-    ["Comète", "Corps de glace et de poussière qui développe une chevelure (coma) et une queue en approchant du Soleil", "Halley, Tchouri (67P)"],
-    ["Météore", "Trace lumineuse laissée par un météoroïde entrant dans l'atmosphère terrestre (étoile filante)", "Pluies des Perséides"],
-    ["Nuage d'Oort", "Réservoir sphérique de corps glacés à la périphérie du système solaire, source probable des comètes à longue période", "Comète Bopp-Hale"],
-  ].map((r, i) => `<tr style="background:${i%2===0?"#f9f9f9":"#fff"}">
-    ${r.map(c => `<td style="padding:5px 8px">${c}</td>`).join("")}
-  </tr>`).join("")}
+    [
+      "Planète naine",
+      "Corps sphérique en orbite autour du Soleil, n'ayant pas nettoyé son voisinage orbital",
+      "Pluton, Cérès, Éris",
+    ],
+    [
+      "Astéroïde",
+      "Petit corps rocheux orbitant autour du Soleil, principalement dans la ceinture d'astéroïdes (entre Mars et Jupiter)",
+      "Cérès, Vesta, Bennu",
+    ],
+    [
+      "Comète",
+      "Corps de glace et de poussière qui développe une chevelure (coma) et une queue en approchant du Soleil",
+      "Halley, Tchouri (67P)",
+    ],
+    [
+      "Météore",
+      "Trace lumineuse laissée par un météoroïde entrant dans l'atmosphère terrestre (étoile filante)",
+      "Pluies des Perséides",
+    ],
+    [
+      "Nuage d'Oort",
+      "Réservoir sphérique de corps glacés à la périphérie du système solaire, source probable des comètes à longue période",
+      "Comète Bopp-Hale",
+    ],
+  ]
+    .map(
+      (r, i) => `<tr style="background:${i % 2 === 0 ? "#f9f9f9" : "#fff"}">
+    ${r.map((c) => `<td style="padding:5px 8px">${c}</td>`).join("")}
+  </tr>`,
+    )
+    .join("")}
 </table>
 
 <p style="font-family:Arial,sans-serif;font-size:10px;color:#888;margin-top:20px;text-align:center">
@@ -170,7 +252,10 @@ ${planetesHtml}
 `;
 
         return new Response(printDoc("Poster — Le système solaire", body), {
-          headers: { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" },
+          headers: {
+            "Content-Type": "text/html; charset=utf-8",
+            "Cache-Control": "public, max-age=3600",
+          },
         });
       },
     },

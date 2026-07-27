@@ -1,11 +1,9 @@
 export const formatCoordinates = (lat: number, lon: number) =>
   `${lat.toFixed(4)}°, ${lon.toFixed(4)}°`;
 
-export const formatSpeed = (kmh: number) =>
-  `${Math.round(kmh).toLocaleString("fr-FR")} km/h`;
+export const formatSpeed = (kmh: number) => `${Math.round(kmh).toLocaleString("fr-FR")} km/h`;
 
-export const formatAltitude = (km: number) =>
-  `${km.toFixed(1).replace(".", ",")} km`;
+export const formatAltitude = (km: number) => `${km.toFixed(1).replace(".", ",")} km`;
 
 export const getReadableDate = (d: Date | string | number) => {
   const date = typeof d === "string" || typeof d === "number" ? new Date(d) : d;
@@ -36,7 +34,10 @@ export const generateCalendarEvent = (pass: PassEvent, city?: string) => {
   const start = new Date(pass.startUTC * 1000);
   const end = new Date((pass.startUTC + pass.duration) * 1000);
   const fmt = (d: Date) =>
-    d.toISOString().replace(/[-:]/g, "").replace(/\.\d{3}/, "");
+    d
+      .toISOString()
+      .replace(/[-:]/g, "")
+      .replace(/\.\d{3}/, "");
   const ics = [
     "BEGIN:VCALENDAR",
     "VERSION:2.0",

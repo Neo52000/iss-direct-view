@@ -51,7 +51,8 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
           Cette page n'a pas pu être chargée.
         </h1>
         <p className="mt-2 text-sm text-muted-foreground">
-          Une erreur s'est produite de notre côté. Vous pouvez essayer d'actualiser la page ou retourner à l'accueil.
+          Une erreur s'est produite de notre côté. Vous pouvez essayer d'actualiser la page ou
+          retourner à l'accueil.
         </p>
         <div className="mt-6 flex flex-wrap justify-center gap-2">
           <button
@@ -81,16 +82,31 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
       { title: "ISS Direct France — Voir l'ISS en direct depuis l'espace" },
-      { name: "description", content: "Regardez la Station Spatiale Internationale en direct, suivez sa position en temps réel et découvrez quand l'observer depuis chez vous." },
+      {
+        name: "description",
+        content:
+          "Regardez la Station Spatiale Internationale en direct, suivez sa position en temps réel et découvrez quand l'observer depuis chez vous.",
+      },
       { property: "og:site_name", content: "ISS Direct France" },
       { property: "og:type", content: "website" },
       { property: "og:locale", content: "fr_FR" },
       { name: "twitter:card", content: "summary_large_image" },
       { name: "theme-color", content: "#050B1F" },
       { property: "og:title", content: "ISS Direct France — Voir l'ISS en direct depuis l'espace" },
-      { name: "twitter:title", content: "ISS Direct France — Voir l'ISS en direct depuis l'espace" },
-      { property: "og:description", content: "Regardez la Station Spatiale Internationale en direct, suivez sa position en temps réel et découvrez quand l'observer depuis chez vous." },
-      { name: "twitter:description", content: "Regardez la Station Spatiale Internationale en direct, suivez sa position en temps réel et découvrez quand l'observer depuis chez vous." },
+      {
+        name: "twitter:title",
+        content: "ISS Direct France — Voir l'ISS en direct depuis l'espace",
+      },
+      {
+        property: "og:description",
+        content:
+          "Regardez la Station Spatiale Internationale en direct, suivez sa position en temps réel et découvrez quand l'observer depuis chez vous.",
+      },
+      {
+        name: "twitter:description",
+        content:
+          "Regardez la Station Spatiale Internationale en direct, suivez sa position en temps réel et découvrez quand l'observer depuis chez vous.",
+      },
       { property: "og:image", content: "https://iss-en-direct.com/og-image.png" },
       { property: "og:image:width", content: "1200" },
       { property: "og:image:height", content: "630" },
@@ -122,7 +138,8 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
           "@context": "https://schema.org",
           "@type": "Organization",
           name: "ISS Direct France",
-          description: "Suivi de la Station Spatiale Internationale en direct, position en temps réel et passages visibles.",
+          description:
+            "Suivi de la Station Spatiale Internationale en direct, position en temps réel et passages visibles.",
         }),
       },
     ],
