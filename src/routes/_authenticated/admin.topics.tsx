@@ -150,9 +150,9 @@ function AdminTopicsPage() {
           category: out.category,
           cover: out.cover,
           reading_time: out.reading_time,
-          published: !out.to_verify,
+          published: !out.to_verify && !!out.cover_image_url,
           published_at: new Date().toISOString(),
-          cover_image_url: null,
+          cover_image_url: out.cover_image_url || null,
           cover_image_alt: out.alt_text || null,
           faq: out.faq,
           social_suggestions: out.social_suggestions,
@@ -170,6 +170,11 @@ function AdminTopicsPage() {
 
       qc.invalidateQueries({ queryKey: ["admin", "topics"] });
       qc.invalidateQueries({ queryKey: ["admin", "blog"] });
+      if (!out.cover_image_url) {
+        setGenError(
+          "Article généré en brouillon (non publié) : l'image de couverture n'a pas pu être générée automatiquement. Ajoutez-en une depuis /admin/blog avant de publier.",
+        );
+      }
     } catch (err) {
       setGenError(err instanceof Error ? err.message : "Erreur de génération");
     } finally {
