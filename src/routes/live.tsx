@@ -8,19 +8,29 @@ import { SponsorBanner } from "@/components/AdSlot";
 export const Route = createFileRoute("/live")({
   head: () => ({
     meta: [
-      { title: "ISS en direct : regardez la Terre depuis la Station Spatiale Internationale" },
+      { title: "ISS en Direct Maintenant — Live Vidéo NASA Gratuit 24/7" },
       {
         name: "description",
         content:
-          "Live vidéo officiel de l'ISS, fourni par la NASA via YouTube. Regardez la Terre depuis l'espace 24/7.",
+          "Regardez l'ISS en direct maintenant : flux vidéo officiel NASA, gratuit et sans inscription. Vue en temps réel de la Terre depuis l'espace, 24h/24, 7j/7.",
       },
-      { property: "og:title", content: "Live ISS — Regardez la Terre depuis l'espace" },
+      { property: "og:title", content: "ISS en Direct Maintenant — Live Vidéo NASA Gratuit 24/7" },
       {
         property: "og:description",
-        content: "Flux vidéo en direct de la Station Spatiale Internationale.",
+        content:
+          "Regardez l'ISS en direct maintenant : flux vidéo officiel NASA, gratuit et sans inscription. Vue en temps réel de la Terre depuis l'espace, 24h/24, 7j/7.",
       },
       { property: "og:url", content: "/live" },
       { property: "og:type", content: "website" },
+      {
+        name: "twitter:title",
+        content: "ISS en Direct Maintenant — Live Vidéo NASA Gratuit 24/7",
+      },
+      {
+        name: "twitter:description",
+        content:
+          "Regardez l'ISS en direct maintenant : flux vidéo officiel NASA, gratuit et sans inscription. Vue en temps réel de la Terre depuis l'espace, 24h/24, 7j/7.",
+      },
     ],
     links: [{ rel: "canonical", href: "/live" }],
     scripts: [{ type: "application/ld+json", children: JSON.stringify(faqJsonLd(homeFaq)) }],

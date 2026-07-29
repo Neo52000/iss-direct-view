@@ -16,16 +16,25 @@ export const Route = createFileRoute("/")({
       {
         name: "description",
         content:
-          "Live vidéo de la Station Spatiale Internationale, position en temps réel et passages visibles au-dessus de chez vous.",
+          "Live ISS, position en temps réel et alertes de passage gratuites au-dessus de votre ville. Tout pour observer la Station Spatiale Internationale, en un seul endroit.",
       },
       { property: "og:title", content: "ISS Direct France — Voir l'ISS en direct" },
       {
         property: "og:description",
         content:
-          "Live vidéo de l'ISS, position en temps réel et alertes de passages visibles depuis votre ville.",
+          "Live ISS, position en temps réel et alertes de passage gratuites au-dessus de votre ville. Tout pour observer la Station Spatiale Internationale, en un seul endroit.",
       },
       { property: "og:url", content: "/" },
       { property: "og:type", content: "website" },
+      {
+        name: "twitter:title",
+        content: "ISS Direct France — Voir l'ISS en direct depuis l'espace",
+      },
+      {
+        name: "twitter:description",
+        content:
+          "Live ISS, position en temps réel et alertes de passage gratuites au-dessus de votre ville. Tout pour observer la Station Spatiale Internationale, en un seul endroit.",
+      },
     ],
     links: [{ rel: "canonical", href: "/" }],
     scripts: [
