@@ -17,6 +17,11 @@ export const Route = createFileRoute("/passage-iss/")({
         content: "Horaires des passages visibles de l'ISS, ville par ville.",
       },
       { property: "og:url", content: "/passage-iss" },
+      { name: "twitter:title", content: "Passage de l'ISS au-dessus de ma ville" },
+      {
+        name: "twitter:description",
+        content: "Horaires des passages visibles de l'ISS, ville par ville.",
+      },
     ],
     links: [{ rel: "canonical", href: "/passage-iss" }],
   }),

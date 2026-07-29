@@ -106,6 +106,16 @@ export const frenchCities: FrenchCity[] = [
   { slug: "pau", name: "Pau", region: "Nouvelle-Aquitaine", lat: 43.2951, lon: -0.3708 },
   { slug: "bayonne", name: "Bayonne", region: "Nouvelle-Aquitaine", lat: 43.4933, lon: -1.4748 },
   { slug: "ajaccio", name: "Ajaccio", region: "Corse", lat: 41.9192, lon: 8.7386 },
+  { slug: "argenteuil", name: "Argenteuil", region: "Île-de-France", lat: 48.9075, lon: 2.2469 },
+  { slug: "dunkerque", name: "Dunkerque", region: "Hauts-de-France", lat: 51.0343, lon: 2.3768 },
+  {
+    slug: "chambery",
+    name: "Chambéry",
+    region: "Auvergne-Rhône-Alpes",
+    lat: 45.5646,
+    lon: 5.9178,
+  },
+  { slug: "colmar", name: "Colmar", region: "Grand Est", lat: 48.0794, lon: 7.3585 },
 ];
 
 export const getCity = (slug: string) => frenchCities.find((c) => c.slug === slug);

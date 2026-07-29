@@ -30,6 +30,8 @@ export const Route = createFileRoute("/passage-iss/$ville")({
         { property: "og:description", content: description },
         { property: "og:type", content: "website" },
         { property: "og:url", content: canonicalUrl },
+        { name: "twitter:title", content: `Passage de l'ISS au-dessus de ${city.name} — Horaires ce soir` },
+        { name: "twitter:description", content: description },
       ],
       links: [{ rel: "canonical", href: canonicalUrl }],
       scripts: [
