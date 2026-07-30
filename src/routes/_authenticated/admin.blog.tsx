@@ -274,6 +274,7 @@ function EditDrawer({
         reading_time: out.reading_time || f.reading_time,
         content: content || f.content,
         cover_image_alt: out.alt_text || f.cover_image_alt,
+        cover_image_url: out.cover_image_url || f.cover_image_url,
         faq: out.faq.length ? out.faq : f.faq,
         social_suggestions: out.social_suggestions.length
           ? out.social_suggestions
@@ -281,6 +282,11 @@ function EditDrawer({
         to_verify: out.to_verify || null,
         published: out.to_verify ? false : f.published,
       }));
+      if (!out.cover_image_url) {
+        setAiError(
+          "Image de couverture non générée automatiquement. Ajoutez-en une manuellement avant de publier.",
+        );
+      }
     } catch (err) {
       setAiError(err instanceof Error ? err.message : "Erreur IA");
     } finally {
@@ -311,6 +317,10 @@ function EditDrawer({
 
   async function submit(e: React.FormEvent) {
     e.preventDefault();
+    if (form.published && !form.cover_image_url) {
+      setError("Impossible de publier sans image de couverture. Ajoutez-en une ou dépubliez.");
+      return;
+    }
     setSaving(true);
     setError(null);
     try {
